@@ -1,0 +1,22 @@
+{
+  "pages_checked": 10,
+  "documents_discovered": 0,
+  "already_registered": 0,
+  "errors": [
+    {
+      "url": "https://zatca.gov.sa/en/RulesRegulations/Taxes/",
+      "issue": "Redirect not followed: external/duplicate/missing target"
+    },
+    {
+      "url": "https://zatca.gov.sa/en/RulesRegulations/Agreements/",
+      "issue": "Redirect not followed: external/duplicate/missing target"
+    },
+    {
+      "url": "https://zatca.gov.sa/en/RulesRegulations/InformationExchange",
+      "issue": "Redirect not followed: external/duplicate/missing target"
+    }
+  ],
+  "pending_pages": 0,
+  "csv": "data/processed/zatca_discovery.csv",
+  "note": "Discovery only; no document contents or regulatory claims verified. Dynamic JS viewers may be missed."
+}

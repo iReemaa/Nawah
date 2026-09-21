@@ -1,0 +1,16 @@
+{
+  "model": "sentence-transformers/paraphrase-multilingual-MiniLM-L12-v2",
+  "chunk_counts": {
+    "structured": 83971,
+    "quarantine": 1081
+  },
+  "structured_source_digest": "ab14b6ac74fcda627ff7cb6de15ce4d455111530213f87a6b2752cd258c34dad",
+  "scraped_queue_digest": "faca174f8019207077e182d2689ad0e2eb9a3e505ad0376fda089d48068d4f53",
+  "quarantine_not_for_answers": true,
+  "excluded_sections": [
+    "activity_crosswalk_candidates",
+    "unverified_rules",
+    "unresolved_for_nawah",
+    "raw_extracted_content"
+  ]
+}

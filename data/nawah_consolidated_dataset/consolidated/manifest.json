@@ -1,0 +1,46 @@
+{
+  "version": "1.0",
+  "input_files": {
+    "sources(1).json": {
+      "sha256": "a8b3ba5421a60e4f96d6c86f63f49183bf4b7525402e617a31145f311ffb13c0",
+      "bytes": 23388
+    },
+    "balady_rag.json": {
+      "sha256": "fd2b12f515b5ecb904f6493216ab38ee6f87e7e3f4fafcc7148736e7156e464b",
+      "bytes": 47113988
+    },
+    "balady_structured.json": {
+      "sha256": "00e99f098ab409c439fae4d28caffc454f99a4afb0817b4ce2ee31f92f1b8fcc",
+      "bytes": 7717741
+    },
+    "ejar_service_rules.json": {
+      "sha256": "75d7cf8e568ce329f734cd16a7ddfd3bb9f28454781fa65d9442627109d7f252",
+      "bytes": 37040
+    },
+    "misa_service_rules.json": {
+      "sha256": "37a3132482728f138edbe65b27a4fb071d4d17bf7423f229e7e4ea03c00b535c",
+      "bytes": 61804
+    },
+    "sbc_activities_structured.json": {
+      "sha256": "9153f3686a6aad6727f759435c5b1da768ed338eafa5502c56f7c54d4350632f",
+      "bytes": 5398574
+    },
+    "sbc_service_rules_structured.json": {
+      "sha256": "cb26e7f168de4589a80565e9515c8144ccf2f113bf7feabf1a3327a7e3c88519",
+      "bytes": 10775
+    }
+  },
+  "counts": {
+    "source_registry": 64,
+    "balady_activities": 3369,
+    "balady_rag_records_original": 81380,
+    "balady_rag_records_deduplicated": 3369,
+    "balady_rule_records_preserved": 78011,
+    "sbc_activities": 2696,
+    "candidate_crosswalks": 3138,
+    "quality_issues": 8
+  },
+  "design": "Balady rules nested by activity_id; SBC activities separate; service knowledge grouped by provider; source registry preserved; candidate crosswalk never auto-merged; all original uploads included under originals/ for audit.",
+  "review_status": "NOT_VERIFIED_FOR_PRODUCTION",
+  "note": "Deduplication only removes exact Balady description copies; original records remain in originals."
+}

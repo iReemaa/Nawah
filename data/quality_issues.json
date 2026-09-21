@@ -1,0 +1,54 @@
+[
+  {
+    "severity": "BLOCKING_FOR_AUTOMATED_ANSWERS",
+    "topic": "Ejar commercial lease fee",
+    "reason": "Source conflict explicitly recorded in input",
+    "action": "Do not choose a fee until verified",
+    "location": "service_knowledge.json / ejar / fees"
+  },
+  {
+    "severity": "UNVERIFIED",
+    "topic": "Ejar rule",
+    "reason": "المصادر الحالية تذكر استرجاع العنوان الوطني ولكنها لا تنص على قاعدة التطابق هذه.",
+    "action": "Exclude from authoritative RAG answers pending verification",
+    "location": "service_knowledge.json / ejar / unverified_rules / 0"
+  },
+  {
+    "severity": "REVIEW",
+    "topic": "MISA unresolved",
+    "reason": "{'id': 'excluded_restricted_activity_list', 'status': 'MISSING_DATA', 'description': 'القائمة الرسمية منشورة ضمن دليل المستثمر، لكن محتوى القسم ذي الصلة غير قابل للاستخراج بشكل موثوق من النسخة الحالية.'}",
+    "action": "Verify before asserting as requirement",
+    "location": "service_knowledge.json / misa / unresolved_for_nawah / 0"
+  },
+  {
+    "severity": "REVIEW",
+    "topic": "MISA unresolved",
+    "reason": "{'id': 'activity_specific_registration_requirements', 'status': 'MISSING_DATA', 'description': 'دليل المستثمر يؤكد أن متطلبات النشاط والشروط الخاصة ونسب الشريك السعودي ورأس المال -عند انطباقها- موجودة في القسم الخامس، لكن تفاصيل القسم غير قابلة للاستخراج بشكل موثوق من النسخة الحالية.'}",
+    "action": "Verify before asserting as requirement",
+    "location": "service_knowledge.json / misa / unresolved_for_nawah / 1"
+  },
+  {
+    "severity": "PROVENANCE",
+    "topic": "Balady rules",
+    "reason": "73454 of 81380 RAG records have no record-level URLs",
+    "action": "Add verified official source links before regulatory claims; do not infer from file names"
+  },
+  {
+    "severity": "SCOPE",
+    "topic": "Activity scope",
+    "reason": "Uploaded catalog includes sectors beyond coffee shops and restaurants",
+    "action": "Retain all records, filter by validated activity IDs at retrieval time"
+  },
+  {
+    "severity": "REVIEW",
+    "topic": "SBC/Balady crosswalk",
+    "reason": "Matching numeric activity identifiers are candidate links, not verified equivalent business activities",
+    "action": "Verify names and definitions before treating records as identical"
+  },
+  {
+    "severity": "REVIEW",
+    "topic": "Regulatory currency",
+    "reason": "No live verification performed on uploaded URLs or current rule status",
+    "action": "Verify authoritative current sources before deployment"
+  }
+]

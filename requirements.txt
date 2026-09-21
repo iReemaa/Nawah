@@ -1,0 +1,15 @@
+langchain
+langchain-openai
+langchain-community
+langchain-text-splitters
+langgraph
+faiss-cpu
+sentence-transformers
+beautifulsoup4
+requests
+pypdf
+python-dotenv
+pydantic
+fastapi
+uvicorn
+fonttools

@@ -1,0 +1,743 @@
+[
+  {
+    "authority": "ZATCA",
+    "category": "regulations_directory",
+    "source_type": "webpage",
+    "url": "https://zatca.gov.sa/en/RulesRegulations/Pages/rules.aspx",
+    "language": "en",
+    "business_activity": "general",
+    "region": "national",
+    "enabled": true
+  },
+  {
+    "authority": "Ministry of Commerce / Saudi Business Center",
+    "category": "foreign_investment_company_formation",
+    "source_type": "webpage",
+    "url": "https://mc.gov.sa/en/eservices/pages/servicedetails.aspx?sid=20",
+    "language": "en",
+    "business_activity": "foreign_investment",
+    "region": "national",
+    "enabled": true
+  },
+  {
+    "authority": "Ministry of Commerce",
+    "category": "business_startup_dependencies",
+    "source_type": "webpage",
+    "url": "https://mc.gov.sa/en/Pages/Start-your-project.aspx",
+    "language": "en",
+    "business_activity": "general",
+    "region": "national",
+    "enabled": true
+  },
+  {
+    "authority": "Ministry of Investment (MISA)",
+    "category": "investment_registration_and_activity_requirements",
+    "source_type": "pdf",
+    "url": "https://misa.gov.sa/app/uploads/2026/01/Investor-Guide_12-05-compressed.pdf",
+    "language": "en",
+    "business_activity": "foreign_investment",
+    "region": "national",
+    "enabled": true
+  },
+  {
+    "authority": "Balady / Ministry of Municipalities and Housing",
+    "category": "commercial_licenses",
+    "source_type": "webpage",
+    "url": "https://www.balady.gov.sa/en/products/commercial-licenses",
+    "language": "en",
+    "business_activity": "general",
+    "region": "national",
+    "enabled": true
+  },
+  {
+    "authority": "Balady / Ministry of Municipalities and Housing",
+    "category": "commercial_license_renewal_requirements",
+    "source_type": "webpage",
+    "url": "https://balady.gov.sa/en/services/10485",
+    "language": "en",
+    "business_activity": "general",
+    "region": "national",
+    "enabled": true
+  },
+  {
+    "authority": "ZATCA",
+    "category": "vat_rules_and_registration",
+    "source_type": "webpage",
+    "url": "https://www.zatca.gov.sa/en/RulesRegulations/VAT/Pages/default1.aspx",
+    "language": "en",
+    "business_activity": "general",
+    "region": "national",
+    "enabled": true
+  },
+  {
+    "authority": "ZATCA",
+    "category": "vat_penalties",
+    "source_type": "webpage",
+    "url": "https://www.zatca.gov.sa/ar/RulesRegulations/VAT/Pages/Penalties.aspx",
+    "language": "ar",
+    "business_activity": "general",
+    "region": "national",
+    "enabled": true
+  },
+  {
+    "authority": "MHRSD / Qiwa",
+    "category": "employment_visa_requirements",
+    "source_type": "webpage",
+    "url": "https://www.hrsd.gov.sa/en/ministry-services/services/%D8%A7%D9%84%D8%AA%D8%A3%D8%B4%D9%8A%D8%B1%D8%A7%D8%AA-%D8%A7%D9%84%D9%85%D9%87%D9%86%D9%8A%D8%A9-%D8%A7%D9%84%D9%81%D9%88%D8%B1%D9%8A%D8%A9",
+    "language": "en",
+    "business_activity": "employment",
+    "region": "national",
+    "enabled": true
+  },
+  {
+    "authority": "GOSI",
+    "category": "employer_establishment_registration",
+    "source_type": "webpage",
+    "url": "https://www.gosi.gov.sa/GOSIOnline/Registration",
+    "language": "ar",
+    "business_activity": "employment",
+    "region": "national",
+    "enabled": true
+  },
+  {
+    "authority": "GOSI",
+    "category": "employer_contributions_and_fines",
+    "source_type": "webpage",
+    "url": "https://www.gosi.gov.sa/GOSIOnline/Contribution_",
+    "language": "ar",
+    "business_activity": "employment",
+    "region": "national",
+    "enabled": true
+  },
+  {
+    "authority": "MEWA / Naama",
+    "category": "agricultural_and_livestock_licensing",
+    "source_type": "webpage",
+    "url": "https://naama.sa/services/details/4b76562c-6042-4d43-bad4-e1e8a0f763ac",
+    "language": "ar",
+    "business_activity": "agriculture_livestock",
+    "region": "national",
+    "enabled": true
+  },
+  {
+    "authority": "MEWA / Naama",
+    "category": "agricultural_service_requirements",
+    "source_type": "webpage",
+    "url": "https://www.mewa.gov.sa/ar/HowWeCanHelp/Help/FAQ/Pages/default.aspx",
+    "language": "ar",
+    "business_activity": "agriculture",
+    "region": "national",
+    "enabled": true
+  },
+  {
+    "authority": "Ministry of Industry and Mineral Resources / Sanaei",
+    "category": "industrial_license",
+    "source_type": "webpage",
+    "url": "https://my.gov.sa/en/services/25187",
+    "language": "en",
+    "business_activity": "industrial",
+    "region": "national",
+    "enabled": true
+  },
+  {
+    "authority": "Ministry of Industry and Mineral Resources",
+    "category": "industrial_license_regulations",
+    "source_type": "pdf",
+    "url": "https://mim.gov.sa/mim/backend/sites/default/files/2022-05/industryrule2_0.pdf",
+    "language": "ar",
+    "business_activity": "industrial",
+    "region": "national",
+    "enabled": true
+  },
+  {
+    "authority": "Ministry of Industry and Mineral Resources",
+    "category": "industrial_license_transfer_dependencies",
+    "source_type": "webpage",
+    "url": "https://mim.gov.sa/mim/services/31350/",
+    "language": "ar",
+    "business_activity": "industrial",
+    "region": "national",
+    "enabled": true
+  },
+  {
+    "authority": "MODON",
+    "category": "industrial_city_land_and_services",
+    "source_type": "pdf",
+    "url": "https://modon.gov.sa/ar/Systems/Documents/Modon_ServicesBooklet.pdf",
+    "language": "ar",
+    "business_activity": "industrial",
+    "region": "national",
+    "enabled": true
+  },
+  {
+    "authority": "MODON",
+    "category": "industrial_city_land_procedures",
+    "source_type": "pdf",
+    "url": "https://www.modon.gov.sa/ar/Systems/Documents/%D8%AF%D9%84%D9%8A%D9%84%20%D8%A7%D9%84%D8%A5%D8%AC%D8%B1%D8%A7%D8%A1%D8%A7%D8%AA%20%D9%84%D9%84%D9%85%D8%AF%D9%86%20%D8%A7%D9%84%D8%B5%D9%86%D8%A7%D8%B9%D9%8A%D8%A9%20%D8%A7%D9%84%D9%85%D8%AD%D8%AF%D8%AF%D8%A9%20%D8%A7%D9%84%D8%AD%D9%83%D9%88%D9%85%D9%8A%D8%A9%20%20%D9%83%D8%A7%D9%85%D9%84%20_Inside_Rev01-2.pdf",
+    "language": "ar",
+    "business_activity": "industrial",
+    "region": "national",
+    "enabled": true
+  },
+  {
+    "authority": "Mining Platform / Ministry of Industry and Mineral Resources",
+    "category": "mining_license",
+    "source_type": "webpage",
+    "url": "https://taadeen.sa/ar/license-types/%D8%B1%D8%AE%D8%B5%D8%A9-%D8%A7%D9%84%D8%AA%D8%B9%D8%AF%D9%8A%D9%86",
+    "language": "ar",
+    "business_activity": "mining",
+    "region": "national",
+    "enabled": true
+  },
+  {
+    "authority": "Mining Platform / Ministry of Industry and Mineral Resources",
+    "category": "building_materials_quarry_license",
+    "source_type": "webpage",
+    "url": "https://taadeen.sa/ar/license-types/%D8%B1%D8%AE%D8%B5%D8%A9-%D9%85%D9%88%D8%A7%D8%AF-%D8%A7%D9%84%D8%A8%D9%86%D8%A7%D8%A1",
+    "language": "ar",
+    "business_activity": "mining",
+    "region": "national",
+    "enabled": true
+  },
+  {
+    "authority": "NCEC",
+    "category": "environmental_construction_permit",
+    "source_type": "webpage",
+    "url": "https://www.ncec.gov.sa/ar/eServices/EservicesDirectory/Pages/Eservice016.aspx",
+    "language": "ar",
+    "business_activity": "environmental",
+    "region": "national",
+    "enabled": true
+  },
+  {
+    "authority": "NCEC",
+    "category": "environmental_operating_permit",
+    "source_type": "webpage",
+    "url": "https://ncec.gov.sa/ar/eServices/EservicesDirectory/Pages/Eservice019.aspx",
+    "language": "ar",
+    "business_activity": "environmental",
+    "region": "national",
+    "enabled": true
+  },
+  {
+    "authority": "NCEC",
+    "category": "environmental_service_provider_license",
+    "source_type": "webpage",
+    "url": "https://www.ncec.gov.sa/ar/eServices/EservicesDirectory/Pages/Eservice002.aspx",
+    "language": "ar",
+    "business_activity": "environmental_services",
+    "region": "national",
+    "enabled": true
+  },
+  {
+    "authority": "MWAN",
+    "category": "waste_management_licensing_regulations",
+    "source_type": "webpage",
+    "url": "https://mwan.gov.sa/web/content/6591315",
+    "language": "en",
+    "business_activity": "waste_management",
+    "region": "national",
+    "enabled": true
+  },
+  {
+    "authority": "SFDA / FIRS",
+    "category": "food_establishment_registration_requirements",
+    "source_type": "webpage",
+    "url": "https://sfda.gov.sa/ar/faq/%D9%85%D8%A7-%D9%87%D9%8A-%D8%A7%D9%84%D9%85%D8%B3%D8%AA%D9%86%D8%AF%D8%A7%D8%AA-%D8%A7%D9%84%D9%85%D8%B7%D9%84%D9%88%D8%A8%D8%A9-%D8%B9%D9%86%D8%AF%D9%85%D8%A7-%D9%8A%D8%AA%D9%85-%D8%AA%D8%B3%D8%AC%D9%8A%D9%84-%D8%A7%D9%84%D9%85%D9%86%D8%B4%D8%A3%D8%A9-%D8%A7%D9%84%D8%BA%D8%B0%D8%A7%D8%A6%D9%8A%D8%A9-%D9%81%D9%8A-%D8%A7%D9%84%D9%86%D8%B8%D8%A7%D9%85%D8%9F",
+    "language": "ar",
+    "business_activity": "food",
+    "region": "national",
+    "enabled": true
+  },
+  {
+    "authority": "SFDA / FIRS",
+    "category": "food_registration_system",
+    "source_type": "webpage",
+    "url": "https://sfda.gov.sa/ar/eservices/%D8%A7%D9%84%D9%86%D8%B8%D8%A7%D9%85-%D8%A7%D9%84%D8%A5%D9%84%D9%83%D8%AA%D8%B1%D9%88%D9%86%D9%8A-%D9%84%D8%AA%D8%B3%D8%AC%D9%8A%D9%84-%D8%A7%D9%84%D8%BA%D8%B0%D8%A7%D8%A1-firs",
+    "language": "ar",
+    "business_activity": "food",
+    "region": "national",
+    "enabled": true
+  },
+  {
+    "authority": "SASO / Saber",
+    "category": "product_conformity_certificate",
+    "source_type": "webpage",
+    "url": "https://saso.gov.sa/en/eservices/pages/maineservicesdetails.aspx?serviceid=396",
+    "language": "en",
+    "business_activity": "product_import_manufacturing",
+    "region": "national",
+    "enabled": true
+  },
+  {
+    "authority": "SASO / Saber",
+    "category": "shipment_certificate_imported_products",
+    "source_type": "webpage",
+    "url": "https://www.saso.gov.sa/en/eservices/pages/maineservicesdetails.aspx?serviceid=397",
+    "language": "en",
+    "business_activity": "product_import",
+    "region": "national",
+    "enabled": true
+  },
+  {
+    "authority": "SASO",
+    "category": "product_safety_and_conformity_system",
+    "source_type": "webpage",
+    "url": "https://saso.gov.sa/ar/sectors/product-safety/Pages/Specifications-Quality-System.aspx",
+    "language": "ar",
+    "business_activity": "product_import_manufacturing",
+    "region": "national",
+    "enabled": true
+  },
+  {
+    "authority": "Ministry of Tourism",
+    "category": "tourism_hospitality_requirements",
+    "source_type": "pdf",
+    "url": "https://cdn.mt.gov.sa/files/A360/doc/Investor-Rights-EN.pdf",
+    "language": "en",
+    "business_activity": "tourism_hospitality",
+    "region": "national",
+    "enabled": true
+  },
+  {
+    "authority": "Transport General Authority / Naql",
+    "category": "passenger_transport_facilities_regulation",
+    "source_type": "webpage",
+    "url": "https://www.tga.gov.sa/Regulations/Regulation/4790",
+    "language": "ar",
+    "business_activity": "transport",
+    "region": "national",
+    "enabled": true
+  },
+  {
+    "authority": "CST",
+    "category": "general_class_telecommunications_license",
+    "source_type": "webpage",
+    "url": "https://www.cst.gov.sa/en/business/services/General-Class-License",
+    "language": "en",
+    "business_activity": "telecommunications",
+    "region": "national",
+    "enabled": true
+  },
+  {
+    "authority": "CST",
+    "category": "general_class_license_regulations",
+    "source_type": "webpage",
+    "url": "https://www.cst.gov.sa/en/regulations-and-licenses/regulations/Document-1557",
+    "language": "en",
+    "business_activity": "telecommunications",
+    "region": "national",
+    "enabled": true
+  },
+  {
+    "authority": "General Entertainment Authority",
+    "category": "entertainment_licensing_regulations",
+    "source_type": "pdf",
+    "url": "https://gea.gov.sa/wp-content/uploads/2023/07/Regulation-for-Licensing-and-Supervising-Entertainment-and-Support-Activities-2023.pdf",
+    "language": "en",
+    "business_activity": "entertainment",
+    "region": "national",
+    "enabled": true
+  },
+  {
+    "authority": "General Entertainment Authority",
+    "category": "event_safety_and_quality_requirements",
+    "source_type": "pdf",
+    "url": "https://www.gea.gov.sa/wp-content/uploads/2021/08/201004-GEA_Guidelines_Chapter1-v4.pdf",
+    "language": "ar",
+    "business_activity": "entertainment_events",
+    "region": "national",
+    "enabled": true
+  },
+  {
+    "authority": "Ministry of Culture / Film Commission / Abde'a",
+    "category": "film_and_tv_content_production_license",
+    "source_type": "webpage",
+    "url": "https://abdea.moc.gov.sa/film-request/produce-visual-audio-content",
+    "language": "ar",
+    "business_activity": "film_media_production",
+    "region": "national",
+    "enabled": true
+  },
+  {
+    "authority": "Ministry of Culture / Film Commission / Abde'a",
+    "category": "cinema_operation_license",
+    "source_type": "webpage",
+    "url": "https://abdea.moc.gov.sa/film-request/practicing-cinema-operating-request",
+    "language": "ar",
+    "business_activity": "cinema",
+    "region": "national",
+    "enabled": true
+  },
+  {
+    "authority": "Ministry of Culture / Music Commission / Abde'a",
+    "category": "music_practitioner_license",
+    "source_type": "webpage",
+    "url": "https://abdea.moc.gov.sa/license-request/practitioner-to-perform-music",
+    "language": "ar",
+    "business_activity": "music",
+    "region": "national",
+    "enabled": true
+  },
+  {
+    "authority": "Ministry of Culture / Theater and Performing Arts Commission / Abde'a",
+    "category": "performing_arts_theater_operation_license",
+    "source_type": "webpage",
+    "url": "https://abdea.moc.gov.sa/theater-authority/performing-arts-theater-operating",
+    "language": "ar",
+    "business_activity": "theater_performing_arts",
+    "region": "national",
+    "enabled": true
+  },
+  {
+    "authority": "General Authority of Media Regulation",
+    "category": "media_license",
+    "source_type": "webpage",
+    "url": "https://my.gov.sa/services/20528",
+    "language": "ar",
+    "business_activity": "media",
+    "region": "national",
+    "enabled": true
+  },
+  {
+    "authority": "REGA / FAL",
+    "category": "real_estate_brokerage_license",
+    "source_type": "webpage",
+    "url": "https://rega.gov.sa/en/rega-services/eservices/issuing-fal-license-for-brokerage-and-marketing-for-establishments/",
+    "language": "en",
+    "business_activity": "real_estate",
+    "region": "national",
+    "enabled": true
+  },
+  {
+    "authority": "REGA / FAL",
+    "category": "property_management_license",
+    "source_type": "webpage",
+    "url": "https://rega.gov.sa/en/rega-services/eservices/fal-license-for-property-management-issuance/",
+    "language": "en",
+    "business_activity": "real_estate",
+    "region": "national",
+    "enabled": true
+  },
+  {
+    "authority": "REGA",
+    "category": "real_estate_brokerage_implementing_regulations",
+    "source_type": "webpage",
+    "url": "https://rega.gov.sa/en/laws-and-decisions/regulations-and-by-laws/regulations/implementing-regulations-of-real-estate-brokerage-law/",
+    "language": "en",
+    "business_activity": "real_estate",
+    "region": "national",
+    "enabled": true
+  },
+  {
+    "authority": "Saudi Contractors Authority",
+    "category": "contractor_membership_requirements",
+    "source_type": "webpage",
+    "url": "https://www.sca.sa/en/faqs",
+    "language": "en",
+    "business_activity": "contracting",
+    "region": "national",
+    "enabled": true
+  },
+  {
+    "authority": "SOCPA",
+    "category": "accounting_profession_law",
+    "source_type": "pdf",
+    "url": "https://socpa.org.sa/SOCPA/files/06/066109b0-5a63-47b6-8fd5-10546e7ca91b.pdf",
+    "language": "ar",
+    "business_activity": "accounting_audit",
+    "region": "national",
+    "enabled": true
+  },
+  {
+    "authority": "SOCPA",
+    "category": "professional_registration",
+    "source_type": "webpage",
+    "url": "https://www.socpa.org.sa/Sites/E-Services/M/11.aspx?t=content",
+    "language": "ar",
+    "business_activity": "accounting_audit",
+    "region": "national",
+    "enabled": true
+  },
+  {
+    "authority": "Saudi Council of Engineers",
+    "category": "engineering_professional_accreditation",
+    "source_type": "webpage",
+    "url": "https://beta.saudieng.sa/English/Eservices/Accreditation/Pages/GoalsAndConditions.aspx",
+    "language": "en",
+    "business_activity": "engineering",
+    "region": "national",
+    "enabled": true
+  },
+  {
+    "authority": "Saudi Council of Engineers",
+    "category": "engineering_regulations_and_procedures",
+    "source_type": "webpage",
+    "url": "https://beta.saudieng.sa/English/RegulationsAndProcedures/Pages/default.aspx",
+    "language": "en",
+    "business_activity": "engineering",
+    "region": "national",
+    "enabled": true
+  },
+  {
+    "authority": "Saudi Central Bank (SAMA)",
+    "category": "payment_service_provider_licensing",
+    "source_type": "webpage",
+    "url": "https://www.rulebook.sama.gov.sa/en/entiresection/10955",
+    "language": "en",
+    "business_activity": "financial_services_payments",
+    "region": "national",
+    "enabled": true
+  },
+  {
+    "authority": "Saudi Central Bank (SAMA)",
+    "category": "payment_services_regulations",
+    "source_type": "pdf",
+    "url": "https://www.sama.gov.sa/en-US/payment/SiteAssets/PSPs%20Regulations%2016.pdf",
+    "language": "en",
+    "business_activity": "financial_services_payments",
+    "region": "national",
+    "enabled": true
+  },
+ 
+  {
+    "authority": "Insurance Authority",
+    "category": "insurance_licensing",
+    "source_type": "webpage",
+    "url": "https://www.ia.gov.sa/en/regulations-and-licenses/apply-for-licenses",
+    "language": "en",
+    "business_activity": "insurance",
+    "region": "national",
+    "enabled": true
+  },
+  {
+    "authority": "Ministry of Education",
+    "category": "private_school_license",
+    "source_type": "webpage",
+    "url": "https://www.moe.gov.sa/en/knowledgecenter/eservices/pages/tarkees.aspx",
+    "language": "en",
+    "business_activity": "private_education",
+    "region": "national",
+    "enabled": true
+  },
+  {
+    "authority": "TVTC",
+    "category": "private_training_facility_license",
+    "source_type": "webpage",
+    "url": "https://tvtc.gov.sa/en/ContactUS/FAQs/Pages/pt-q16.aspx",
+    "language": "en",
+    "business_activity": "private_training",
+    "region": "national",
+    "enabled": true
+  },
+  {
+    "authority": "Ministry of Health",
+    "category": "private_health_institution_licensing",
+    "source_type": "webpage",
+    "url": "https://www.moh.gov.sa/eservices/licences/pages/default.aspx",
+    "language": "ar",
+    "business_activity": "healthcare",
+    "region": "national",
+    "enabled": true
+  },
+  {
+    "authority": "Ministry of Health",
+    "category": "private_health_institutions_law",
+    "source_type": "pdf",
+    "url": "https://www.moh.gov.sa/Documents/Private-Health-Institutions-Law.pdf",
+    "language": "ar",
+    "business_activity": "healthcare",
+    "region": "national",
+    "enabled": true
+  },
+  {
+    "authority": "Ministry of Health",
+    "category": "health_facility_investor_guide",
+    "source_type": "pdf",
+    "url": "https://www.moh.gov.sa/eServices/Licences/Documents/Investor-Manual.pdf",
+    "language": "ar",
+    "business_activity": "healthcare",
+    "region": "national",
+    "enabled": true
+  },
+  {
+    "authority": "Saudi Commission for Health Specialties / Mumaris+",
+    "category": "professional_registration",
+    "source_type": "webpage",
+    "url": "https://scfhs.org.sa/en/node/1985",
+    "language": "en",
+    "business_activity": "healthcare_profession",
+    "region": "national",
+    "enabled": true
+  },
+  {
+    "authority": "Saudi Commission for Health Specialties / Mumaris+",
+    "category": "classification_registration_dependencies",
+    "source_type": "webpage",
+    "url": "https://scfhs.org.sa/en/mumaris-faq",
+    "language": "en",
+    "business_activity": "healthcare_profession",
+    "region": "national",
+    "enabled": true
+  },
+  {
+    "authority": "National Center for Non-Profit Sector",
+    "category": "nonprofit_foundation_establishment",
+    "source_type": "webpage",
+    "url": "https://ncnp.gov.sa/ar/services/%D8%AA%D8%A3%D8%B3%D9%8A%D8%B3-%D9%85%D8%A4%D8%B3%D8%B3%D8%A9-%D8%A3%D9%87%D9%84%D9%8A%D8%A9",
+    "language": "ar",
+    "business_activity": "nonprofit",
+    "region": "national",
+    "enabled": true
+  },
+  {
+    "authority": "MHRSD / Musaned",
+    "category": "domestic_labor_recruitment_regulation",
+    "source_type": "webpage",
+    "url": "https://www.hrsd.gov.sa/ur/node/5575980",
+    "language": "en",
+    "business_activity": "domestic_labor_recruitment",
+    "region": "national",
+    "enabled": true
+  },
+  {
+    "authority": "MHRSD / Musaned",
+    "category": "domestic_labor_service_requirements",
+    "source_type": "webpage",
+    "url": "https://www.hrsd.gov.sa/en/ministry-services/services/%D8%AE%D8%AF%D9%85%D8%A9-%D8%A7%D9%84%D8%AA%D8%B9%D8%A7%D9%82%D8%AF-%D8%AD%D8%B3%D8%A8-%D8%A7%D9%84%D9%85%D9%88%D8%A7%D8%B5%D9%81%D8%A7%D8%AA",
+    "language": "en",
+    "business_activity": "domestic_labor",
+    "region": "national",
+    "enabled": true
+  },
+  {
+    "authority": "ZATCA",
+    "category": "zatca_services",
+    "source_type": "webpage",
+    "url": "https://zatca.gov.sa/ar/eServices/Pages/eServices-009.aspx",
+    "language": "ar",
+    "business_activity": "general",
+    "region": "national",
+    "enabled": true
+  },
+  {
+    "authority": "ZATCA",
+    "category": "zatca_services",
+    "source_type": "webpage",
+    "url": "https://zatca.gov.sa/ar/eServices/Pages/eServices-225.aspx",
+    "language": "ar",
+    "business_activity": "general",
+    "region": "national",
+    "enabled": true
+  },
+  {
+    "authority": "ZATCA",
+    "category": "zatca_services",
+    "source_type": "webpage",
+    "url": "https://zatca.gov.sa/ar/eServices/Pages/eServices-234.aspx",
+    "language": "ar",
+    "business_activity": "general",
+    "region": "national",
+    "enabled": true
+  },
+  {
+    "authority": "ZATCA",
+    "category": "zatca_services",
+    "source_type": "webpage",
+    "url": "https://zatca.gov.sa/ar/eServices/Pages/eServices-048.aspx",
+    "language": "ar",
+    "business_activity": "general",
+    "region": "national",
+    "enabled": true
+  },
+  {
+    "authority": "ZATCA",
+    "category": "zatca_services",
+    "source_type": "webpage",
+    "url": "https://zatca.gov.sa/ar/eServices/Pages/eServices-001.aspx",
+    "language": "ar",
+    "business_activity": "general",
+    "region": "national",
+    "enabled": true
+  },
+  {
+    "authority": "ZATCA",
+    "category": "zatca_services",
+    "source_type": "webpage",
+    "url": "https://zatca.gov.sa/ar/eServices/UserManual/Pages/UserManual-001.aspx?service=eServices-001",
+    "language": "ar",
+    "business_activity": "general",
+    "region": "national",
+    "enabled": true
+  },
+  {
+    "authority": "ZATCA",
+    "category": "e_invoicing",
+    "source_type": "webpage",
+    "url": "https://zatca.gov.sa/ar/E-Invoicing/Pages/default.aspx",
+    "language": "ar",
+    "business_activity": "general",
+    "region": "national",
+    "enabled": true
+  },
+  {
+    "authority": "ZATCA",
+    "category": "e_invoicing",
+    "source_type": "webpage",
+    "url": "https://zatca.gov.sa/ar/E-Invoicing/Introduction/Pages/Roll-out-phases.aspx",
+    "language": "ar",
+    "business_activity": "general",
+    "region": "national",
+    "enabled": true
+  },
+  {
+    "authority": "ZATCA",
+    "category": "e_invoicing",
+    "source_type": "webpage",
+    "url": "https://zatca.gov.sa/ar/E-Invoicing/Introduction/Guidelines/Pages/default.aspx",
+    "language": "ar",
+    "business_activity": "general",
+    "region": "national",
+    "enabled": true
+  },
+  {
+    "authority": "ZATCA",
+    "category": "zatca_services",
+    "source_type": "webpage",
+    "url": "https://zatca.gov.sa/ar/eServices/Pages/eServices-273.aspx",
+    "language": "ar",
+    "business_activity": "general",
+    "region": "national",
+    "enabled": true
+  },
+  {
+    "authority": "ZATCA",
+    "category": "zatca_services",
+    "source_type": "webpage",
+    "url": "https://zatca.gov.sa/ar/eServices/Pages/Product-Identification.aspx",
+    "language": "ar",
+    "business_activity": "general",
+    "region": "national",
+    "enabled": true
+  },
+  {
+  "authority": "ZATCA",
+  "category": "e_invoicing_overview",
+  "source_type": "webpage",
+  "url": "https://zatca.gov.sa/ar/E-Invoicing/Introduction/Pages/What-is-e-invoicing.aspx",
+  "language": "ar",
+  "business_activity": "general",
+  "region": "national",
+  "enabled": true
+  },
+{
+  "authority": "ZATCA",
+  "category": "e_invoicing_phase1_requirements",
+  "source_type": "webpage",
+  "url": "https://zatca.gov.sa/ar/E-Invoicing/PreparingYourBusiness/Phase1/Pages/How-to-prepare.aspx",
+  "language": "ar",
+  "business_activity": "general",
+  "region": "national",
+  "enabled": true
+}
+]

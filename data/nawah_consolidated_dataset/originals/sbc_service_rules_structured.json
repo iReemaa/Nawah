@@ -1,0 +1,138 @@
+{
+  "services": [
+    {
+      "serviceId": "sole_proprietorship_cr",
+      "titleAr": "قيد سجل تجاري لمؤسسة فردية",
+      "titleEn": "Recording Commercial Registration for Sole Proprietorship",
+      "descriptionAr": "هذه الخدمة تمكن المستثمر من البدء في مُمارسة النشاط التجاري.",
+      "descriptionEn": "This service enables investors to start engaging in commercial activity.",
+      "termsAr": [
+        "ألا يقل العمر عن 18سنة.",
+        "ألا يكون موظفًا حكوميًا.",
+        "ألا يكون المالك ممتلكًا سجلًا تجاريًا نشطًا لمؤسسة فردية.",
+        "تقديم موافقة الجهة المرخصة في حال كان النشاط المُمَارس من الأنشطة التي تتطلب ترخيصًا قبل الإصدار.",
+        "تحديد ممارسة التجارة الإلكترونية في حال كان مقدم الطلب ممارسًا لها.",
+        "تقديم المستندات التالية من وزارة الموارد البشرية والتنمية الاجتماعية أو المركز الوطني لتنمية القطاع غير الربحي في حال كان طالب القيد جمعية تعاونية أو خيرية:",
+        "تقديم صورة من شهادة التسجيل.",
+        "تقديم نسخة من الخطاب الذي يتضمن الموافقة على مجلس إدارة المؤسسة مع نسخة من نظام المؤسسة.",
+        "تقديم نسخة من نظام الجمعية التعاونية.",
+        "وجود تفويض من مجلس المؤسسة لشخص سعودي لاستكمال إجراءات القيد في السجل التجاري.",
+        "التحقق من الآتي في حال كان طالب القيد مؤسسة وقفية:",
+        "تقديم صك الوقفية من محكمة الأحوال الشخصية.",
+        "وجود وكالة شرعية من الواقف أو ناظر الوقف أو مجلس النظارة لاستخراج سجل تجاري بصك الوقفية.",
+        "أقر بالموافقة على سياسة الخصوصية لدى  وزارة التجارة."
+      ],
+      "termsEn": [
+        "The applicant must not be less than 18 years.",
+        "The applicant must not hold a government position.",
+        "The owner must not have an active commercial registration for a sole proprietorship.",
+        "The approval of the licensing authority is required if the business activity conducted is among those necessitating license before issuance.",
+        "The practice of e-commerce must be determined if the applicant engages in it.",
+        "In the event that the applicant is a cooperative or charitable association, the following documents must be submitted through the Ministry of Human Resources and Social Development or the National Center for Non-Profit Sector:",
+        "A copy of the registration certificate must be submitted.",
+        "A copy of the letter that includes the approval of the establishment’s board of directors, along with a copy of the establishment’s bylaws, must be submitted.",
+        "A copy of the cooperative association’s bylaws must be submitted.",
+        "An authorization from the establishment's board must be provided, appointing a Saudi national to complete the registration procedures in the commercial registration.",
+        "The following  must be verified if the entity is an endowment institution:",
+        "A copy of the endowment (waqf) deed issued by the Personal Status Court must be submitted.",
+        "A legal power of attorney must be provided by the endower, the endowment administrator, or the board of trustees authorizing the issuance of a commercial registration based on the endowment (waqf) deed.",
+        "I hereby acknowledge and consent to the Privacy Policy for Ministry of Commerce."
+      ],
+      "eligibilityRules": [
+        {
+          "rule": "minimum_age",
+          "value": 18
+        },
+        {
+          "rule": "government_employee",
+          "allowed": false
+        },
+        {
+          "rule": "existing_active_sole_proprietorship_cr",
+          "allowed": false
+        }
+      ],
+      "conditionalRules": [
+        {
+          "condition": "activity_requires_pre_license",
+          "sourceField": "licenseRequiredBeforeIssue",
+          "requirement": "obtain_pre_authority_approval",
+          "authorityField": "preAuthority",
+          "relationship": "BLOCKING"
+        },
+        {
+          "condition": "user_practices_ecommerce",
+          "requirement": "declare_ecommerce"
+        }
+      ]
+    },
+    {
+      "serviceId": "trade_name_reservation",
+      "titleAr": "حجز اسم تجاري",
+      "titleEn": "Trade Name Reservation",
+      "descriptionAr": "هذه الخدمة تمكن المستثمر من حجز اسم تجاري لمدة (60) يومًا.",
+      "descriptionEn": "This service enables investors to reserve a trade name for a period of 60 days.",
+      "requirementsAr": [
+        "ألا يقل العمر عن 18 سنة.",
+        "أن يكون مقدم الطلب هو المستفيد من الاسم التجاري، أو مفوضًا عنه.",
+        "أن يتكون الاسم من ألفاظ عربية، أو معربة، أو من حروف، أو أرقام عربية، أو من واحد أو أكثر منهما، في حال حجز اسم تجاري باللغة العربية.",
+        "أن يتكون الاسم من ألفاظ أو حروف أو أرقام إنجليزية، أو من واحد أو أكثر منها، في حال حجز اسم تجاري باللغة الإنجليزية.",
+        "ألا يكون مخالفًا للنظام العام، أو الآداب العامة، أو يؤدي إلى التضليل، أو محظور استعماله.",
+        "ألا يشابه اسما تجاريًا محجوزًا أو مقيدًا في السجل التجاري أيًا كان نوع النشاط.",
+        "ألا يشابه اسمًا تجاريًا، أو علامة تجارية مشهورة عالميًا، أو يشابه علامة تجارية مسجلة أو مشهورة في المملكة.",
+        "ألا يحتوي على معنى أو دلالة أو مضمونًا سياسيًا أو عسكريًا أو دينيًا.",
+        "ألا يشابه اسمًا أو شارة شرفية أو رمزًا خاصًا بأي من المنظمات المحلية أو الإقليمية أو الدولية أو إحدى مؤسساتها.",
+        "ألا يحتوي على اسم محظور حسب قائمة الأسماء المحظورة.",
+        "ألا يحتوي على اسم حكومي أو جهة حكومية أو شبه حكومية.",
+        "الالتزام بضوابط حجز أو قيد اسم (السعودية)، أو أسماء المدن والمناطق والأماكن العامة، وفق الضوابط الواردة في نظام الأسماء التجارية ولائحته التنفيذية.",
+        "التقيد بالأحكام الواردة في اللائحة التنفيذية المتعلقة بحجز الأسماء العائلية بصفة الأسماء التجارية.",
+        "تقديم خطاب من الجهة بطلب الخدمة، في حال كان المستفيد جهة حكومية أو جهة تابعة لها.",
+        "تقديم ترخيص الجمعية أو شهادة الوقف عند طلب حجز اسم تجاري لجمعية أو وقف.",
+        "تقديم شهادة ملكية العلامة التجارية عند التقدم بطلب حجز اسم تجاري بناء على علامة تجارية."
+      ],
+      "requirementsEn": [
+        "The age must not be less than 18 years.",
+        "The applicant must be the beneficiary of the trade name or authorized on their behalf with a valid authorization.",
+        "The name must consist of Arabic words, Arabized words, letters, Arabic numbers, or one or more of these, if a trade name in Arabic is being reserved.",
+        "The name must consist of English words, letters, numbers, or one or more of these, if a trade name in English is being reserved.",
+        "It must not be contrary to public order, public morals, lead to deception, or be prohibited from use.",
+        "It must not resemble a trade name that is reserved or registered in the commercial registration, regardless of the type of activity.",
+        "It must not resemble a trade name, a globally renowned trademark, or a registered or well-known trademark in the Kingdom.",
+        "It must not contain any political, military, or religious meaning, indication, or connotation.",
+        "It must not resemble the name, honorary title, or symbol of any local, regional, or international organization or any of its institutions.",
+        "It must not contain a prohibited name as per the list of prohibited names.",
+        "It must not contain the name of a government or a semi-government  entity.",
+        "The regulations for reserving or registering the name (Saudi Arabia), or the names of cities, regions, and public places, must be adhered to in accordance with the regulations outlined in the Trade Name Law and its Executive Regulations.",
+        "The provisions outlined in the executive regulations related to reserving family names as trade names must be observed.",
+        "A letter from the entity requesting the service must be provided if the beneficiary is a government entity or an entity affiliated with it.",
+        "When reserving a trade name for an association or endowment, the applicant must provide the association’s license or the endowment certificate.",
+        "A trademark ownership certificate must be submitted when requesting a trade name reservation based on a registered trademark."
+      ],
+      "disclaimerAr": " ",
+      "disclaimerEn": " ",
+      "eligibilityRules": [
+        {
+          "rule": "minimum_age",
+          "value": 18
+        },
+        {
+          "rule": "beneficiary_or_authorized_representative",
+          "required": true
+        }
+      ]
+    }
+  ],
+  "dependencies": [
+    {
+      "dependencyId": "reserved_trade_name_before_cr",
+      "appliesWhen": {
+        "tradeNameType": "RESERVED",
+        "hasExistingReservation": false
+      },
+      "relationship": "BLOCKING",
+      "requiredService": "trade_name_reservation",
+      "blocksService": "sole_proprietorship_cr",
+      "resumeAfter": "trade_name_reservation_completed"
+    }
+  ]
+}

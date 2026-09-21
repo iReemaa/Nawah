@@ -1,0 +1,252 @@
+{
+  "created_at": "2026-09-21T07:11:09.777568+00:00",
+  "input_file": "data/processed/zatca_extraction_review.json",
+  "input_file_sha256": "77e5ff3726a86cde0ced805741316773dd3906078c085120ca3b95442749379e",
+  "total_sources": 11,
+  "approved": 0,
+  "note": "Conservative text boundaries only. All entries require human review and original-page verification.",
+  "results": [
+    {
+      "source_url": "https://zatca.gov.sa/ar/eServices/Pages/eServices-009.aspx",
+      "metadata": {
+        "authority": "ZATCA",
+        "category": "zatca_services",
+        "source_url": "https://zatca.gov.sa/ar/eServices/Pages/eServices-009.aspx",
+        "source_type": "webpage",
+        "language": "ar",
+        "business_activity": "general",
+        "region": "national",
+        "ingested_at": "2026-09-21T07:02:19.424259+00:00"
+      },
+      "review_status": "PENDING_HUMAN_REVIEW",
+      "original_text_sha256": "0de2d3e76fb664d51ef71bcad80c17e1bfe8f6d4bf06d6e5ca6738c37e26f98b",
+      "extracted_section": "الخدمات الزكوية والضريبية والجمركية تقديم إقرار ضريبة القيمة المضافة استمع تقديم إقرار ضريبة القيمة المضافة ابدأ https: //login. zatca. gov. sa/irj/portal? ume. logon. locale=ar&login=angular&eTile=1022 ضريبة القيمة المضافة; الخدمات الاستباقية والرسائل النصية; تدعم الذكاء الاصطناعي خدمة إلكترونية تتيح تقديم الإقرارات المتعلقة بضريبة القيمة المضافة. حيث ينبغي على الأشخاص الخاضعين لضريبة القيمة المضافة تقديم إقراراتهم الضريبية والإفصاح عن جميع التعاملات ذات الصلة بالمبيعات والمشتريات الخاضعة للضريبة، و بعد ذلك تقوم الهيئة بالتحقق من الإقرارات باستخدام تقنيات الذكاء الاصطناعي. الخطوات الشروط المستندات المطلوبة https: //www. youtube. com/embed/1Zz8DJskjJ8? si=CxVPGRMvWcT9V41B خطوات الخدمة محتوى الصفحة تسجيل الدخول إلى البوابة الإلكترونية للهيئة الانتقال إلى تبويب الضرائب غير المباشرة - ضريبة القيمة المضافة الانتقال إلى الإقرارات الضريبية تحديد الإقرار المراد تقديمه تقديم نموذج إقرار ضريبة القيمة المضافة تسليم الطلب وإرسال إشعار باستلام الإقرار ومبلغ الفاتورة عن طريق الرسائل القصيرة والبريد الإلكتروني يتم التحقق من البيانات باستخدام أدوات الذكاء الاصطناعي بيانات إجمالي المبيعات بيانات إجمالي المشتريات الفئة المستهدفة جميع الأشخاص المسجَّلين في ضريبة القيمة المضافة مدة تنفيذ الخدمة 5 دقائق تكلفة الخدمة لا يوجد قنوات الخدمة مركز الاتصال الفرع الموقع الإلكتروني تطبيق الهاتف الجوال مدراء العلاقة الدردشة المباشرة تويتر البريد الإلكتروني نعم لا لا لا لا نعم لا لغات تقديم الخدمة العربية / الإنجليزية تاريخ إصدار الخدمة | 10-08-1440 | 15-04-2019 توفر رسائل نصية نعم متوفر غير متوفر قنوات السداد نعم نعم نعم مجانية الأسئلة الشائعة 3 الأسئلة الشائعة الهاتف 19993 البريد الإلكتروني info@zatca. gov. sa الاتصال عبر X @Zatca_care تحميل دليل الخدمة /ar/eServices/UserManual/Pages/UserManual-009. aspx",
+      "warnings": [
+        "URLs may be corrupted by upstream cleaning; verify links on the original page.",
+        "Not verified for legal completeness, applicability or currency."
+      ],
+      "approved": false
+    },
+    {
+      "source_url": "https://zatca.gov.sa/ar/eServices/Pages/eServices-225.aspx",
+      "metadata": {
+        "authority": "ZATCA",
+        "category": "zatca_services",
+        "source_url": "https://zatca.gov.sa/ar/eServices/Pages/eServices-225.aspx",
+        "source_type": "webpage",
+        "language": "ar",
+        "business_activity": "general",
+        "region": "national",
+        "ingested_at": "2026-09-21T07:02:21.055858+00:00"
+      },
+      "review_status": "PENDING_HUMAN_REVIEW",
+      "original_text_sha256": "fe47212236c31283217893bf27d8de37031b4f262d9b18fe09bc94e6da7f7039",
+      "extracted_section": "الخدمات الزكوية والضريبية والجمركية التسجيل في برنامج المشغل الاقتصادي السعودي المعتمد استمع التسجيل في برنامج المشغل الاقتصادي السعودي المعتمد ابدأ https: //zatca. gov. sa/ar/HelpCenter/AEO/Pages/default. aspx الخدمات الجمركية; الخدمات الاستباقية والرسائل النصية خدمة إلكترونية تتيح للمنشآت التجارية الانضمام لبرنامج المشغل الاقتصادي السعودي المعتمد الذي يقدم حزمة من المزايا والتسهيلات للمنشآت المستوفية للشروط والمعايير المنصوص عليها في سياسة البرنامج الخطوات الشروط المستندات المطلوبة https: //www. youtube. com/embed/RSv8yYz-ErA? si=onjizdheuTW68gXh خطوات الخدمة محتوى الصفحة الدخول إلى الخدمة تسجيل الدخول تعبئة الحقول وإرفاق المستندات المطلوبة تقديم الطلب <ul><li>&#160; حساب فعال في موقع هيئة الزكاة والضريبة والجمارك</li></ul> الفئة المستهدفة المستوردون والموردون التجار مدة تنفيذ الخدمة تكلفة الخدمة قنوات الخدمة مركز الاتصال الفرع الموقع الإلكتروني تطبيق الهاتف الجوال مدراء العلاقة الدردشة المباشرة تويتر البريد الإلكتروني لا لا لا لا لا نعم لا لغات تقديم الخدمة تاريخ إصدار الخدمة | 19-12-1442 | 29-07-2021 توفر رسائل نصية نعم متوفر غير متوفر قنوات السداد لا لا لا مجانية الأسئلة الشائعة 18 الأسئلة الشائعة الهاتف 19993 البريد الإلكتروني info@zatca. gov. sa الاتصال عبر X @Zatca_care تحميل دليل الخدمة https: //zatca. gov. sa/ar/HelpCenter/AEO/Documents/AEO_UserManual. pdf",
+      "warnings": [
+        "HTML fragments remain; preserve original wording and review manually.",
+        "URLs may be corrupted by upstream cleaning; verify links on the original page.",
+        "Duration/cost fields appear empty; do not infer values.",
+        "Not verified for legal completeness, applicability or currency."
+      ],
+      "approved": false
+    },
+    {
+      "source_url": "https://zatca.gov.sa/ar/eServices/Pages/eServices-234.aspx",
+      "metadata": {
+        "authority": "ZATCA",
+        "category": "zatca_services",
+        "source_url": "https://zatca.gov.sa/ar/eServices/Pages/eServices-234.aspx",
+        "source_type": "webpage",
+        "language": "ar",
+        "business_activity": "general",
+        "region": "national",
+        "ingested_at": "2026-09-21T07:02:23.042859+00:00"
+      },
+      "review_status": "PENDING_HUMAN_REVIEW",
+      "original_text_sha256": "d707e5148129e0cbb6857d840e4c7faafa231262086982c08903f3994db28e11",
+      "extracted_section": "الخدمات الزكوية والضريبية والجمركية التسجيل كمستورد أو مصدر استمع التسجيل كمستورد أو مصدر ابدأ https: //zatca. fasah. sa/ar/login/1.0/ الخدمات الجمركية; الخدمات الاستباقية والرسائل النصية خدمة إلكترونية توفر للتجار التسجيل في منصة فسح لبدء أعمال الاستيراد والتصدير. الخطوات الشروط المستندات المطلوبة خطوات الخدمة محتوى الصفحة الدخول إلى الخدمة تسجيل الدخول إلى منصة فسح تعبئة الحقول تفعيل الحساب سيصلك إشعار عن طريق الرسائل النصية والبريد الإلكتروني عند اكتمال الطلب <ul><li>رقم السجل التجاري أو رقم الهوية<br/></li></ul> الفئة المستهدفة المستوردون والموردون التجار مدة تنفيذ الخدمة تكلفة الخدمة قنوات الخدمة مركز الاتصال الفرع الموقع الإلكتروني تطبيق الهاتف الجوال مدراء العلاقة الدردشة المباشرة تويتر البريد الإلكتروني لا لا لا لا لا نعم لا لغات تقديم الخدمة تاريخ إصدار الخدمة | 20-12-1442 | 30-07-2021 توفر رسائل نصية نعم متوفر غير متوفر قنوات السداد لا لا لا مجانية الأسئلة الشائعة 18 الأسئلة الشائعة الهاتف 19993 البريد الإلكتروني info@zatca. gov. sa الاتصال عبر X @Zatca_care تحميل دليل الخدمة /ar/eServices/Documents/Register%20a%20New%20Importer%20or%20Exporter. pdf",
+      "warnings": [
+        "HTML fragments remain; preserve original wording and review manually.",
+        "URLs may be corrupted by upstream cleaning; verify links on the original page.",
+        "Duration/cost fields appear empty; do not infer values.",
+        "Not verified for legal completeness, applicability or currency."
+      ],
+      "approved": false
+    },
+    {
+      "source_url": "https://zatca.gov.sa/ar/eServices/Pages/eServices-048.aspx",
+      "metadata": {
+        "authority": "ZATCA",
+        "category": "zatca_services",
+        "source_url": "https://zatca.gov.sa/ar/eServices/Pages/eServices-048.aspx",
+        "source_type": "webpage",
+        "language": "ar",
+        "business_activity": "general",
+        "region": "national",
+        "ingested_at": "2026-09-21T07:02:25.125606+00:00"
+      },
+      "review_status": "PENDING_HUMAN_REVIEW",
+      "original_text_sha256": "de473f6d0bcd94c81e0bdf0e3dc769446f1564a6e72550f3e3e6527d31df9999",
+      "extracted_section": "الخدمات الزكوية والضريبية والجمركية التسجيل في الزكاة للمنشآت استمع التسجيل في الزكاة للمنشآت ابدأ https: //login. zatca. gov. sa/irj/portal? ume. logon. locale=ar&login=angular الخدمات الزكوية; الخدمات الاستباقية والرسائل النصية خدمة إلكترونية للتسجيل في الزكاة، حيث يخضع للزكاة كل نشاط يقصد به الكسب من مال أو عمل. وعند تسجيل المنشأة في وزارة التجارة، يتم إنشاء رقم مميز للمنشأة وفور إنشائه يتعين على المكلَّف تسجيل الدخول إلى البوابة الإلكترونية لهيئة الزكاة والضريبة والجمارك لاستكمال التسجيل الأولي، وبعد انتهاء العملية مباشرة، سيتم تسجيل المكلَّف بشكل استباقي في خدمات الزكاة. الخطوات الشروط المستندات المطلوبة https: //www. youtube. com/embed/g8SBZpvFErs? si=90SMWCqz64CLW2lG خطوات الخدمة محتوى الصفحة إكمال التسجيل لدى وزارة التجارة تسجيل الدخول إلى موقع الهيئة تسجيل الدخول إلى البوابة الإلكترونية الانتقال إلى الزكاة والضريبة والجمارك التسجيل في البوابة الإلكترونية للهيئة إكمال نموذج تسجيل الزكاة/ضريبة الدخل سيصلك إشعار عن طريق الرسائل النصية والبريد الإلكتروني عند اكتمال الطلب <ul><li>تسجيل المنشأة في وزارة التجارة</li></ul><br/> <ul><li> نسخة من الهوية</li><li>تحديد نوع الهوية: جواز السفر أو الهوية الوطنية</li><li>عقد تأسيس المنشأة (للشركات فقط)</li></ul> الفئة المستهدفة جميع المنشآت التي تمارس نشاطًا تجاريًا وتخضع لأنظمة الزكاة مدة تنفيذ الخدمة تكلفة الخدمة قنوات الخدمة مركز الاتصال الفرع الموقع الإلكتروني تطبيق الهاتف الجوال مدراء العلاقة الدردشة المباشرة تويتر البريد الإلكتروني لا لا لا لا لا نعم لا لغات تقديم الخدمة العربية - الإنجليزية تاريخ إصدار الخدمة | 11-08-1440 | 16-04-2019 توفر رسائل نصية نعم متوفر غير متوفر قنوات السداد لا لا لا مجانية الأسئلة الشائعة الأسئلة الشائعة الهاتف 19993 البريد الإلكتروني info@zatca. gov. sa الاتصال عبر X @Zatca_care تحميل دليل الخدمة /ar/eServices/Documents/Zakat%20Registration. pdf",
+      "warnings": [
+        "HTML fragments remain; preserve original wording and review manually.",
+        "URLs may be corrupted by upstream cleaning; verify links on the original page.",
+        "Duration/cost fields appear empty; do not infer values.",
+        "Not verified for legal completeness, applicability or currency."
+      ],
+      "approved": false
+    },
+    {
+      "source_url": "https://zatca.gov.sa/ar/eServices/Pages/eServices-001.aspx",
+      "metadata": {
+        "authority": "ZATCA",
+        "category": "zatca_services",
+        "source_url": "https://zatca.gov.sa/ar/eServices/Pages/eServices-001.aspx",
+        "source_type": "webpage",
+        "language": "ar",
+        "business_activity": "general",
+        "region": "national",
+        "ingested_at": "2026-09-21T07:02:27.286780+00:00"
+      },
+      "review_status": "PENDING_HUMAN_REVIEW",
+      "original_text_sha256": "d7ca2c6f824ee86e95b0f50e4e3451ce01c022a7605acabb0f18cc73c63c5533",
+      "extracted_section": "الخدمات الزكوية والضريبية والجمركية التسجيل في ضريبة القيمة المضافة للمنشآت استمع التسجيل في ضريبة القيمة المضافة للمنشآت ابدأ https: //login. zatca. gov. sa/irj/portal? ume. logon. locale=ar&login=angular&eTile=1018 ضريبة القيمة المضافة خدمة إلكترونية توفر التسجيل كـ \"منشآت\" خاضعة لضريبة القيمة المضافة، وسيتم بعد التسجيل، تخصيص رقم حساب لضريبة القيمة المضافة. الخطوات الشروط المستندات المطلوبة https: //www. youtube. com/embed/fpP9-XFO-xA? si=covDuE3Qp8766fxz خطوات الخدمة محتوى الصفحة الدخول إلى موقع الهيئة الإلكتروني وتسجيل الدخول إلى حساب المستفيد الانتقال إلى تبويب الخدمات العامة الانتقال إلى علامة التسجيل في ضريبة القيمة المضافة تعبئة نموذج التسجيل سيصلك إشعار عن طريق الرسائل النصية والبريد الإلكتروني عند اكتمال الطلب وصول الإيرادات السنوية لحد التسجيل الإلزامي أو الاختياري. الفئة المستهدفة المنشآت التي تمارس نشاطًا اقتصاديًا خاضعًا لضريبة القيمة المضافة. مدة تنفيذ الخدمة تكلفة الخدمة قنوات الخدمة مركز الاتصال الفرع الموقع الإلكتروني تطبيق الهاتف الجوال مدراء العلاقة الدردشة المباشرة تويتر البريد الإلكتروني نعم لا لا لا لا نعم لا لغات تقديم الخدمة العربية / الإنجليزية تاريخ إصدار الخدمة | 10-08-1440 | 15-04-2019 توفر رسائل نصية نعم متوفر غير متوفر قنوات السداد لا لا لا مجانية الأسئلة الشائعة 1 الأسئلة الشائعة الهاتف 19993 البريد الإلكتروني info@zatca. gov. sa الاتصال عبر X @Zatca_care تحميل دليل الخدمة /ar/eServices/UserManual/Pages/UserManual-001. aspx",
+      "warnings": [
+        "URLs may be corrupted by upstream cleaning; verify links on the original page.",
+        "Duration/cost fields appear empty; do not infer values.",
+        "Not verified for legal completeness, applicability or currency."
+      ],
+      "approved": false
+    },
+    {
+      "source_url": "https://zatca.gov.sa/ar/eServices/UserManual/Pages/UserManual-001.aspx?service=eServices-001",
+      "metadata": {
+        "authority": "ZATCA",
+        "category": "zatca_services",
+        "source_url": "https://zatca.gov.sa/ar/eServices/UserManual/Pages/UserManual-001.aspx?service=eServices-001",
+        "source_type": "webpage",
+        "language": "ar",
+        "business_activity": "general",
+        "region": "national",
+        "ingested_at": "2026-09-21T07:02:29.124570+00:00"
+      },
+      "review_status": "PENDING_HUMAN_REVIEW",
+      "original_text_sha256": "d412b9192637268ea1a209de204ff43edd377c93a672b20a9a5ba594fed12548",
+      "extracted_section": "الخدمات الزكوية والضريبية والجمركية دليل المستخدم دليل المستخدم - التسجيل في ضريبة القيمة المضافة للمنشآت استمع /ar/eServices/Documents/Registration%20for%20VAT. pdf خطوات التسجيل في ضريبة القيمة المضافة: 1 الدخول إلى الموقع الإلكتروني والخدمات الإلكترونية الدخول إلى موقع هيئة الزكاة والضريبة والجمارك الإلكتروني: zatca. gov. sa ثم الضغط على \"الخدمات الإلكترونية\" من أعلى القائمة. 2 اختيار خدمة التسجيل في ضريبة القيمة المضافة البحث باستخدام محرك البحث واختيار خدمة \"التسجيل في ضريبة القيمة المضافة للمنشآت\". 3 تسجيل الدخول تسجيل الدخول باسم المستخدم وكلمة المرور \"للشركات والمؤسسات\" أو عن طريق منصة النفاذ الوطني الموحد \"للأفراد\". 4 إدخال رمز التحقق إدخال رمز التحقق المرسل من خلال الرسائل النصية على الجوال. 5 اختيار خدمات ضريبة القيمة المضافة اختيار \"خدمات ضريبة القيمة المضافة\" من القائمة الجانبية. 6 اختيار خدمة التسجيل في ضريبة القيمة المضافة اختيار خدمة \"التسجيل في ضريبة القيمة المضافة\". 7 تعبئة تفاصيل المكلف تعبئة البيانات المطلوبة في قسم \"تفاصيل المكلف\". 8 تعبئة المعلومات المالية تعبئة بيانات المبيعات والمشتريات في قسم \"المعلومات المالية\". 9 إرفاق المستندات الداعمة إرفاق المستندات الداعمة للطلب. 10 تعبئة بيانات الممثل المالي تعبئة البيانات في قسم \"الممثل المالي\". 11 إرفاق المستندات الإضافية (اختياري) إرفاق المستندات الإضافية في حال الرغبة (خطوة اختيارية). 12 مراجعة ملخص الطلب وتقديمه مراجعة ملخص الطلب وتقديمه. 13 تأكيد تقديم الطلب بنجاح ستظهر نافذة تفيد بتقديم الطلب بنجاح. الدعم والمساعدة للحصول على مزيد من المعلومات أو للمساعدة، يمكنك الاستفادة من الخيارات التالية الأسئلة الشائعة تصفح أبرز الأسئلة الشائعة للحصول على إجابات سريعة ومباشرة. تواصل معنا فريق الدعم متاح لمساعدتك في حال واجهت أي صعوبة رحلة المستفيد سلسلة الرحلات التعليمية الخاصة من الهيئة",
+      "warnings": [
+        "URLs may be corrupted by upstream cleaning; verify links on the original page.",
+        "Informational page: linked PDFs, images and legal details are not included automatically.",
+        "Not verified for legal completeness, applicability or currency."
+      ],
+      "approved": false
+    },
+    {
+      "source_url": "https://zatca.gov.sa/ar/E-Invoicing/Pages/default.aspx",
+      "metadata": {
+        "authority": "ZATCA",
+        "category": "e_invoicing",
+        "source_url": "https://zatca.gov.sa/ar/E-Invoicing/Pages/default.aspx",
+        "source_type": "webpage",
+        "language": "ar",
+        "business_activity": "general",
+        "region": "national",
+        "ingested_at": "2026-09-21T07:02:30.598264+00:00"
+      },
+      "review_status": "PENDING_HUMAN_REVIEW",
+      "original_text_sha256": "8ed632b344ff66f832dd5c76389fd1f4aa455c5a62799ff61e91aad50f88fffa",
+      "extracted_section": "الفوترة الإلكترونية الفوترة الإلكترونية استمع ماهي الفوترة الالكترونية عرض الكل منظومة الفوترة الإلكترونية هي إجراء يهدف إلى تحويل عملية إصدار الفواتير والإشعارات الورقية إلى عملية إلكترونية تسمح بتبادل الفواتير والإشعارات المدينة والدائنة ومعالجتها بصيغة إلكترونية منظمة بين البائع والمشتري بتنسيق إلكتروني متكامل مراحل التطبيق اللوائح والقرارات المواد التعليمية الأسئلة الشائعة جهز منشأتك أطلقت هيئة الزكاة والضريبة والجمارك متطلبات الفوترة الإلكترونية \"فاتورة\"، وسيتم تطبيقها على مرحلتين المرحلة الأولى (4 ديسمبر 2021م) المرحلة الثانية (1 يناير 2023م) مطورو الأنظمة منظومة الفوترة الإلكترونية هي إجراء يهدف إلى تحويل عملية إصدار الفواتير والإشعارات الورقية إلى عملية إلكترونية تسمح بتبادل الفواتير والإشعارات المدينة والدائنة ومعالجتها بصيغة إلكترونية منظمة بين البائع والمشتري بتنسيق إلكتروني متكامل مواصفات الفاتورة الإلكترونية يحتوي هذا المستند على أسماء وتعاريف ومواصفات العناصر البيانية تنفيذ الفوترة الإلكترونية XML يحتوي هذا المستند على المتطلبات الرقمية لبناء ومحتوى الفواتير الإلكترونية التي يجب على المكلف أن يخضع لها. المتطلبات الأمنية يحتوي هذا المستند على المتطلبات الأمنية للفواتير الإلكترونية التي يجب على المكلف الخضوع لها. مزوّدو حلول الفوترة الإلكترونية يمكن للمكلفين الحصول على خدمات الفوترة الإلكترونية من أي شركة تقدم أنظمة إلكترونية بشرط أن يكون النظام المستخدم من المكلف ملتزمًا بمتطلبات الفوترة، حيث أن الهيئة تعد أي مكلف يقوم بالالتزام بالمتطلبات فهو نظامي حتى لو لم يكن مقدم الخدمة مسجلًا في القائمة الاسترشادية لمزودي خدمات الفوترة الإلكترونية. وتسهيلًا لوصول المكلفين لمزودي خدمات الفوترة الإلكترونية، تم إعداد قائمة بمجموعة من مقدمي الأنظمة الإلكترونية الذين اجتازوا شروط التأهيل، والتي يمكن للمكلفين التواصل معهم للحصول على خدمات الفوترة. قائمه مقدمي الأنظمة",
+      "warnings": [
+        "Informational page: linked PDFs, images and legal details are not included automatically.",
+        "Not verified for legal completeness, applicability or currency."
+      ],
+      "approved": false
+    },
+    {
+      "source_url": "https://zatca.gov.sa/ar/E-Invoicing/Introduction/Pages/Roll-out-phases.aspx",
+      "metadata": {
+        "authority": "ZATCA",
+        "category": "e_invoicing",
+        "source_url": "https://zatca.gov.sa/ar/E-Invoicing/Introduction/Pages/Roll-out-phases.aspx",
+        "source_type": "webpage",
+        "language": "ar",
+        "business_activity": "general",
+        "region": "national",
+        "ingested_at": "2026-09-21T07:02:31.858553+00:00"
+      },
+      "review_status": "PENDING_HUMAN_REVIEW",
+      "original_text_sha256": "03f71479ca9677962473e5faff3be6726826280af35fc57cfc17185c79baccab",
+      "extracted_section": "الفوترة الإلكترونية تعرف على الفوترة الإلكترونية مراحل التطبيق مراحل التطبيق استمع محتوى الصفحة تطبيق الفوترة الإلكترونية (فاتورة) في المملكة أطلقت هيئة الزكاة والضريبة والجمارك متطلبات الفوترة الإلكترونية (فاتورة) وسيتم تطبيقها على مرحلتين: المرحلة الأولى (اعتباراً من 4 ديسمبر 2021): تتطلب المرحلة الأولى من المكلفين إصدار وحفظ الفواتير إلكترونيًا عبر نظام فوترة إلكتروني متوافق مع متطلبات هيئة الزكاة والضريبة والجمارك المرحلة الأولى بدأت اعتبارًا من 4 ديسمبر 2021 لجميع الأشخاص الخاضعين للائحة الفوترة الإلكترونية وأي طرف آخر يصدر الفاتورة الضريبية نيابة عن الموردين الخاضعين لضريبة القيمة المضافة المرحلة الثانية (نافذة اعتباراً من 1 يناير 2023 بشكل مرحلي): تُعرف المرحلة الثانية باسم مرحلة الربط التكامل حيث يجب ربط أنظمة الفوترة الإلكترونية الخاصة بالمكلف مع نظام هيئة الزكاة والضريبة والجمارك (منصة فاتورة) ويجب أن تصدر الفواتير الإلكترونية بالصيغة المطلوبة. وسيتم تنفيذها بشكل مرحلي وستقوم هيئة الزكاة والضريبة والجمارك بإشعار المكلفين بالمرحلة الثانية قبل 6 أشهر على الأقل، ويطبقّها المكلف كما هو موضح في الجدول أعلاه. صورة الصفحة",
+      "warnings": [
+        "Referenced links, tables or images are not fully represented; check source.",
+        "Informational page: linked PDFs, images and legal details are not included automatically.",
+        "Not verified for legal completeness, applicability or currency."
+      ],
+      "approved": false
+    },
+    {
+      "source_url": "https://zatca.gov.sa/ar/E-Invoicing/Introduction/Guidelines/Pages/default.aspx",
+      "metadata": {
+        "authority": "ZATCA",
+        "category": "e_invoicing",
+        "source_url": "https://zatca.gov.sa/ar/E-Invoicing/Introduction/Guidelines/Pages/default.aspx",
+        "source_type": "webpage",
+        "language": "ar",
+        "business_activity": "general",
+        "region": "national",
+        "ingested_at": "2026-09-21T07:02:33.079935+00:00"
+      },
+      "review_status": "PENDING_HUMAN_REVIEW",
+      "original_text_sha256": "227ded69742e8988e24270ef3bc6fab2427d9a5c0a12a96d1dc2575fc3b3ed4f",
+      "extracted_section": "الفوترة الإلكترونية تعرف على الفوترة الإلكترونية المواد التعليمية المواد التعليمية استمع محتوى الصفحة الدليل المبسط للفوترة الإلكترونية يحتوي هذا الدليل على المتطلبات بشكل مبسط للمكلفين الخاضعين للائحة الفوترة الإلكترونية لتجهيز وتحديث أنظمة الفوترة الخاصة بهم للمرحلتين الأولى (الإصدار والحفظ) والثانية (الربط والتكامل). لتحميل الدليل المبسط للفوترة الإلكترونية اضغط هنا الدليل المبسط لمنصة إصدار الفواتير الإلكترونية يحتوي هذا الدليل على آلية استخدام منصة إصدار الفواتير الإلكترونية بشكل مبسط للمكلفين الخاضعين للائحة الفوترة الإلكترونية وتنطبق عليهم شروط الأهلية لاستخدام المنصة. للتحميل الدليل المبسط لمنصة إصدار الفواتير الإلكترونية اضغط هنا الدليل الإرشادي يحتوي هذا الدليل على المتطلبات لتطبيق الفوترة الإلكترونية (فاتورة) بالإضافة للمتطلبات الفنية والأمنية للمكلفين ولمقدمي خدمات وحلول الفوترة الإلكترونية. ويتضمن الدليل على المتطلبات التقنية التفصيلية مثل مواصفات الفاتورة وقاموس البيانات والمواصفات الأمنية لتطبيق الفوترة الإلكترونية. لتحميل الدليل الإرشادي اضغط هنا دليل المستخدم الخاص بمنصة فاتورة يحتوي هذا الدليل على آلية استخدام منصة فاتورة الخاصة بتهيئة وربط أنظمة الفوترة الإلكترونية. لتحميل دليل المستخدم الخاص بمنصة فاتورة اضغط هنا الدليل التقني للفوترة الإلكترونية يحتوي هذا الدليل على المتطلبات التقنية الخاصة بالفوترة الإلكترونية. لتحميل الدليل التقني للفوترة الإلكترونية اضغط هنا دليل بوابة مطورو الأنظمة لتحميل دليل بوابة مطورو الأنظمة اضغط هنا الدليل الإرشادي المبسط لقرار تعديل تصنيف مخالفات ضريبة القيمة المضافة يحتوي هذا الدليل على تصنيف المخالفات العامة لضريبة القيمة المضافة. لتحميل الدليل الإرشادي المبسط لقرار تعديل تصنيف مخالفات ضريبة القيمة المضافة اضغط هنا صورة الصفحة",
+      "warnings": [
+        "Referenced links, tables or images are not fully represented; check source.",
+        "Informational page: linked PDFs, images and legal details are not included automatically.",
+        "Not verified for legal completeness, applicability or currency."
+      ],
+      "approved": false
+    },
+    {
+      "source_url": "https://zatca.gov.sa/ar/eServices/Pages/eServices-273.aspx",
+      "metadata": {
+        "authority": "ZATCA",
+        "category": "zatca_services",
+        "source_url": "https://zatca.gov.sa/ar/eServices/Pages/eServices-273.aspx",
+        "source_type": "webpage",
+        "language": "ar",
+        "business_activity": "general",
+        "region": "national",
+        "ingested_at": "2026-09-21T07:02:35.029555+00:00"
+      },
+      "review_status": "PENDING_HUMAN_REVIEW",
+      "original_text_sha256": "3d68c909ec09dff6ebac5291b1f69d6df1f39f1a51246b44b848a76eaac579bb",
+      "extracted_section": "الخدمات الزكوية والضريبية والجمركية الإفصاح عن إقامة فعالية داخل المملكة استمع الإفصاح عن إقامة فعالية داخل المملكة ابدأ https: //eservices. zatca. gov. sa/sites/sc/ar/EServices/Pages/ClientEventsPages/AddNewEvent. aspx الخدمات الجمركية; الخدمات الاستباقية والرسائل النصية خدمة إلكترونية تتيح للمستوردين العاملين في مجال الفعاليات والمعارض، التقدم بإشعار الهيئة مسبقًا عن إقامة فعالية أو معرض داخل المملكة من خلال تعبئة طلب الإفصاح؛ لغرض ترتيب وتسهيل الإجراءات الجمركية والإجابة عن كل الاستفسارات والالتزامات الضريبية. الخطوات الشروط المستندات المطلوبة خطوات الخدمة محتوى الصفحة تسجيل الدخول عبر موقع الهيئة الإلكتروني. من الخدمات الإلكترونية الانتقال إلى «الخدمات الجمركية» ثم اختيار «منظمو الفعاليات». تحديد «إشعار عن إقامة فعالية أو معرض داخل المملكة». تعبئة البيانات المطلوبة. تقديم الطلب. حساب مستورد نشط لا يوجد الفئة المستهدفة المستوردون العاملون في مجال الفعاليات والمعارض مدة تنفيذ الخدمة 24 ساعة تكلفة الخدمة لا يوجد رسوم قنوات الخدمة مركز الاتصال الفرع الموقع الإلكتروني تطبيق الهاتف الجوال مدراء العلاقة الدردشة المباشرة تويتر البريد الإلكتروني لا لا لا نعم لا نعم لا لغات تقديم الخدمة العربية تاريخ إصدار الخدمة 08-08-1444 | 28-02-2023 08-08-1444 | 28-02-2023 توفر رسائل نصية نعم متوفر غير متوفر قنوات السداد لا لا لا مجانية الأسئلة الشائعة 18 الأسئلة الشائعة الهاتف 19993 البريد الإلكتروني info@zatca. gov. sa الاتصال عبر X @Zatca_care تحميل دليل الخدمة /ar/eServices/Documents/Event%20Notice%20in%20KSA. pdf",
+      "warnings": [
+        "URLs may be corrupted by upstream cleaning; verify links on the original page.",
+        "Not verified for legal completeness, applicability or currency."
+      ],
+      "approved": false
+    },
+    {
+      "source_url": "https://zatca.gov.sa/ar/eServices/Pages/Product-Identification.aspx",
+      "metadata": {
+        "authority": "ZATCA",
+        "category": "zatca_services",
+        "source_url": "https://zatca.gov.sa/ar/eServices/Pages/Product-Identification.aspx",
+        "source_type": "webpage",
+        "language": "ar",
+        "business_activity": "general",
+        "region": "national",
+        "ingested_at": "2026-09-21T07:02:37.418175+00:00"
+      },
+      "review_status": "PENDING_HUMAN_REVIEW",
+      "original_text_sha256": "1968968a32caa5ffda019d0192fa4abad7af9c15a9e568880426fd06b557f08a",
+      "extracted_section": "الخدمات الزكوية والضريبية والجمركية تعريف المنتجات استمع تعريف المنتجات ابدأ https: //eservices. zatca. gov. sa/sites/sc/ar/ImporterInquiries/Pages/PIS/Identify. aspx الخدمات الجمركية خدمة إلكترونية تتيح للمستوردين تسجيل منتجاتهم بدقة، وتمكنهم من الاطلاع على كافة المنتجات المسجلة من قبلهم، وكذلك التحديث أو التعليق أو الإلغاء على المنتج المسجل في النظام، إضافةً إلى إتاحة استخدام بيانات المنتجات المسجلة في النظام من قبل المخلص واسترجاع بيانات المنتج آليًا على البيان الجمركي. الخطوات الشروط المستندات المطلوبة خطوات الخدمة محتوى الصفحة الدخول إلى موقع الهيئة الإلكتروني اختيار الخدمات الجمركية، والضغط على «أخرى» اختيار خدمة تعريف المنتجات، والضغط على «ابدأ» تسجيل الدخول إلى البوابة الإلكترونية، وأدخل اسم المستخدم وكلمة المرور الضغط على خدمة تعريف المنتجات اختيار تعريف المنتج الجديد (كل منتج على حدة) أو (تحميل منتجات متعددة) إدخال البيانات المطلوبة وتقديم الطلب <ul><li>أن يكون لدى المستورد حساب في الخدمات الجمركية بالهيئة. </li></ul> <p>لايوجد<br/></p> الفئة المستهدفة المسجلين لدى هيئة الزكاة والضريبة والجمارك كمستوردين للمنتجات المحددة مدة تنفيذ الخدمة فوري تكلفة الخدمة لا يوجد رسوم قنوات الخدمة مركز الاتصال الفرع الموقع الإلكتروني تطبيق الهاتف الجوال مدراء العلاقة الدردشة المباشرة تويتر البريد الإلكتروني نعم نعم نعم نعم نعم نعم نعم لغات تقديم الخدمة العربية/ الإنجليزية تاريخ إصدار الخدمة 09-08-1447 | 28-01-2026 09-08-1447 | 28-01-2026 توفر رسائل نصية لا متوفر غير متوفر قنوات السداد لا لا لا مجانية الأسئلة الشائعة الأسئلة الشائعة الهاتف 19993 البريد الإلكتروني info@zatca. gov. sa الاتصال عبر X @Zatca_care تحميل دليل الخدمة /ar/eServices/Documents/Product%20_Identification_User. pdf",
+      "warnings": [
+        "HTML fragments remain; preserve original wording and review manually.",
+        "URLs may be corrupted by upstream cleaning; verify links on the original page.",
+        "Not verified for legal completeness, applicability or currency."
+      ],
+      "approved": false
+    }
+  ]
+}
