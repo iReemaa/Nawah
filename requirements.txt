@@ -1,15 +1,9 @@
-langchain
-langchain-openai
-langchain-community
-langchain-text-splitters
-langgraph
-faiss-cpu
-sentence-transformers
-beautifulsoup4
-requests
-pypdf
-python-dotenv
-pydantic
-fastapi
-uvicorn
-fonttools
+fastapi>=0.110
+uvicorn[standard]>=0.29
+pydantic>=2
+openai>=1.30
+scikit-learn>=1.4
+numpy>=1.26
+langsmith>=0.1        # optional -- tracing only turns on if LANGCHAIN_API_KEY is set
+
+python-dotenv>=1.0

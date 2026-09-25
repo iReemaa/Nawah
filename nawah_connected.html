@@ -1,0 +1,1292 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#101B14">
+<title>نواة | Nawah</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Aref+Ruqaa:wght@400;700&family=Cormorant+Garamond:wght@400;500;600;700&family=IBM+Plex+Sans+Arabic:wght@300;400;500;600&family=Mrs+Saint+Delafield&display=swap" rel="stylesheet">
+ 
+<style>
+/* =========================================================
+   الألوان والخطوط — مأخوذة من الواجهة المرجعية
+   ========================================================= */
+:root{
+  --forest-950:#0E1811; --forest-900:#131F17; --forest-800:#1B2B1F; --forest-700:#263A29;
+  --olive:#6F8A4B; --olive-l:#9DB86A; --leaf:#7E9A4F;
+  --copper:#B67B4F; --copper-d:#8A5433; --copper-dd:#6F4227;
+  --gold:#D3A86B; --gold-l:#EBD3A3;
+  --cream:#F7F0E4; --paper:#F5F0E8; --beige:#EDE3D4; --nude:#D9C3A5;
+  --ink:#2A1F17; --ink-soft:#6B5848;
+  --dark-brown:#241B10; --card-brown:#33261A;
+ 
+  --f-display:'Cormorant Garamond','Amiri',Georgia,serif;
+  --f-body:'IBM Plex Sans Arabic','Segoe UI',Tahoma,sans-serif;
+  --f-script:'Mrs Saint Delafield','Aref Ruqaa',cursive;
+ 
+  --pad-x:clamp(20px,6vw,110px);
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{font-family:var(--f-body);background:var(--paper);color:var(--ink);line-height:1.75;font-size:16px;overflow-x:hidden;-webkit-font-smoothing:antialiased}
+a{color:inherit}
+button,input,select{font:inherit;color:inherit}
+:focus-visible{outline:3px solid var(--gold);outline-offset:3px;border-radius:10px}
+[hidden]{display:none !important}
+section[id]{scroll-margin-top:70px}
+.defs{position:absolute;width:0;height:0;overflow:hidden}
+.ic{width:1em;height:1em;flex:none}
+[dir="rtl"] .flip-rtl{transform:scaleX(-1)}
+@media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}*{transition:none !important}}
+ 
+/* أزرار */
+.btn{
+  display:inline-flex;align-items:center;justify-content:center;gap:12px;cursor:pointer;border:0;text-decoration:none;
+  padding:13px 28px;border-radius:999px;font-weight:500;font-size:.98rem;
+  background:linear-gradient(180deg,#96603F,#744628);color:#FBEFE0;
+  box-shadow:0 14px 26px -14px rgba(60,30,10,.8), inset 0 1px 0 rgba(255,255,255,.18);
+  transition:transform .18s ease, filter .18s ease;
+}
+.btn:hover{transform:translateY(-2px);filter:brightness(1.07)}
+.btn .ic{font-size:1.05em}
+ 
+/* =========================================================
+   الترويسة
+   ========================================================= */
+.hdr{
+  position:fixed;inset-inline:0;top:0;z-index:60;display:flex;align-items:center;gap:20px;
+  padding:20px var(--pad-x);color:var(--cream);transition:background .25s,padding .25s,box-shadow .25s,transform .25s;
+}
+.hdr.solid{background:rgba(14,24,17,.93);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);padding-block:12px;box-shadow:0 12px 30px -20px rgba(0,0,0,.8)}
+.brand{display:flex;align-items:center;gap:10px;text-decoration:none}
+.brand .logo{width:46px;height:46px}
+.brand span{font-family:var(--f-display);font-size:2.1rem;font-weight:500;line-height:1}
+.hdr nav{display:flex;gap:34px;margin-inline:auto}
+.hdr nav a{text-decoration:none;font-size:.95rem;padding-block:6px;border-bottom:2px solid transparent;opacity:.92;transition:border-color .2s}
+.hdr nav a:hover,.hdr nav a.on{border-color:var(--copper)}
+.hdr .tools{display:flex;align-items:center;gap:14px}
+.lang{background:transparent;border:1px solid rgba(255,255,255,.28);padding:6px 16px;border-radius:999px;cursor:pointer;font-size:.9rem}
+.lang:hover{background:rgba(255,255,255,.1)}
+.ibtn{background:transparent;border:0;cursor:pointer;font-size:1.35rem;display:grid;place-items:center;padding:4px}
+@media (max-width:980px){.hdr nav{display:none}.hdr .tools{margin-inline-start:auto}.hdr .btn{display:none}}
+ 
+/* =========================================================
+   الواجهة الرئيسية
+   ========================================================= */
+.hero{
+  --hero-dir:90deg;--glow-x:78%;
+  position:relative;overflow:hidden;color:var(--cream);min-height:min(100vh,760px);
+  background:
+    radial-gradient(58% 72% at var(--glow-x) 44%, rgba(222,152,82,.55), transparent 64%),
+    linear-gradient(var(--hero-dir),#0F1A13 0%,#18271B 34%,#2C3022 56%,#6B4829 80%,#A56E3C 100%);
+}
+[dir="rtl"] .hero{--hero-dir:270deg;--glow-x:22%}
+.hero-bg{position:absolute;inset:0;pointer-events:none}
+.hero-bg .sky{position:absolute;inset-inline-end:0;bottom:0;width:62%;height:78%;color:#3A2818;opacity:.6}
+.hero-bg .fronds{position:absolute;inset-inline-end:-2%;top:-30px;width:44%;filter:blur(5px);opacity:.9}
+[dir="rtl"] .hero-bg .fronds{transform:scaleX(-1)}
+.hero-bg .hp{position:absolute;color:#0B150E;filter:blur(3px);opacity:.45;height:auto;aspect-ratio:380/555}
+.hero-in{
+  position:relative;z-index:3;display:grid;grid-template-columns:minmax(0,1.05fr) minmax(0,.95fr);
+  min-height:inherit;padding:120px var(--pad-x) 0;gap:20px;
+}
+.hero-copy{align-self:center;padding-bottom:70px;max-width:640px}
+.hero-copy > *{opacity:0;animation:heroIn .8s cubic-bezier(.2,.75,.25,1) forwards}
+.hero-copy > :nth-child(1){animation-delay:.12s}
+.hero-copy > :nth-child(2){animation-delay:.22s}
+.hero-copy > :nth-child(3){animation-delay:.32s}
+.hero-copy > :nth-child(4){animation-delay:.42s}
+.hero-copy > :nth-child(5){animation-delay:.52s}
+.stage{animation:stageIn 1.1s cubic-bezier(.2,.75,.25,1) .16s both}
+@keyframes heroIn{from{opacity:0;transform:translateY(24px)}to{opacity:1;transform:translateY(0)}}
+@keyframes stageIn{from{opacity:0;transform:translateY(28px) scale(.96)}to{opacity:1;transform:translateY(0) scale(1)}}
+.eyebrow{font-size:.74rem;letter-spacing:.28em;color:#D9C3A0;margin-bottom:20px}
+[lang="ar"] .eyebrow{letter-spacing:.04em;font-size:.95rem}
+.hero h1{font-family:var(--f-display);font-weight:500;font-size:clamp(2.7rem,5.6vw,4.8rem);line-height:1.06;letter-spacing:-.01em;margin-bottom:22px}
+[lang="ar"] .hero h1{line-height:1.35;letter-spacing:0}
+.hero h1 em{font-style:normal;color:var(--copper);background:linear-gradient(180deg,#D39A6A,#A5683F);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
+.hero p.lead{color:#E8DDC9;max-width:470px;margin-bottom:28px;font-size:1rem}
+.ask{
+  display:flex;align-items:center;gap:10px;background:#FBF6EE;border-radius:999px;padding:7px 8px;padding-inline-start:20px;
+  max-width:500px;box-shadow:0 20px 40px -22px rgba(0,0,0,.7);color:var(--ink);
+}
+.ask .ic{font-size:1.25rem;color:#7A6754}
+.ask input{flex:1;min-width:0;border:0;background:transparent;outline:0;padding:9px 4px;font-size:.95rem}
+.ask input::placeholder{color:#8A7863}
+.ask:focus-within{box-shadow:0 0 0 3px rgba(211,168,107,.7),0 20px 40px -22px rgba(0,0,0,.7)}
+.send{width:44px;height:44px;border-radius:50%;border:0;cursor:pointer;background:linear-gradient(180deg,#96603F,#744628);color:#fff;display:grid;place-items:center;font-size:1.15rem;flex:none;transition:transform .2s ease,filter .2s ease,box-shadow .2s ease}
+.send:hover{filter:brightness(1.1);transform:scale(1.08);box-shadow:0 8px 18px -10px rgba(60,30,10,.9)}
+.send:active{transform:scale(.94)}
+.try{display:flex;flex-wrap:wrap;align-items:center;gap:10px;margin-top:16px;font-size:.85rem;color:#E2D5BC}
+.try button{background:rgba(14,24,17,.72);border:1px solid rgba(255,255,255,.14);color:#EFE3CB;padding:7px 16px;border-radius:999px;cursor:pointer;font-size:.8rem;transition:background .15s}
+.try button:hover{background:rgba(14,24,17,.95)}
+.hint{margin-top:12px;font-size:.88rem;color:#F0C48A}
+ 
+.stage{position:relative;align-self:end;height:clamp(360px,44vw,560px)}
+.stage svg.art{position:absolute;inset:0;width:100%;height:100%}
+.stage .date-float{animation:dateFloat 6s ease-in-out infinite}
+.stage .ring-spin{transform-origin:345px 238px;animation:ringSpin 34s linear infinite}
+.stage .glow-pulse{transform-origin:350px 250px;animation:glowPulse 4.6s ease-in-out infinite}
+.stage .shadow-pulse{transform-origin:350px 446px;animation:shadowPulse 6s ease-in-out infinite}
+@keyframes dateFloat{0%,100%{transform:translateY(0) rotate(-1deg)}50%{transform:translateY(-16px) rotate(1deg)}}
+@keyframes ringSpin{from{transform:rotate(0)}to{transform:rotate(360deg)}}
+@keyframes glowPulse{0%,100%{transform:scale(1);opacity:1}50%{transform:scale(1.08);opacity:.75}}
+@keyframes shadowPulse{0%,100%{transform:scale(1);opacity:.4}50%{transform:scale(.86);opacity:.26}}
+@media (prefers-reduced-motion:reduce){.stage .date-float,.stage .ring-spin,.stage .glow-pulse,.stage .shadow-pulse{animation:none}}
+.script{position:absolute;inset-inline-end:0;bottom:36%;transform:rotate(-8deg);font-family:var(--f-script);font-size:2.7rem;line-height:.95;color:#F1DDBB;opacity:.92;text-shadow:0 2px 12px rgba(0,0,0,.3);text-align:start}
+[lang="ar"] .script{font-size:1.9rem;line-height:1.5}
+@media (max-width:980px){
+  .hero-in{grid-template-columns:1fr;padding-top:110px}
+  .hero-copy{padding-bottom:10px}
+  .stage{height:min(88vw,460px);margin-top:10px}
+  .hero-bg .sky{width:100%}
+}
+ 
+/* =========================================================
+   شريط الثقة
+   ========================================================= */
+.trust{position:relative;background:#F4EFE6;border-bottom:1px solid #E6DCCB;overflow:hidden}
+.trust .row{display:grid;grid-template-columns:repeat(4,1fr);max-width:1080px;margin-inline:auto;padding:26px var(--pad-x)}
+.ti{display:flex;align-items:center;gap:16px;padding-inline:18px;font-size:.9rem;line-height:1.45;color:#4A3A2C;transition:transform .25s ease,color .25s ease}
+.ti:hover{transform:translateY(-4px);color:#2E4A31}
+.ti + .ti{border-inline-start:1px solid #DDD0BC}
+.ti .ic{font-size:2.15rem;color:#5B4736;stroke-width:1.3}
+.trust .deco{position:absolute;inset-inline-end:2%;top:0;height:100%;width:330px;pointer-events:none;color:#C9B18B}
+.trust .deco .palm{position:absolute;inset-inline-end:16%;bottom:6px;width:44px;height:auto;aspect-ratio:380/555;opacity:.7}
+@media (max-width:980px){.trust .row{grid-template-columns:1fr 1fr;gap:16px 0}.trust .deco{display:none}.ti:nth-child(3){border-inline-start:0}}
+@media (max-width:520px){.trust .row{grid-template-columns:1fr}.ti + .ti{border-inline-start:0}}
+ 
+/* =========================================================
+   خطتك (من اللقطة المرفقة)
+   ========================================================= */
+.plan{
+  background:linear-gradient(180deg,#152018 0,#241B11 160px,#221A10 100%);
+  color:#F4E9D4;padding:clamp(44px,7vw,84px) var(--pad-x) clamp(56px,8vw,100px);
+}
+.plan .in{max-width:1000px;margin-inline:auto}
+.plan-head{
+  position:relative;overflow:hidden;border-radius:34px;padding:34px 40px 30px;
+  background:linear-gradient(115deg,#4A3921 0%,#55552E 52%,#6B854D 100%);
+  box-shadow:0 30px 60px -34px rgba(0,0,0,.8);
+}
+.plan-head::after{content:"";position:absolute;inset:-45% auto -45% -25%;width:18%;background:linear-gradient(90deg,transparent,rgba(255,255,255,.14),transparent);transform:rotate(18deg);animation:headShine 8s ease-in-out infinite}
+@keyframes headShine{0%,55%{inset-inline-start:-30%;opacity:0}65%{opacity:1}82%,100%{inset-inline-start:125%;opacity:0}}
+[dir="rtl"] .plan-head{background:linear-gradient(245deg,#4A3921 0%,#55552E 52%,#6B854D 100%)}
+.plan-head .skyline{position:absolute;inset-inline:0;bottom:0;width:100%;height:46%;color:#E9DDBC;opacity:.2;pointer-events:none}
+.plan-head > *{position:relative}
+.plan-top{display:flex;flex-wrap:wrap;align-items:flex-start;justify-content:space-between;gap:16px}
+.plan-head h2{font-family:var(--f-display);font-weight:700;font-size:clamp(2rem,4.4vw,3.3rem);line-height:1.15;color:#FBF1DE}
+[lang="ar"] .plan-head h2{line-height:1.4}
+.plan-head .sub{margin-top:6px;color:#EADFC4;font-size:1.02rem}
+.sels{display:flex;flex-wrap:wrap;gap:8px}
+.sels select{
+  appearance:none;-webkit-appearance:none;background:rgba(20,14,6,.38) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' fill='none' stroke='%23EBD3A3' stroke-width='1.6' stroke-linecap='round'%3E%3Cpath d='m1 1.5 5 5 5-5'/%3E%3C/svg%3E") no-repeat;
+  background-position:right 14px center;border:1px solid rgba(235,211,163,.4);color:#FBF1DE;padding:8px 38px 8px 16px;border-radius:999px;cursor:pointer;font-size:.9rem;
+}
+[dir="rtl"] .sels select{background-position:left 14px center;padding:8px 16px 8px 38px}
+.sels select option{color:#241B11;background:#F5EBD8}
+.progress{margin-top:52px}
+.bar{height:16px;border-radius:999px;background:rgba(255,255,255,.2);overflow:hidden}
+.bar i{display:block;height:100%;width:0;border-radius:999px;background:linear-gradient(90deg,#DAD68F,#C3C96F);transition:width .45s ease}
+.progress .txt{margin-top:8px;font-size:1.02rem;color:#F3E8CD}
+ 
+.steps{list-style:none;margin-top:34px}
+.st{display:grid;grid-template-columns:82px minmax(0,1fr);gap:18px;padding-bottom:22px}
+.rail{position:relative;display:flex;justify-content:center}
+.st:not(:last-child) .rail::after{content:"";position:absolute;top:88px;bottom:-22px;inset-inline-start:50%;border-inline-start:2px dotted rgba(214,182,120,.55)}
+.orb{
+  position:relative;width:78px;height:78px;border-radius:50%;background:#2B2115;border:3px solid #8A6C3E;
+  display:grid;place-items:center;flex:none;transition:transform .3s ease,box-shadow .3s ease,border-color .3s ease;
+}
+.st:hover .orb{transform:scale(1.06);border-color:#B98F4B;box-shadow:0 0 0 8px rgba(185,143,75,.1)}
+.orb svg.pit{width:26px;height:44px;margin-top:6px}
+.orb .sprout{position:absolute;top:8px;width:34px;height:20px;display:none}
+.st.done .orb{border-color:#89A94F;background:#2E3D1E}
+.st.done .orb .sprout{display:block}
+.st.done .orb svg.pit{margin-top:14px}
+.stc{
+  background:var(--card-brown);border:1.5px solid rgba(126,154,79,.75);border-radius:30px;padding:26px 32px 26px;
+  box-shadow:0 20px 40px -28px rgba(0,0,0,.8);transition:transform .28s ease,box-shadow .28s ease,border-color .28s ease;
+}
+.st:hover .stc{transform:translateY(-5px);box-shadow:0 28px 48px -28px rgba(0,0,0,.9);border-color:#A4BF68}
+.stc h3{display:flex;align-items:center;gap:14px;font-family:var(--f-body);font-weight:600;font-size:clamp(1.15rem,2.2vw,1.55rem);color:#FBF1DE;line-height:1.35}
+.num{flex:none;width:40px;height:40px;border-radius:50%;background:#B98F4B;color:#2A1F14;display:grid;place-items:center;font-size:1.05rem;font-weight:600}
+.stc .desc{margin-top:12px;color:#CDBB9C;font-size:1.02rem;max-width:66ch}
+.bl{list-style:none;margin-top:14px;display:grid;gap:6px}
+.bl li{display:flex;align-items:flex-start;gap:12px;font-size:1.02rem;color:#F1E6CF}
+.bl li svg{width:16px;height:16px;flex:none;margin-top:.5em;color:#8DAE55}
+.links{display:flex;flex-wrap:wrap;gap:10px;margin-top:18px}
+.pill{
+  display:inline-flex;align-items:center;gap:10px;text-decoration:none;font-weight:500;font-size:.98rem;color:#F5EAD3;
+  border:1.5px solid rgba(166,184,112,.7);padding:9px 20px;border-radius:999px;transition:background .15s;
+}
+.pill:hover{background:rgba(166,184,112,.15)}
+.pill .ic{font-size:1em}
+.deps{margin-top:14px;font-size:.84rem;color:#A99A80}
+.done-btn{
+  margin-top:16px;cursor:pointer;padding:10px 26px;border-radius:999px;font-weight:600;font-size:.98rem;
+  border:1.5px solid rgba(166,184,112,.7);background:transparent;color:#F1E6CF;transition:background .2s ease,transform .2s ease,box-shadow .2s ease;
+}
+.done-btn:hover{background:rgba(166,184,112,.14);transform:translateY(-2px)}
+.done-btn[aria-pressed="true"]{background:#94B45A;border-color:#94B45A;color:#22301A}
+.st.done .stc{border-color:#89A94F}
+.plan .note{margin-top:14px;font-size:.88rem;color:#B9AA8F;border-inline-start:3px solid #8DAE55;padding-inline-start:14px;max-width:70ch}
+/* ---- مذكرة المستشار الحقيقية (من الخادم) ---- */
+.memo{background:#FBF6EE;color:var(--ink);border-radius:18px;padding:22px 26px;margin-bottom:22px;box-shadow:0 20px 40px -26px rgba(0,0,0,.6);white-space:pre-wrap;line-height:1.9;font-size:.98rem}
+.onboard .onboard-progress{opacity:.6;font-size:.8rem;margin:0 0 6px}
+.onboard .onboard-q{font-weight:700;font-size:1.05rem;margin:0 0 14px}
+.onboard .onboard-opts{display:flex;flex-wrap:wrap;gap:10px}
+.onboard .onboard-opt{cursor:pointer;border:1px solid rgba(0,0,0,.15);background:#fff}
+.memo.loading{color:var(--ink-soft);font-style:italic;white-space:normal}
+.memo.error{background:#3A241C;color:#F2C9B0;border:1px solid rgba(230,140,90,.4);white-space:normal}
+.memo .memo-cost{margin-top:14px;padding-top:12px;border-top:1px dashed #D9C3A5;font-size:.8rem;color:var(--ink-soft);white-space:normal}
+@media (max-width:640px){
+  .plan-head{padding:26px 22px}
+  .st{grid-template-columns:52px minmax(0,1fr);gap:10px}
+  .orb{width:50px;height:50px;border-width:2px}
+  .orb svg.pit{width:16px;height:28px;margin-top:4px}
+  .st:not(:last-child) .rail::after{top:58px}
+  .orb .sprout{width:22px;height:13px;top:5px}
+  .stc{padding:20px 18px;border-radius:24px}
+  .num{width:34px;height:34px}
+}
+ 
+/* =========================================================
+   كيف تعمل نواة
+   ========================================================= */
+.how{position:relative;overflow:hidden;background:var(--paper);padding:clamp(56px,8vw,96px) var(--pad-x)}
+.how .grid{position:relative;z-index:2;max-width:1240px;margin-inline:auto;display:grid;grid-template-columns:minmax(230px,.75fr) minmax(0,1.55fr) minmax(0,1.15fr);gap:clamp(24px,3.5vw,54px);align-items:start}
+.how .eb{font-size:.74rem;letter-spacing:.26em;color:var(--copper-d);margin-bottom:14px}
+[lang="ar"] .how .eb{letter-spacing:.03em;font-size:.95rem}
+.how h2{font-family:var(--f-display);font-weight:500;font-size:clamp(2.2rem,3.8vw,3.3rem);line-height:1.08;margin-bottom:20px}
+[lang="ar"] .how h2{line-height:1.35}
+.how .lead{color:var(--ink-soft);max-width:340px;margin-bottom:26px;font-size:.98rem}
+.hs-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:36px 20px}
+.hs .top{display:flex;align-items:center;gap:12px;margin-bottom:12px}
+.hs .circ{width:58px;height:58px;border-radius:50%;background:#EAE0D0;display:grid;place-items:center;font-size:1.7rem;color:#4A3A2C;transition:transform .3s ease,background .3s ease,box-shadow .3s ease}
+.hs:hover .circ{transform:translateY(-5px) rotate(-6deg);background:#E1D5BF;box-shadow:0 12px 20px -14px rgba(74,58,44,.8)}
+.hs .circ .ic{stroke-width:1.4}
+.hs .ar{font-size:1.15rem;color:#B5A48C}
+.hs h3{font-family:var(--f-body);font-weight:500;font-size:.98rem;line-height:1.4;margin-bottom:6px}
+.hs p{font-size:.82rem;color:var(--ink-soft);line-height:1.6}
+.hs-script{align-self:center;font-family:var(--f-script);font-size:2.1rem;line-height:1;color:#B57C55;transform:rotate(-7deg);padding-inline-start:10px}
+[lang="ar"] .hs-script{font-size:1.5rem;line-height:1.6}
+@media (max-width:1100px){.how .grid{grid-template-columns:1fr}.hs-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media (max-width:560px){.hs-grid{grid-template-columns:1fr}}
+ 
+.leaves{position:absolute;inset-inline-start:-40px;bottom:-30px;width:270px;z-index:1;pointer-events:none}
+ 
+.app{
+  display:grid;grid-template-columns:150px minmax(0,1fr);border-radius:22px;overflow:hidden;background:#FBF8F3;
+  box-shadow:0 34px 64px -30px rgba(42,31,23,.55);border:1px solid #E9DFCF;min-height:360px;
+}
+.app aside{background:linear-gradient(180deg,#1F3324,#172619);color:#EDE3CF;padding:18px 12px;display:flex;flex-direction:column;font-size:.8rem}
+.app .ab{display:flex;align-items:center;gap:8px;margin-bottom:22px;font-family:var(--f-display);font-size:1.35rem}
+.app .ab .logo{width:26px;height:26px}
+.app .mi{display:flex;align-items:center;gap:10px;padding:8px 10px;border-radius:12px;opacity:.85}
+.app .mi.on{background:rgba(255,255,255,.12);opacity:1}
+.app .mi .ic{font-size:1.05rem}
+.app .ft{margin-top:auto;text-align:center;font-size:.7rem;opacity:.75;padding-top:20px}
+.app .ft svg{width:28px;height:auto;aspect-ratio:380/555;color:#B9A578;display:block;margin:0 auto 6px;opacity:.75}
+.app .main{padding:16px 16px 14px;display:flex;flex-direction:column;gap:12px;font-size:.78rem}
+.app .u{display:flex;align-items:center;gap:8px;align-self:flex-end;flex-direction:row-reverse}
+[dir="rtl"] .app .u{flex-direction:row}
+.app .u .av{width:26px;height:26px;border-radius:50%;background:#E4DACA;display:grid;place-items:center;color:#5B4736}
+.app .bub{background:#EFE7DA;border-radius:12px;padding:8px 12px;max-width:190px}
+.app .bot{display:flex;gap:8px;align-items:flex-start}
+.app .bot .av{width:24px;height:24px;flex:none}
+.app .bot .msg{background:#F3ECE0;border-radius:14px;padding:10px 12px;flex:1;color:#4A3A2C;line-height:1.5}
+.app .bot{animation:messageIn .7s ease .7s both}
+@keyframes messageIn{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
+.app .rq{margin-top:10px;background:#fff;border-radius:12px;overflow:hidden;border:1px solid #EADFCC}
+.app .rq div.r{display:flex;align-items:center;gap:10px;padding:8px 10px;border-bottom:1px solid #F0E7D8;animation:messageIn .55s ease both}
+.app .rq div.r:nth-child(1){animation-delay:.95s}.app .rq div.r:nth-child(2){animation-delay:1.1s}.app .rq div.r:nth-child(3){animation-delay:1.25s}
+.app .rq .r .ic{font-size:1.1rem;color:#6C5A46}
+.app .rq b{display:block;font-weight:500;color:#3A2C20;font-size:.76rem;line-height:1.3}
+.app .rq small{display:block;font-size:.66rem;color:#9A8770}
+.app .rq .vp{display:flex;width:100%;justify-content:space-between;align-items:center;padding:10px;background:#F1E9D0;border:0;cursor:pointer;font-size:.76rem;font-weight:500;color:#4A3A2C}
+.app .rq .vp:hover{background:#EBE0BF}
+.app .in{margin-top:auto;display:flex;align-items:center;gap:8px;border:1px solid #E5DAC8;background:#fff;border-radius:999px;padding:6px 6px;padding-inline-start:14px;color:#A8977F;font-size:.72rem}
+.app .in span{flex:1}
+.app .in i{width:26px;height:26px;border-radius:50%;background:#1F3324;color:#fff;display:grid;place-items:center;font-style:normal;font-size:.8rem}
+@media (max-width:520px){.app{grid-template-columns:1fr}.app aside{display:none}}
+ 
+/* =========================================================
+   المنصات (المعرفة) والتذييل
+   ========================================================= */
+.about{position:relative;overflow:hidden;background:#EFE7DA;padding:clamp(56px,8vw,96px) var(--pad-x)}
+.about .in{max-width:1080px;margin-inline:auto;position:relative;z-index:2}
+.about .eb{font-size:.74rem;letter-spacing:.26em;color:var(--copper-d);margin-bottom:14px}
+[lang="ar"] .about .eb{letter-spacing:.03em;font-size:.95rem}
+.about h2{font-family:var(--f-display);font-weight:500;font-size:clamp(2.1rem,3.8vw,3.2rem);line-height:1.15;margin-bottom:20px;max-width:16ch}
+[lang="ar"] .about h2{line-height:1.45}
+.about .top{display:grid;grid-template-columns:1.1fr .9fr;gap:clamp(30px,5vw,70px);align-items:start}
+.about .lead{color:var(--ink-soft);font-size:1.02rem;max-width:56ch}
+.about .lead + .lead{margin-top:14px}
+.vals{margin-top:0;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:18px}
+.val{background:#FBF6EC;border:1px solid #E1D3B8;border-radius:22px;padding:24px 22px;transition:transform .28s ease,box-shadow .28s ease,border-color .28s ease}
+.val:hover{transform:translateY(-5px);box-shadow:0 18px 30px -24px rgba(42,31,23,.8);border-color:#C8A96F}
+.val .circ{width:50px;height:50px;border-radius:50%;background:#EAE0D0;display:grid;place-items:center;font-size:1.4rem;color:#4A3A2C;margin-bottom:14px;transition:transform .3s ease}
+.val:hover .circ{transform:rotate(8deg) scale(1.08)}
+.val h3{font-weight:600;font-size:1rem;margin-bottom:6px}
+.val p{font-size:.85rem;color:var(--ink-soft);line-height:1.6}
+.team{margin-top:44px;padding-top:34px;border-top:1px solid #D8C9B0}
+.team .lbl{font-size:.8rem;letter-spacing:.08em;color:var(--copper-d);margin-bottom:16px}
+.team ul{list-style:none;display:flex;flex-wrap:wrap;gap:12px}
+.team li{background:#FBF6EC;border:1px solid #E1D3B8;border-radius:999px;padding:9px 20px;font-size:.9rem;display:flex;align-items:center;gap:9px;transition:transform .25s ease,box-shadow .25s ease}
+.team li:hover{transform:translateY(-3px);box-shadow:0 12px 20px -18px rgba(42,31,23,.8)}
+.team li b{width:30px;height:30px;border-radius:50%;background:linear-gradient(135deg,var(--olive),var(--copper));color:#fff;display:grid;place-items:center;font-size:.78rem;flex:none}
+.about .deco{position:absolute;inset-inline-end:-60px;top:-40px;width:340px;z-index:1;pointer-events:none;color:#DCC79E;opacity:.55}
+@media (max-width:900px){.about .top{grid-template-columns:1fr}.vals{grid-template-columns:1fr 1fr}}
+@media (max-width:560px){.vals{grid-template-columns:1fr}}
+ 
+footer{background:var(--forest-950);color:#E9DEC7;padding:52px var(--pad-x) 44px}
+footer .in{max-width:1080px;margin-inline:auto;display:grid;gap:14px}
+footer .fb{display:flex;align-items:center;gap:10px;font-family:var(--f-display);font-size:1.8rem}
+footer .fb .logo{width:38px;height:38px}
+footer p{font-size:.9rem;opacity:.85;max-width:76ch}
+footer .team{opacity:.62;font-size:.84rem}
+
+/* =========================================================
+   حركات الظهور عند التمرير
+   ========================================================= */
+.reveal-target{
+  opacity:0;
+  transform:translateY(24px);
+  transition:opacity .7s ease,transform .7s cubic-bezier(.2,.75,.25,1);
+  transition-delay:var(--reveal-delay,0ms);
+}
+.reveal-target.is-visible{opacity:1;transform:none}
+@media (prefers-reduced-motion:reduce){
+  .hero-copy > *, .stage, .app .bot, .app .rq div.r{animation:none;opacity:1}
+  .plan-head::after{animation:none;display:none}
+  .reveal-target{opacity:1;transform:none;transition:none}
+  .st:hover .stc,.st:hover .orb,.hs:hover .circ,.val:hover,.team li:hover,.send:hover{transform:none}
+}
+
+/* Nawah v4: chatbot + market location advisor */
+.service-tools{padding:90px 6%;background:#172018;color:#f7eedc}.service-tools .wrap{max-width:1180px;margin:auto}.service-tools h2{font-family:var(--f-display);font-size:clamp(2rem,4vw,3.1rem);margin-bottom:10px}.service-tools .lead2{color:#c9bca4;max-width:760px;margin-bottom:28px}.tool-grid{display:grid;grid-template-columns:1fr 1fr;gap:22px}.tool-card{background:#211d16;border:1px solid rgba(170,193,108,.28);border-radius:24px;padding:24px;box-shadow:0 18px 45px rgba(0,0,0,.18)}.tool-card h3{font-size:1.3rem;margin-bottom:8px}.tool-card p{color:#c9bca4;line-height:1.8}.chat-log{height:310px;overflow:auto;background:#15150f;border-radius:16px;padding:14px;margin:16px 0;display:flex;flex-direction:column;gap:10px}.chat-msg{max-width:88%;padding:11px 14px;border-radius:15px;line-height:1.7;white-space:pre-wrap}.chat-msg.user{align-self:flex-start;background:#6b854d;color:#fff}.chat-msg.bot{align-self:flex-end;background:#f7f0e5;color:#2c2117}.chat-row{display:flex;gap:9px}.chat-row input{flex:1;border:1px solid #716344;background:#15150f;color:#fff;border-radius:999px;padding:12px 16px}.chat-row button,.loc-btn{border:0;border-radius:999px;background:#9b6038;color:white;padding:12px 18px;cursor:pointer}.location-results{margin-top:18px}.loc-card{padding:14px 0;border-bottom:1px solid rgba(255,255,255,.1)}.loc-card b{color:#f7eedc}.loc-card a{color:#b8d67c}.market-map{height:360px;border-radius:18px;margin-top:16px;overflow:hidden;background:#111}.loc-status{margin-top:12px;color:#d6c7ae}.plan-status{max-width:1000px;margin:18px auto;color:#d8c9b1;font-style:italic}.plan-status.error{color:#f0a98c}.plan .memo#planMemo{display:none!important}@media(max-width:850px){.tool-grid{grid-template-columns:1fr}}
+</style>
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" crossorigin="" />
+</head>
+ 
+<body>
+ 
+<!-- =========================================================
+     الأشكال والأيقونات المشتركة
+     ========================================================= -->
+<svg class="defs" aria-hidden="true" focusable="false">
+  <defs>
+    <linearGradient id="pitGrad" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#B07A4C"/><stop offset="1" stop-color="#4A2812"/></linearGradient>
+ 
+    <g id="pit-g">
+      <path d="M30 3 C46 3 56 24 56 50 C56 76 46 97 30 97 C14 97 4 76 4 50 C4 24 14 3 30 3Z" fill="url(#pitGrad)"/>
+      <path d="M30 13 C36 38 36 62 30 87" fill="none" stroke="rgba(255,228,196,.55)" stroke-width="3" stroke-linecap="round"/>
+    </g>
+ 
+    <g id="logo-g">
+      <path d="M36 4 C58 10 62 40 32 60 C40 40 32 22 36 4Z" fill="#7C9A52"/>
+      <path d="M30 8 C46 12 50 36 26 54 C32 38 26 24 30 8Z" fill="#4E6B34" opacity=".9"/>
+      <g transform="translate(9 8) rotate(-20 20 26) scale(.52)"><use href="#pit-g"/></g>
+    </g>
+ 
+    <g id="palm-g">
+      <path d="M143 460 C147 360 160 250 152 126 L168 126 C168 250 173 360 178 460Z" fill="currentColor"/>
+      <g transform="translate(160 122)" fill="currentColor">
+        <path transform="rotate(-84) scale(.95)" d="M0 0 C34 -50 104 -60 156 -4 C100 -28 50 -22 0 0Z"/>
+        <path transform="rotate(-54) scale(1.08)" d="M0 0 C34 -50 104 -60 156 -4 C100 -28 50 -22 0 0Z"/>
+        <path transform="rotate(-24) scale(1.16)" d="M0 0 C34 -50 104 -60 156 -4 C100 -28 50 -22 0 0Z"/>
+        <path transform="rotate(8) scale(1.08)" d="M0 0 C34 -50 104 -60 156 -4 C100 -28 50 -22 0 0Z"/>
+        <path transform="rotate(38) scale(.9)" d="M0 0 C34 -50 104 -60 156 -4 C100 -28 50 -22 0 0Z"/>
+        <path transform="scale(-1 1) rotate(-84) scale(.95)" d="M0 0 C34 -50 104 -60 156 -4 C100 -28 50 -22 0 0Z"/>
+        <path transform="scale(-1 1) rotate(-54) scale(1.08)" d="M0 0 C34 -50 104 -60 156 -4 C100 -28 50 -22 0 0Z"/>
+        <path transform="scale(-1 1) rotate(-24) scale(1.16)" d="M0 0 C34 -50 104 -60 156 -4 C100 -28 50 -22 0 0Z"/>
+        <path transform="scale(-1 1) rotate(8) scale(1.08)" d="M0 0 C34 -50 104 -60 156 -4 C100 -28 50 -22 0 0Z"/>
+        <path transform="scale(-1 1) rotate(38) scale(.9)" d="M0 0 C34 -50 104 -60 156 -4 C100 -28 50 -22 0 0Z"/>
+      </g>
+    </g>
+ 
+    <!-- أفق الرياض: برج المملكة وبرج الفيصلية وأبراج -->
+    <g id="skyline-g" fill="currentColor">
+      <rect x="0" y="222" width="40" height="78" rx="2"/><rect x="46" y="176" width="30" height="124" rx="2"/>
+      <rect x="82" y="205" width="44" height="95" rx="2"/><rect x="132" y="150" width="34" height="150" rx="2"/>
+      <rect x="172" y="190" width="52" height="110" rx="2"/><rect x="230" y="128" width="40" height="172" rx="2"/>
+      <path d="M296 300 L306 100 L326 100 L336 300Z"/><circle cx="316" cy="86" r="14"/><rect x="314" y="34" width="4" height="52"/>
+      <rect x="352" y="170" width="46" height="130" rx="2"/><rect x="404" y="140" width="34" height="160" rx="2"/>
+      <rect x="444" y="196" width="58" height="104" rx="2"/>
+      <!-- برج المملكة -->
+      <path d="M520 300 V44 Q520 20 542 20 L552 20 Q574 190 596 20 L606 20 Q628 20 628 44 V300Z"/>
+      <rect x="640" y="150" width="42" height="150" rx="2"/><rect x="688" y="196" width="36" height="104" rx="2"/>
+      <rect x="730" y="118" width="52" height="182" rx="2"/><rect x="788" y="182" width="34" height="118" rx="2"/>
+      <rect x="828" y="218" width="40" height="82" rx="2"/><rect x="874" y="250" width="26" height="50" rx="2"/>
+    </g>
+ 
+    <!-- أيقونات خطية -->
+    <symbol id="i-shield-check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3 4 6v6c0 4.5 3.2 8 8 9 4.8-1 8-4.5 8-9V6l-8-3Z"/><path d="m8.5 12 2.5 2.5 4.5-5"/></symbol>
+    <symbol id="i-chip" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="7" y="7" width="10" height="10" rx="2"/><path d="M9 3v4M15 3v4M9 17v4M15 17v4M3 9h4M3 15h4M17 9h4M17 15h4"/><circle cx="12" cy="12" r="1.6"/></symbol>
+    <symbol id="i-route" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="6" cy="18" r="2.4"/><circle cx="18" cy="6" r="2.4"/><path d="M8.4 18H15a3 3 0 0 0 0-6H9a3 3 0 0 1 0-6h6.6"/></symbol>
+    <symbol id="i-shield-home" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3 4 6v6c0 4.5 3.2 8 8 9 4.8-1 8-4.5 8-9V6l-8-3Z"/><path d="M9 14v-3l3-2.2 3 2.2v3z"/></symbol>
+    <symbol id="i-chat" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M4 5h16v11H9l-5 4V5Z"/><path d="M8.5 10.5h.01M12 10.5h.01M15.5 10.5h.01" stroke-width="2.2"/></symbol>
+    <symbol id="i-doc" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M6 3h9l4 4v14H6V3Z"/><path d="M9 11h7M9 14h7M9 17h4"/></symbol>
+    <symbol id="i-search" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="6.5"/><path d="m20 20-4.2-4.2"/></symbol>
+    <symbol id="i-check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="4" width="14" height="17" rx="2"/><path d="m8.5 13 2.2 2.2 4.3-4.7"/><path d="M9 4V3h6v1"/></symbol>
+    <symbol id="i-home" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M4 11 12 4l8 7v9h-5v-6H9v6H4v-9Z"/></symbol>
+    <symbol id="i-lines" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M5 6h14M5 12h14M5 18h9"/></symbol>
+    <symbol id="i-book" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M5 4h11a3 3 0 0 1 3 3v13H8a3 3 0 0 1-3-3V4Z"/><path d="M8 17h11"/></symbol>
+    <symbol id="i-gear" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M12 3v3M12 18v3M3 12h3M18 12h3M5.6 5.6l2.1 2.1M16.3 16.3l2.1 2.1M18.4 5.6l-2.1 2.1M7.7 16.3l-2.1 2.1"/></symbol>
+    <symbol id="i-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></symbol>
+    <symbol id="i-ext" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M8 4H4v12h12v-4M11 3h6v6M17 3l-8 8"/></symbol>
+    <symbol id="i-send" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="m4 12 16-8-6 16-2.5-6.5L4 12Z"/></symbol>
+    <symbol id="i-user" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="3.4"/><path d="M5 20c1-4 4-5.5 7-5.5s6 1.5 7 5.5"/></symbol>
+    <symbol id="i-leaf" viewBox="0 0 16 16"><path d="M2 12C2 6 6 2 14 2c0 7-4 12-10 12l-1.5 1.5-1-1L2 12Z" fill="currentColor"/></symbol>
+  </defs>
+</svg>
+ 
+<!-- ===================== الترويسة ===================== -->
+<header class="hdr" id="hdr">
+  <a class="brand" href="#top"><svg class="logo" viewBox="0 0 64 64" aria-hidden="true"><use href="#logo-g"/></svg><span data-i18n="brand"></span></a>
+  <nav aria-label="main">
+    <a class="on" href="#top" data-i18n="nav_home"></a>
+    <a href="#how" data-i18n="nav_about"></a>
+    <a href="#servicesTools" data-i18n="nav_services"></a>
+    <a href="#about" data-i18n="nav_knowledge"></a>
+    <a href="#contact" data-i18n="nav_contact"></a>
+  </nav>
+  <div class="tools">
+    <button class="ibtn" type="button" id="searchBtn" aria-label="search"><svg class="ic"><use href="#i-search"/></svg></button>
+    <button class="lang" id="langBtn" type="button"></button>
+    <a class="btn" href="#top" id="startNow"><span data-i18n="start_now"></span><svg class="ic flip-rtl"><use href="#i-arrow"/></svg></a>
+  </div>
+</header>
+ 
+<main id="top">
+ 
+<!-- ===================== الواجهة الرئيسية ===================== -->
+<section class="hero">
+  <div class="hero-bg" aria-hidden="true">
+    <!-- نخيل خافت خلف النص -->
+    <svg class="hp" style="inset-inline-start:-2%;bottom:-60px;width:min(24vw,330px)" viewBox="-30 -95 380 555"><use href="#palm-g"/></svg>
+    <svg class="hp" style="inset-inline-start:18%;bottom:-120px;width:min(14vw,200px);opacity:.3" viewBox="-30 -95 380 555"><use href="#palm-g"/></svg>
+    <!-- أفق الرياض عند الغروب -->
+    <svg class="sky" viewBox="0 0 900 300" preserveAspectRatio="xMaxYMax meet"><use href="#skyline-g"/></svg>
+    <!-- سعف النخيل في الزاوية (ضبابي) -->
+    <svg class="fronds" viewBox="0 0 420 280">
+      <g fill="#142216" transform="translate(400 -10)">
+        <path transform="rotate(200) scale(1.7)" d="M0 0 C34 -50 104 -60 156 -4 C100 -28 50 -22 0 0Z"/>
+        <path transform="rotate(170) scale(1.6)" d="M0 0 C34 -50 104 -60 156 -4 C100 -28 50 -22 0 0Z"/>
+        <path transform="rotate(140) scale(1.5)" d="M0 0 C34 -50 104 -60 156 -4 C100 -28 50 -22 0 0Z"/>
+        <path transform="rotate(115) scale(1.35)" d="M0 0 C34 -50 104 -60 156 -4 C100 -28 50 -22 0 0Z"/>
+        <path transform="rotate(95) scale(1.2)" d="M0 0 C34 -50 104 -60 156 -4 C100 -28 50 -22 0 0Z"/>
+      </g>
+    </svg>
+  </div>
+ 
+  <div class="hero-in">
+    <div class="hero-copy">
+      <p class="eyebrow" data-i18n="eyebrow"></p>
+      <h1><span data-i18n="h1_1"></span><br><span data-i18n="h1_2a"></span> <em data-i18n="h1_2b"></em></h1>
+      <p class="lead" data-i18n="hero_p"></p>
+ 
+      <form class="ask" id="askForm" autocomplete="off">
+        <svg class="ic"><use href="#i-chat"/></svg>
+        <input id="biz" type="text" data-i18n-ph="ask_ph" aria-label="business idea">
+        <button class="send" type="submit" aria-label="send"><svg class="ic flip-rtl"><use href="#i-arrow"/></svg></button>
+      </form>
+      <div class="try"><span data-i18n="try_lbl"></span><button type="button" id="try1"></button><button type="button" id="try2"></button></div>
+      <p class="hint" id="hint" hidden></p>
+    </div>
+ 
+    <!-- المشهد: تمرة داخل غلاف النواة فوق صخرة (رسم متجهي، يمكن استبداله بصورة) -->
+    <div class="stage">
+      <svg class="art" viewBox="0 0 700 560" preserveAspectRatio="xMidYMax meet" aria-hidden="true">
+        <defs>
+          <radialGradient id="dateG" cx=".34" cy=".26" r=".9"><stop offset="0" stop-color="#D9793C"/><stop offset=".32" stop-color="#9C431B"/><stop offset=".72" stop-color="#521F0C"/><stop offset="1" stop-color="#2A1008"/></radialGradient>
+          <linearGradient id="shellG" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#F0DBAA"/><stop offset=".55" stop-color="#CBA668"/><stop offset="1" stop-color="#8E6A3A"/></linearGradient>
+          <linearGradient id="shellIn" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#6F4F2A"/><stop offset="1" stop-color="#B58C52"/></linearGradient>
+          <linearGradient id="leafG" x1="0" y1="1" x2="1" y2="0"><stop offset="0" stop-color="#132016"/><stop offset="1" stop-color="#3F5C38"/></linearGradient>
+          <linearGradient id="rockG" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#A27650"/><stop offset="1" stop-color="#3F2718"/></linearGradient>
+          <linearGradient id="ringG" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#F3DDAA"/><stop offset="1" stop-color="#B98A4E"/></linearGradient>
+          <filter id="soft" x="-20%" y="-20%" width="140%" height="140%"><feGaussianBlur stdDeviation="2.6"/></filter>
+          <filter id="glowB" x="-30%" y="-30%" width="160%" height="160%"><feGaussianBlur stdDeviation="14"/></filter>
+        </defs>
+ 
+        <!-- توهج خلف الثمرة -->
+        <g class="glow-pulse"><ellipse cx="350" cy="250" rx="250" ry="230" fill="#E29B55" opacity=".22" filter="url(#glowB)"/></g>
+ 
+        <!-- الصخرة -->
+        <path d="M30 560 L52 505 Q88 456 175 450 L520 446 Q612 452 652 505 L680 560Z" fill="url(#rockG)"/>
+        <path d="M175 450 Q350 424 520 446 Q350 474 175 450Z" fill="#B58A5C" opacity=".55"/>
+        <g fill="none" stroke="#2A170C" stroke-width="2" opacity=".35" stroke-linecap="round">
+          <path d="M96 520 q34 -16 72 -6"/><path d="M210 540 q40 -18 90 -8"/><path d="M420 526 q46 -14 100 -4"/><path d="M560 512 q30 -10 60 2"/><path d="M300 492 q30 -8 60 0"/>
+        </g>
+        <ellipse cx="350" cy="452" rx="215" ry="16" fill="#1A0E08" opacity=".5" filter="url(#soft)"/>
+ 
+        <!-- الأوراق الخضراء الخلفية -->
+        <path d="M178 412 C104 312 138 150 300 60 C306 190 264 332 178 412Z" fill="url(#leafG)"/>
+        <path d="M518 412 C590 312 556 150 396 60 C390 190 432 332 518 412Z" fill="url(#leafG)"/>
+        <path d="M200 380 C190 300 230 180 296 90" fill="none" stroke="#9DB56E" stroke-opacity=".22" stroke-width="2"/>
+        <path d="M496 380 C506 300 466 180 400 90" fill="none" stroke="#9DB56E" stroke-opacity=".22" stroke-width="2"/>
+ 
+        <!-- الحلقة الذهبية -->
+        <g class="ring-spin"><ellipse cx="345" cy="238" rx="222" ry="212" transform="rotate(-18 345 238)" fill="none" stroke="url(#ringG)" stroke-width="2.2" opacity=".85"/></g>
+ 
+        <!-- الظل المتحرك أسفل التمرة -->
+        <ellipse class="shadow-pulse" cx="350" cy="446" rx="150" ry="17" fill="#150B05" opacity=".4" filter="url(#soft)"/>
+ 
+        <g class="date-float">
+          <!-- غلاف النواة: الجزء الخلفي -->
+          <path d="M138 330 C116 190 214 80 338 70 C454 62 548 132 554 252 C560 342 500 432 384 454 C260 476 158 438 138 330Z" fill="url(#shellG)"/>
+          <path d="M172 322 C162 212 242 122 338 114 C430 107 506 160 512 250 C516 324 468 394 380 412 C285 430 184 398 172 322Z" fill="url(#shellIn)" opacity=".62"/>
+ 
+          <!-- التمرة -->
+          <g transform="translate(350 262) rotate(12)">
+            <ellipse rx="106" ry="172" fill="url(#dateG)"/>
+            <g fill="none" stroke-linecap="round">
+              <path d="M-72 -70 C-32 -26 -42 40 -78 98" stroke="#1E0A04" stroke-opacity=".38" stroke-width="5"/>
+              <path d="M-22 -122 C10 -56 6 34 -30 128" stroke="#1E0A04" stroke-opacity=".3" stroke-width="4"/>
+              <path d="M40 -112 C72 -46 62 44 30 118" stroke="#1E0A04" stroke-opacity=".32" stroke-width="4"/>
+              <path d="M74 -38 C90 8 84 52 62 96" stroke="#1E0A04" stroke-opacity=".3" stroke-width="4"/>
+              <path d="M-50 -100 C-20 -60 -24 -10 -46 40" stroke="#FFC9A0" stroke-opacity=".16" stroke-width="2.4"/>
+              <path d="M8 -132 C34 -80 30 -6 4 60" stroke="#FFC9A0" stroke-opacity=".14" stroke-width="2.4"/>
+            </g>
+            <ellipse cx="-46" cy="-88" rx="24" ry="60" transform="rotate(16 -46 -88)" fill="#fff" opacity=".3" filter="url(#soft)"/>
+            <ellipse cx="-58" cy="-70" rx="6" ry="20" transform="rotate(16 -58 -70)" fill="#fff" opacity=".55"/>
+            <ellipse cx="52" cy="30" rx="10" ry="26" transform="rotate(8 52 30)" fill="#FFB98A" opacity=".18" filter="url(#soft)"/>
+            <path d="M-16 -168 Q6 -192 30 -168 Q10 -156 -16 -168Z" fill="#C9A06A"/>
+            <ellipse cx="-6" cy="170" rx="15" ry="8" fill="#6E4A2A"/>
+          </g>
+ 
+          <!-- حافة الغلاف الأمامية -->
+          <path d="M148 352 C190 424 292 456 392 444 C484 432 538 372 552 302 C522 372 452 402 350 402 C260 402 190 384 148 352Z" fill="url(#shellG)"/>
+          <path d="M150 352 C192 422 292 454 392 442" fill="none" stroke="#FFF2CC" stroke-opacity=".5" stroke-width="2"/>
+        </g>
+      </svg>
+      <p class="script"><span data-i18n="script1"></span><br><span data-i18n="script2"></span></p>
+    </div>
+  </div>
+</section>
+ 
+<!-- ===================== شريط الثقة ===================== -->
+<section class="trust" aria-label="trust">
+  <div class="row">
+    <div class="ti"><svg class="ic"><use href="#i-shield-check"/></svg><span data-i18n="trust1"></span></div>
+    <div class="ti"><svg class="ic"><use href="#i-chip"/></svg><span data-i18n="trust2"></span></div>
+    <div class="ti"><svg class="ic"><use href="#i-route"/></svg><span data-i18n="trust3"></span></div>
+    <div class="ti"><svg class="ic"><use href="#i-shield-home"/></svg><span data-i18n="trust4"></span></div>
+  </div>
+  <div class="deco" aria-hidden="true">
+    <svg width="100%" height="100%" viewBox="0 0 330 100" preserveAspectRatio="none" fill="none" stroke="currentColor" stroke-width="1"><path d="M0 92 C90 90 150 20 330 34" opacity=".7"/><path d="M40 98 C130 84 190 30 330 12" opacity=".45"/></svg>
+    <svg class="palm" viewBox="-30 -95 380 555"><use href="#palm-g"/></svg>
+  </div>
+</section>
+ 
+<!-- ===================== خطتك ===================== -->
+<section class="plan" id="plan" hidden>
+  <div class="in">
+    <div class="plan-head">
+      <svg class="skyline" viewBox="0 0 900 300" preserveAspectRatio="xMidYMax slice" aria-hidden="true"><use href="#skyline-g"/></svg>
+      <div class="plan-top">
+        <div>
+          <h2 id="planTitle"></h2>
+          <p class="sub" id="planSub"></p>
+        </div>
+        <div class="sels">
+          <select id="selAct" aria-label="activity"></select>
+          <select id="selCity" aria-label="city"></select>
+        </div>
+      </div>
+      <div class="progress"><div class="bar"><i id="barFill"></i></div><p class="txt" id="progTxt"></p></div>
+    </div>
+    <p id="planStatus" class="plan-status" hidden></p>
+    <div id="onboard" class="memo" hidden></div>
+    <ol class="steps" id="steps"></ol>
+    <p class="note" data-i18n="plan_note"></p>
+  </div>
+</section>
+ 
+<!-- ===================== خدمات نواة الذكية ===================== -->
+<section class="service-tools" id="servicesTools">
+  <div class="wrap">
+    <h2>خدمات نواة الذكية</h2>
+    <p class="lead2">اسأل عن معاملة أو ترخيص، وإذا لم تحدد موقع مشروعك نحلل لك مناطق مناسبة ونربطك بنتائج عقارية منشورة.</p>
+    <div class="tool-grid">
+      <div class="tool-card" id="chatService">
+        <h3>مستشار المعاملات والتراخيص</h3>
+        <p>اسأل عن السجل التجاري، بلدي، إيجار، الاستثمار أو أي إجراء يخص تأسيس وتشغيل النشاط.</p>
+        <div class="chat-log" id="chatLog"><div class="chat-msg bot">اسأل نواة عن أي معاملة أو ترخيص، وسأتذكر نشاطك أثناء المحادثة.</div></div>
+        <form class="chat-row" id="chatForm"><input id="chatInput" placeholder="مثال: ما متطلبات الرخصة البلدية لمقهى؟"><button type="submit">إرسال</button></form>
+      </div>
+      <div class="tool-card" id="locationService">
+        <h3>محلل الموقع والسوق</h3>
+        <p>يظهر تلقائيًا عندما تحدد أنك لم تختر موقعًا بعد. يقارن مناطق مناسبة حسب النشاط والمدينة، ويبحث عن مؤشرات سوق وعروض منشورة في عقار.</p>
+        <div class="chat-row"><input id="locationInput" placeholder="مثال: أفضل مواقع لعيادة أسنان في جدة"><button class="loc-btn" id="locationBtn" type="button">ابحث عن المواقع</button></div>
+        <div id="locationStatus" class="loc-status"></div>
+        <div id="locationResults" class="location-results"></div>
+        <div id="marketMap" class="market-map" hidden></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===================== كيف تعمل نواة ===================== -->
+<section class="how" id="how">
+  <svg class="leaves" viewBox="0 0 270 260" aria-hidden="true">
+    <path d="M-20 240 C10 120 90 40 210 20 C200 120 130 220 -20 240Z" fill="#5C7B45"/>
+    <path d="M-10 236 C40 150 110 80 200 34" fill="none" stroke="#B9CF95" stroke-opacity=".35" stroke-width="2"/>
+    <path d="M40 270 C60 190 130 130 250 120 C230 200 160 260 40 270Z" fill="#8A5A3B"/>
+    <path d="M60 262 C110 200 170 160 240 132" fill="none" stroke="#E7C9A5" stroke-opacity=".3" stroke-width="2"/>
+  </svg>
+  <div class="grid">
+    <div>
+      <p class="eb" data-i18n="how_eb"></p>
+      <h2 data-i18n="how_title"></h2>
+      <p class="lead" data-i18n="how_p"></p>
+      <a class="btn" href="#top" id="startJourney"><span data-i18n="how_cta"></span><svg class="ic flip-rtl"><use href="#i-arrow"/></svg></a>
+    </div>
+ 
+    <div class="hs-grid">
+      <div class="hs"><div class="top"><span class="circ"><svg class="ic"><use href="#i-chat"/></svg></span><svg class="ic ar flip-rtl"><use href="#i-arrow"/></svg></div><h3 data-i18n="hs1_t"></h3><p data-i18n="hs1_d"></p></div>
+      <div class="hs"><div class="top"><span class="circ"><svg class="ic"><use href="#i-doc"/></svg></span><svg class="ic ar flip-rtl"><use href="#i-arrow"/></svg></div><h3 data-i18n="hs2_t"></h3><p data-i18n="hs2_d"></p></div>
+      <div class="hs"><div class="top"><span class="circ"><svg class="ic"><use href="#i-search"/></svg></span></div><h3 data-i18n="hs3_t"></h3><p data-i18n="hs3_d"></p></div>
+      <div class="hs"><div class="top"><span class="circ"><svg class="ic"><use href="#i-route"/></svg></span><svg class="ic ar flip-rtl"><use href="#i-arrow"/></svg></div><h3 data-i18n="hs4_t"></h3><p data-i18n="hs4_d"></p></div>
+      <div class="hs"><div class="top"><span class="circ"><svg class="ic"><use href="#i-check"/></svg></span></div><h3 data-i18n="hs5_t"></h3><p data-i18n="hs5_d"></p></div>
+      <p class="hs-script"><span data-i18n="hsx1"></span><br><span data-i18n="hsx2"></span></p>
+    </div>
+ 
+    <!-- معاينة التطبيق -->
+    <div class="app" aria-label="preview">
+      <aside>
+        <div class="ab"><svg class="logo" viewBox="0 0 64 64"><use href="#logo-g"/></svg><span data-i18n="brand"></span></div>
+        <div class="mi on"><svg class="ic"><use href="#i-home"/></svg><span data-i18n="app_home"></span></div>
+        <div class="mi"><svg class="ic"><use href="#i-lines"/></svg><span data-i18n="app_plans"></span></div>
+        <div class="mi"><svg class="ic"><use href="#i-book"/></svg><span data-i18n="app_know"></span></div>
+        <div class="mi"><svg class="ic"><use href="#i-gear"/></svg><span data-i18n="app_settings"></span></div>
+        <div class="ft"><svg viewBox="-30 -95 380 555"><use href="#palm-g"/></svg><span data-i18n="app_tag"></span></div>
+      </aside>
+      <div class="main">
+        <div class="u"><span class="av"><svg class="ic"><use href="#i-user"/></svg></span><div class="bub" data-i18n="app_user"></div></div>
+        <div class="bot">
+          <svg class="av" viewBox="0 0 64 64"><use href="#logo-g"/></svg>
+          <div class="msg"><span data-i18n="app_bot"></span>
+            <div class="rq">
+              <div class="r"><svg class="ic"><use href="#i-doc"/></svg><div><b data-i18n="app_i1n"></b><small data-i18n="app_i1s"></small></div></div>
+              <div class="r"><svg class="ic"><use href="#i-shield-home"/></svg><div><b data-i18n="app_i2n"></b><small data-i18n="app_i2s"></small></div></div>
+              <div class="r"><svg class="ic"><use href="#i-check"/></svg><div><b data-i18n="app_i3n"></b><small data-i18n="app_i3s"></small></div></div>
+              <button class="vp" type="button" id="viewFull"><span data-i18n="app_view"></span><svg class="ic flip-rtl"><use href="#i-arrow"/></svg></button>
+            </div>
+          </div>
+        </div>
+        <div class="in"><span data-i18n="app_ph"></span><i><svg class="ic"><use href="#i-send"/></svg></i></div>
+      </div>
+    </div>
+  </div>
+</section>
+ 
+<!-- ===================== المنصات الحكومية ===================== -->
+<section class="about" id="about">
+  <svg class="deco" viewBox="0 0 340 380" aria-hidden="true"><use href="#palm-g" x="-40" y="-60" width="320" height="440"/></svg>
+  <div class="in">
+    <p class="eb" data-i18n="about_eb"></p>
+    <div class="top">
+      <div>
+        <h2 data-i18n="about_title"></h2>
+        <p class="lead" data-i18n="about_p1"></p>
+        <p class="lead" data-i18n="about_p2"></p>
+      </div>
+      <div class="vals">
+        <div class="val"><span class="circ"><svg class="ic"><use href="#i-route"/></svg></span><h3 data-i18n="about_v1_t"></h3><p data-i18n="about_v1_d"></p></div>
+        <div class="val"><span class="circ"><svg class="ic"><use href="#i-shield-check"/></svg></span><h3 data-i18n="about_v2_t"></h3><p data-i18n="about_v2_d"></p></div>
+        <div class="val"><span class="circ"><svg class="ic"><use href="#i-chip"/></svg></span><h3 data-i18n="about_v3_t"></h3><p data-i18n="about_v3_d"></p></div>
+        <div class="val"><span class="circ"><svg class="ic"><use href="#i-shield-home"/></svg></span><h3 data-i18n="about_v4_t"></h3><p data-i18n="about_v4_d"></p></div>
+      </div>
+    </div>
+    <div class="team">
+      <p class="lbl" data-i18n="about_team_lbl"></p>
+      <ul>
+        <li><b>خ</b>Khyria Mukhtar</li>
+        <li><b>ر</b>Reema Alhassoun</li>
+        <li><b>م</b>Maram Zamdi</li>
+        <li><b>ر</b>Renad Alghamdi</li>
+      </ul>
+    </div>
+  </div>
+</section>
+</main>
+ 
+<footer id="contact">
+  <div class="in">
+    <div class="fb"><svg class="logo" viewBox="0 0 64 64" aria-hidden="true"><use href="#logo-g"/></svg><span data-i18n="brand"></span></div>
+    <p data-i18n="foot_prog"></p>
+    <p data-i18n="foot_disc"></p>
+    <p class="team"><span data-i18n="foot_team"></span>: Khyria Mukhtar, Reema Alhassoun, Maram Zamdi, Renad Alghamdi · <span data-i18n="foot_inst"></span>: Godwin Badu-Marfo, Lohit Talasila</p>
+  </div>
+</footer>
+ 
+<script>
+/* =========================================================
+   واجهة فقط (Front-end only) — كل البيانات ثابتة هنا.
+   عند ربط نواة بالخادم (LangGraph + RAG) استبدل buildPlan()
+   بنداء للوكيل، وأبقِ renderPlan() كما هي.
+   ========================================================= */
+(function(){
+  const $  = s => document.querySelector(s);
+  const $$ = s => [...document.querySelectorAll(s)];
+ 
+  /* ---------- النصوص الثابتة ---------- */
+  const T = {
+    ar:{
+      brand:"نواة", nav_home:"الرئيسية", nav_about:"عن نواة", nav_services:"الخدمات", nav_knowledge:"المعرفة", nav_contact:"تواصل معنا", start_now:"ابدأ الآن",
+      eyebrow:"رحلة مشروعك، بكل بساطة",
+      h1_1:"من فكرة", h1_2a:"إلى", h1_2b:"مشروع حقيقي",
+      hero_p:"نواة وكيل ذكي يرشدك خلال إجراءات تأسيس مشروعك في السعودية، من فهم المتطلبات إلى إعداد خطتك المخصصة.",
+      ask_ph:"اكتب فكرة مشروعك...", try_lbl:"جرّب أن تسأل:",
+      try1:"أرغب بفتح مقهى في الرياض", try2:"كيف أبدأ متجرًا إلكترونيًا؟",
+      hint_noact:"لم أتعرف على نوع النشاط. جرّب مثلًا: مقهى، مطعم، متجر إلكتروني، استشارات، أو محل تجزئة.",
+      script1:"فكرتك…", script2:"وإرشادنا",
+      trust1:"مصادر حكومية موثوقة", trust2:"إرشاد بالذكاء الاصطناعي", trust3:"خطة مخصصة خطوة بخطوة", trust4:"آمن وموثوق",
+      how_eb:"كيف تعمل نواة", how_title:"طريقة أذكى للبداية",
+      how_p:"تحلّل نواة هدفك، وتحدد ما ينطبق على مشروعك، وترشدك بخطوات واضحة وموثوقة دون تشتّت.",
+      how_cta:"ابدأ رحلتك",
+      hs1_t:"1. شارك فكرتك", hs1_d:"أخبرنا بنوع المشروع الذي تريد البدء به.",
+      hs2_t:"2. احصل على المعلومة الصحيحة", hs2_d:"نحدد ما ينطبق على مشروعك ونسألك عن أي تفاصيل ناقصة.",
+      hs3_t:"3. نسترجع ونحلّل", hs3_d:"نسحب البيانات من مصادر رسمية ونحلل متطلباتك.",
+      hs4_t:"4. نخطط وننظّم", hs4_d:"نكتشف الاعتماديات بين الإجراءات ونضبط التسلسل الصحيح.",
+      hs5_t:"5. خطتك المخصصة", hs5_d:"قائمة واضحة مع الشرح والمصادر الرسمية.",
+      hsx1:"بحث أقل.", hsx2:"تقدّم أكثر.",
+      app_home:"الرئيسية", app_plans:"خططي", app_know:"المعرفة", app_settings:"الإعدادات", app_tag:"ندعم رواد الأعمال السعوديين",
+      app_user:"أرغب بفتح مقهى في الرياض",
+      app_bot:"ممتاز! حلّلت طلبك. هذه أهم المتطلبات لمقهاك في الرياض:",
+      app_i1n:"السجل التجاري", app_i1s:"وزارة التجارة",
+      app_i2n:"الرخصة البلدية", app_i2s:"بلدي",
+      app_i3n:"التسجيل الضريبي", app_i3s:"هيئة الزكاة والضريبة والجمارك",
+      app_view:"عرض الخطة كاملة", app_ph:"اطرح سؤالًا إضافيًا...",
+      plan_note:"معلومات إرشادية أولية، وقد تختلف اشتراطات نشاطك وموقعك. تحقّق دائمًا من الجهة الرسمية قبل التنفيذ.",
+      about_eb:"من نحن", about_title:"وُلدت نواة من رحلة كل رائد أعمال سعودي",
+      about_p1:"نواة منصة سعودية تبسّط أول خطوة في أي مشروع: فهم ما تحتاجه فعلًا. نجمع الأنظمة والتراخيص واللوائح المتفرقة عبر جهات متعددة، ونحوّلها إلى خطة واحدة واضحة تناسب نشاطك وموقعك تحديدًا.",
+      about_p2:"لسنا بديلًا عن الجهات الرسمية، بل دليلك إليها؛ كل خطوة في نواة تنتهي برابط مباشر للمصدر الرسمي حتى تنفّذها بثقة.",
+      about_v1_t:"مسار واضح", about_v1_d:"نرتّب خطواتك بالتسلسل الصحيح حسب اعتماد كل إجراء على غيره.",
+      about_v2_t:"مصداقية أولًا", about_v2_d:"كل معلومة مبنية على أنظمة ومنصات حكومية سعودية موثّقة.",
+      about_v3_t:"ذكاء وكيلي", about_v3_d:"نواة تخطط وتسأل وتحلل نيابة عنك، لا تكتفي بالإجابة عن سؤال واحد.",
+      about_v4_t:"خصوصية بالتصميم", about_v4_d:"نرشدك للجهة الصحيحة، ولا نطّلع على بياناتك الرسمية أو نقدّمها نيابة عنك.",
+      about_team_lbl:"فريق نواة",
+      foot_prog:"مشروع تدريبي ضمن معسكر الذكاء الاصطناعي الوكيلي (Agentic AI Bootcamp) – SDA.",
+      foot_disc:"نواة نموذج أولي للإرشاد المعلوماتي، ولا تحل محل الجهات الحكومية أو الاستشارة القانونية.",
+      foot_team:"فريق العمل", foot_inst:"بإشراف",
+      dep_none:"يمكنك البدء بها الآن", dep_after:"تعتمد على الخطوة", mark:"علّمها منجزة", done:"تم",
+      langBtn:"EN", title:"نواة | Nawah"
+    },
+    en:{
+      brand:"Nawah", nav_home:"Home", nav_about:"About", nav_services:"Services", nav_knowledge:"Knowledge", nav_contact:"Contact", start_now:"Start Now",
+      eyebrow:"YOUR BUSINESS JOURNEY, SIMPLIFIED",
+      h1_1:"From an Idea", h1_2a:"to a", h1_2b:"Real Business",
+      hero_p:"Nawah is an AI agent that guides you through the business setup process in Saudi Arabia — from understanding requirements to creating your personalized plan.",
+      ask_ph:"Tell us your business idea...", try_lbl:"Try asking:",
+      try1:"I want to open a coffee shop in Riyadh", try2:"How can I start an online store?",
+      hint_noact:"I couldn't tell the type of business. Try: coffee shop, restaurant, online store, consulting, or retail store.",
+      script1:"Your idea", script2:"Our guidance",
+      trust1:"Trusted Government Sources", trust2:"AI-Powered Guidance", trust3:"Personalized Step-by-Step Plan", trust4:"Secure & Reliable",
+      how_eb:"HOW NAWAH WORKS", how_title:"A Smarter Way to Start",
+      how_p:"Nawah analyzes your goal, finds what applies to your business, and guides you with clear, trusted steps — without the confusion.",
+      how_cta:"Start Your Journey",
+      hs1_t:"1. Share Your Idea", hs1_d:"Tell us what kind of business you want to start.",
+      hs2_t:"2. Get the Right Information", hs2_d:"We identify what applies to your business and ask for missing details.",
+      hs3_t:"3. Retrieve & Analyze", hs3_d:"We pull data from official sources and analyze your requirements.",
+      hs4_t:"4. Plan & Organize", hs4_d:"We find dependencies and set the right sequence of steps.",
+      hs5_t:"5. Your Personalized Plan", hs5_d:"Get a clear checklist with explanations and official sources.",
+      hsx1:"Less research.", hsx2:"More progress.",
+      app_home:"Home", app_plans:"My Plans", app_know:"Knowledge", app_settings:"Settings", app_tag:"Supporting Saudi Entrepreneurs",
+      app_user:"I want to open a coffee shop in Riyadh",
+      app_bot:"Great! I've analyzed your request. Here are the key requirements for your coffee shop in Riyadh:",
+      app_i1n:"Commercial Registration", app_i1s:"Ministry of Commerce",
+      app_i2n:"Municipal License", app_i2s:"Balady",
+      app_i3n:"ZATCA Tax Registration", app_i3s:"ZATCA",
+      app_view:"View Full Plan", app_ph:"Ask a follow-up question...",
+      plan_note:"Guidance only. Requirements can vary by activity and location, so confirm each step with the official entity before acting.",
+      about_eb:"Who we are", about_title:"Nawah was born from every Saudi founder's first struggle",
+      about_p1:"Nawah is a Saudi platform that simplifies the first step of any business: knowing exactly what you need. We bring together scattered regulations, licenses and requirements across multiple entities and turn them into one clear plan built for your specific activity and location.",
+      about_p2:"We're not a replacement for official authorities — we're your guide to them. Every step in Nawah ends with a direct link to the official source, so you can act with confidence.",
+      about_v1_t:"A clear path", about_v1_d:"We order your steps correctly, based on what each procedure depends on.",
+      about_v2_t:"Credibility first", about_v2_d:"Every piece of information is grounded in verified Saudi government platforms.",
+      about_v3_t:"Agentic by design", about_v3_d:"Nawah plans, asks and analyzes on your behalf — not just one answer at a time.",
+      about_v4_t:"Privacy by design", about_v4_d:"We point you to the right entity. We never access or submit your official data for you.",
+      about_team_lbl:"The Nawah team",
+      foot_prog:"A training project of the Agentic AI Bootcamp – SDA.",
+      foot_disc:"Nawah is an informational prototype. It doesn't replace official authorities or legal advice.",
+      foot_team:"Team", foot_inst:"Instructors",
+      dep_none:"You can start now", dep_after:"Needs step", mark:"Mark as done", done:"Done",
+      langBtn:"عربي", title:"Nawah | نواة"
+    }
+  };
+ 
+  /* ---------- الأنشطة والمدن: [عربي، English] ---------- */
+  const ACT = {
+    custom:{lab:["نشاطك","Your activity"], own:["مشروعك","your business"], def:["النشاط","activity"], re:/.*/}
+  };
+  const DETECT = [];
+  function extractActivityLabel(text){
+    const clean=(text||"").trim();
+    const ar=clean.match(/(?:أرغب|ابغى|أبي|اريد|أريد|ودي)?\s*(?:ب)?(?:فتح|إنشاء|انشاء|تأسيس)\s+(.+?)(?:\s+في\s+|$)/i);
+    const en=clean.match(/(?:open|start|establish|launch)\s+(?:an?\s+)?(.+?)(?:\s+in\s+|$)/i);
+    let label=(ar&&ar[1])||(en&&en[1])||clean;
+    label=label.replace(/^(?:مشروع|شركة)\s+/,'').trim();
+    return label.length>34 ? label.slice(0,34)+"…" : label;
+  }
+
+  const CITY = {
+    riyadh: {n:["الرياض","Riyadh"],                 m:["أمانة منطقة الرياض","Riyadh Region Municipality"],          re:/الرياض|riyadh/i},
+    jeddah: {n:["جدة","Jeddah"],                    m:["أمانة محافظة جدة","Jeddah Municipality"],                  re:/جدة|jeddah|jiddah/i},
+    dammam: {n:["الدمام","Dammam"],                 m:["أمانة المنطقة الشرقية","Eastern Province Municipality"],   re:/الدمام|الخبر|الشرقية|dammam|khobar/i},
+    makkah: {n:["مكة المكرمة","Makkah"],            m:["أمانة العاصمة المقدسة","Makkah Municipality"],             re:/مكة|makkah|mecca/i},
+    madinah:{n:["المدينة المنورة","Madinah"],       m:["أمانة منطقة المدينة المنورة","Madinah Municipality"],       re:/المدينة|madinah|medina/i}
+  };
+ 
+  /* ---------- الجهات الرسمية والروابط ---------- */
+  const GOV = {
+    absher:  {u:"https://www.absher.sa",              n:["أبشر","Absher"],                                   d:["الدخول الموحد للخدمات الحكومية","Single sign-in for government services"]},
+    spl:     {u:"https://splonline.com.sa",           n:["العنوان الوطني (سبل)","National Address (SPL)"],   d:["تسجيل العنوان الوطني","Register your national address"]},
+    sbc:     {u:"https://business.sa",                n:["المركز السعودي للأعمال","Saudi Business Center"],  d:["السجل التجاري وتأسيس المنشآت","Commercial registration and business setup"]},
+    moc:     {u:"https://mc.gov.sa",                  n:["وزارة التجارة","Ministry of Commerce"],            d:["أنظمة الأنشطة التجارية","Trade regulations and activities"]},
+    ejar:    {u:"https://www.ejar.sa",                n:["إيجار","Ejar"],                                    d:["توثيق عقود الإيجار","Documented lease contracts"]},
+    momah:   {u:"https://momah.gov.sa",               n:["البلديات والإسكان","Municipalities & Housing"],    d:["اشتراطات الأنشطة والمواقع","Activity and location requirements"]},
+    balady:  {u:"https://balady.gov.sa",              n:["بلدي","Balady"],                                   d:["رخص الأنشطة والشهادات الصحية","Activity licenses and health certificates"]},
+    civil:   {u:"https://www.998.gov.sa",             n:["الدفاع المدني","Civil Defense"],                   d:["اشتراطات السلامة","Safety requirements"]},
+    zatca:   {u:"https://zatca.gov.sa",               n:["الزكاة والضريبة","ZATCA"],                         d:["الزكاة وضريبة القيمة المضافة والفوترة","Zakat, VAT and e-invoicing"]},
+    qiwa:    {u:"https://qiwa.sa",                    n:["قوى","Qiwa"],                                      d:["ملف المنشأة وعقود العمل","Establishment file and work contracts"]},
+    muqeem:  {u:"https://muqeem.sa",                  n:["مقيم","Muqeem"],                                   d:["خدمات الإقامة للمنشآت","Residency services for establishments"]},
+    gosi:    {u:"https://www.gosi.gov.sa",            n:["التأمينات الاجتماعية","GOSI"],                     d:["تسجيل المنشأة والموظفين","Employer and employee registration"]},
+    mudad:   {u:"https://mudad.com.sa",               n:["مدد","Mudad"],                                     d:["الرواتب وحماية الأجور","Payroll and wage protection"]},
+    chambers:{u:"https://www.saudichambers.org.sa",   n:["الغرف السعودية","Saudi Chambers"],                 d:["الاشتراك في الغرف التجارية","Chamber of commerce membership"]},
+    maroof:  {u:"https://maroof.sa",                  n:["معروف","Maroof"],                                  d:["توثيق المتاجر الإلكترونية","E-store verification"]}
+  };
+ 
+  /* ---------- الخطوات: عنوان، شرح، نقاط، روابط، واعتماديات ---------- */
+  const STEPS = {
+    digital:{deps:[], links:["absher","spl"],
+      t:["جهّز أساسياتك الرقمية","Set up your digital basics"],
+      d:["تعتمد أغلب المنصات الحكومية على أبشر لتسجيل الدخول، ويُطلب العنوان الوطني في أكثر من تسجيل.","Most government platforms sign you in through Absher, and the National Address is asked for in more than one registration."],
+      b:[["فعّل حسابك في أبشر","سجّل عنوانك الوطني (أو عنوان المنشأة)"],["Activate your Absher account","Register your National Address (or the business address)"]]},
+    prof:{deps:[], links:["moc"],
+      t:["تحقّق من الترخيص المهني لتخصصك","Check the professional license for your field"],
+      d:["بعض الاستشارات (كالهندسية والقانونية والطبية) تتطلب ترخيصًا مهنيًا من جهة مختصة قبل السجل التجاري.","Some consulting fields (engineering, legal, medical) need a license from their regulator before the commercial registration."],
+      b:[["حدّد الجهة المنظمة لتخصصك","تأكد إن كان الترخيص مطلوبًا قبل التسجيل"],["Identify the regulator for your field","Confirm whether a license is required before registering"]]},
+    cr:{deps:["digital","prof"], links:["sbc","moc"],
+      t:["سجّل منشأتك (السجل التجاري)","Register your business (Commercial Registration)"],
+      d:["هذه نقطة البداية الرسمية. تختار شكل المنشأة والاسم التجاري والنشاط (بالنسبة إلى {own}، اختر النشاط المعتمد المناسب).","This is the official starting line. You pick the entity type, trade name and activity (for your {own}, the matching approved activity)."],
+      b:[["اختر شكل المنشأة: مؤسسة فردية أو شركة","احجز اسمك التجاري","اختر نشاط {def} من قائمة الأنشطة المعتمدة","ادفع الرسوم إلكترونيًا","بعد الإصدار تُربط منشأتك بالزكاة والتأمينات والموارد البشرية والغرفة التجارية"],
+         ["Choose the entity type: sole proprietorship or company","Reserve your trade name","Select the {def} activity from the approved list","Pay the fee online","Once issued, your business is linked to zakat, social insurance, human resources and the chamber"]]},
+    lease:{deps:["digital"], links:["ejar","momah"],
+      t:["احجز موقعك ووثّق عقد الإيجار","Secure and document your location"],
+      d:["تحتاج عقد إيجار موثّقًا للموقع قبل طلب رخصة النشاط.","You need a documented lease for the premises before you can ask for an activity license."],
+      b:[["اختر موقعًا يسمح بنشاطك حسب اشتراطات البلدية","وثّق عقد الإيجار في إيجار","جهّز مخططات المحل إن طلبتها البلدية"],["Choose premises where your activity is allowed","Document the lease contract on Ejar","Keep the shop layout drawings ready if the municipality asks for them"]]},
+    maroof:{deps:["cr"], links:["maroof","moc"],
+      t:["وثّق متجرك الإلكتروني","Verify your online store"],
+      d:["التوثيق يعزز ثقة العملاء ويربط متجرك ببيانات سجلك التجاري.","Verification builds customer trust and ties your store to your registration details."],
+      b:[["أضف بيانات التجارة الإلكترونية عند إصدار السجل","وثّق متجرك في منصة معروف"],["Add your e-commerce details when issuing the registration","Verify your store on Maroof"]]},
+    balady:{deps:["cr","lease"], links:["balady","civil"],
+      t:["استخرج رخصة البلدية وشهادة السلامة","Get your municipal license and safety permit"],
+      d:["قدّم الطلب عبر بلدي لدى {muni}. وتصدر شهادة السلامة من الدفاع المدني مع رخصة النشاط للأنشطة المعتمدة.","Apply on Balady with {muni}. The Civil Defense safety permit is issued along with the activity license for approved activities."],
+      b:[["قدّم طلب رخصة النشاط عبر بلدي","جهّز عقد الإيجار والسجل التجاري","قد تزور البلدية الموقع للتحقق"],["Submit the activity license request on Balady","Have your lease and commercial registration ready","The municipality may visit the premises to verify"]]},
+    health:{deps:["balady"], links:["balady"],
+      t:["أصدر الشهادات الصحية لفريقك","Issue health certificates for your team"],
+      d:["العاملون في تجهيز الأغذية يحتاجون شهادات صحية سارية قبل الافتتاح.","People who handle food need valid health certificates before you open."],
+      b:[["أحصِ كل من سيتعامل مع الأغذية","أصدر أو جدّد كل شهادة عبر بلدي"],["List everyone who will handle food","Issue or renew each certificate on Balady"]]},
+    zatca:{deps:["cr"], links:["zatca"],
+      t:["سجّل في الزكاة والضريبة","Register for zakat and tax"],
+      d:["يُفتح ملفك الزكوي مع السجل التجاري. والتسجيل في ضريبة القيمة المضافة إلزامي إذا تجاوزت إيراداتك السنوية 375 ألف ريال، واختياري من 187.5 ألف ريال.","Your zakat file opens with the commercial registration. VAT registration is mandatory once annual revenue passes SAR 375,000, and voluntary from SAR 187,500."],
+      b:[["تأكد من ملفك الزكوي والضريبي في الهيئة","تحقّق هل ينطبق عليك التسجيل في ضريبة القيمة المضافة"],["Confirm your zakat and tax file on ZATCA","Check whether VAT registration applies to you"]]},
+    einv:{deps:["zatca"], links:["zatca"],
+      t:["فعّل الفوترة الإلكترونية","Set up e-invoicing"],
+      d:["تُلزم الهيئة المنشآت بإصدار فواتير إلكترونية عبر نظام متوافق.","ZATCA requires businesses to issue electronic invoices through a compliant system."],
+      b:[["اختر نظام نقاط بيع أو محاسبة يوافق متطلبات الهيئة","أكمل تفعيل الفوترة الإلكترونية (فاتورة)"],["Choose a point-of-sale or accounting system that meets ZATCA requirements","Complete the e-invoicing (Fatoora) onboarding"]]},
+    hr:{deps:["cr"], links:["qiwa","muqeem"],
+      t:["افتح ملف المنشأة وخطّط للتوظيف","Open your establishment file and plan hiring"],
+      d:["قبل توظيف أي شخص، فعّل ملف منشأتك في وزارة الموارد البشرية. وتُدار إقامات العمالة غير السعودية عبر مقيم.","Before you hire anyone, activate your establishment file with the Ministry of Human Resources. Residency for non-Saudi staff is handled through Muqeem."],
+      b:[["فعّل ملف المنشأة في الوزارة","أصدر عقود العمل عبر قوى","أدر إقامات العمالة غير السعودية عبر مقيم (إن وُجدت)"],["Activate the establishment file with the Ministry","Issue work contracts through Qiwa","Manage residency for non-Saudi staff on Muqeem (if any)"]]},
+    gosi:{deps:["cr"], links:["gosi"],
+      t:["سجّل في التأمينات الاجتماعية","Register with social insurance"],
+      d:["سجّل المنشأة وموظفيها لدى المؤسسة العامة للتأمينات الاجتماعية عند بدء التوظيف.","Register the business and its employees with GOSI when you start hiring."],
+      b:[["سجّل المنشأة لدى التأمينات","أضف كل موظف","سدّد الاشتراكات الشهرية"],["Register the business with GOSI","Add each employee","Pay monthly contributions"]]},
+    mudad:{deps:["hr","gosi"], links:["mudad"],
+      t:["جهّز الرواتب وحماية الأجور","Set up payroll and wage protection"],
+      d:["تُصرف الرواتب وتُوثّق عبر برنامج حماية الأجور في منصة مدد.","Salaries are paid and documented through the wage protection program on Mudad."],
+      b:[["سجّل منشأتك في مدد","وثّق الرواتب شهريًا"],["Register your business on Mudad","Document salaries every month"]]},
+    chamber:{deps:["cr"], links:["chambers"],
+      t:["اشترك في الغرفة التجارية","Join the chamber of commerce"],
+      d:["يعتمد الاشتراك على موقع منشأتك، ويُربط عادةً بإصدار السجل التجاري.","Membership depends on your location and is usually linked with the commercial registration."],
+      b:[["حدّد الغرفة حسب موقع المنشأة","أكمل اشتراكك أو جدّده"],["Confirm your chamber by business location","Complete or renew your membership"]]}
+  };
+  const PLAN = {
+    restaurant:["digital","cr","lease","balady","health","zatca","einv","hr","gosi","mudad","chamber"],
+    coffee:    ["digital","cr","lease","balady","health","zatca","einv","hr","gosi","mudad","chamber"],
+    retail:    ["digital","cr","lease","balady","zatca","einv","hr","gosi","mudad","chamber"],
+    ecommerce: ["digital","cr","maroof","zatca","einv","hr","gosi","mudad","chamber"],
+    consulting:["digital","prof","cr","zatca","einv","hr","gosi","mudad","chamber"]
+  };
+ 
+  /* ---------- الحالة ---------- */
+  const S = {lang:"ar", act:"custom", city:"riyadh", done:{}};
+  try{ S.lang = localStorage.getItem("nawah_lang") || "ar"; }catch(e){}
+  const i = () => S.lang==="ar" ? 0 : 1;
+  const t = k => T[S.lang][k];
+
+  /* ---------- الاتصال بخادم الوكيل (Nawah API) ----------
+     شغّلي server.py محليًا (uvicorn server:app --reload --port 8000) أو
+     غيّري القيمة أدناه لرابط الخادم بعد نشره. عند تعذّر الوصول للخادم،
+     تعود الواجهة تلقائيًا للخطة التجريبية المحلية (PLAN/STEPS بالأسفل). */
+  const API_BASE = "http://localhost:8000";
+  let liveResult = null;   // آخر استجابة حقيقية كاملة من /api/plan
+  let liveNationality = "unspecified";
+
+  async function fetchAgentPlan(businessIdea, nationality, answers){
+    const res = await fetch(`${API_BASE}/api/plan`, {
+      method: "POST",
+      headers: {"Content-Type": "application/json"},
+      // `answers` (has_lease / name_type / registration_started) lets the
+      // real agent skip questions it already has and call fewer speculative
+      // tools -- it never gets used to force a status/link that the data
+      // doesn't actually support. If your server.py's request model doesn't
+      // accept `answers` yet, add it as an optional field there.
+      body: JSON.stringify({business_idea: businessIdea, nationality, answers: answers || {}})
+    });
+    if(!res.ok){
+      const detail = await res.json().catch(() => ({}));
+      throw new Error(detail.detail || `HTTP ${res.status}`);
+    }
+    return res.json();
+  }
+
+  /* ---------- أسئلة ما قبل الخطة (onboarding) ----------
+     تُسأل مرة واحدة قبل أول خطة حقيقية، عشان الوكيل يبني خطة مخصّصة بدل
+     ما يخمّن. الإجابات تُرسل مع كل طلب لاحق أيضًا. */
+  const ONBOARD_Q = [
+    { key: "nationality", ar: "جنسية صاحب/ة العمل؟", en: "Owner's nationality?",
+      opts: [["saudi","سعودي/ة","Saudi"], ["gcc","خليجي/ة","GCC"], ["foreign","غير خليجي","Non-GCC foreign"]] },
+    { key: "has_lease", ar: "عندك عقد إيجار مسجّل بإيجار للمكان؟", en: "Do you have a registered Ejar lease for the location?",
+      opts: [["yes","نعم","Yes"], ["no","لا، ما زلت أبحث","Not yet"]] },
+    { key: "location_ready", ar: "هل حددت موقع/حي مناسب لمشروعك؟", en: "Have you chosen a suitable location/neighborhood for your business?",
+      opts: [["yes","نعم، حددته","Yes"], ["no","لا، اقترح لي أفضل المناطق","No, suggest areas"]] },
+    { key: "name_type", ar: "بتسجّلين باسم تجاري ولا باسمك الشخصي؟", en: "Registering under a trade name or your personal name?",
+      opts: [["trade","اسم تجاري","Trade name"], ["personal","اسمي الشخصي","Personal name"]] },
+    { key: "registration_started", ar: "بدأتِ أي خطوة تسجيل رسمية قبل الآن؟", en: "Started any official registration step already?",
+      opts: [["yes","نعم","Yes"], ["no","لا، لسه بالبداية","Not yet"]] },
+  ];
+  let onboardAnswers = null;   // null = لم تُطرح الأسئلة بعد لهذي الجلسة
+  let onboardStep = 0;
+  let pendingQuery = null;
+
+  function renderOnboard(){
+    const el = $("#onboard");
+    el.hidden = false; el.className = "memo onboard";
+    const q = ONBOARD_Q[onboardStep];
+    const label = q[S.lang];
+    el.innerHTML = `
+      <p class="onboard-progress">${onboardStep+1} / ${ONBOARD_Q.length}</p>
+      <p class="onboard-q"></p>
+      <div class="onboard-opts"></div>`;
+    el.querySelector(".onboard-q").textContent = label;
+    const wrap = el.querySelector(".onboard-opts");
+    q.opts.forEach(([val, ar, en]) => {
+      const b = document.createElement("button");
+      b.type = "button"; b.className = "pill onboard-opt";
+      b.textContent = S.lang === "ar" ? ar : en;
+      b.addEventListener("click", () => {
+        onboardAnswers[q.key] = val;
+        if(q.key === "nationality") liveNationality = val === "saudi" ? "saudi" : (val === "foreign" ? "non_saudi" : "unspecified");
+        onboardStep++;
+        if(onboardStep < ONBOARD_Q.length) renderOnboard();
+        else { el.hidden = true; el.innerHTML = ""; runQuery(pendingQuery); }
+      });
+      wrap.appendChild(b);
+    });
+    $("#plan").scrollIntoView({behavior: matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth"});
+  }
+
+  /* ---------- حركات الظهور عند التمرير ---------- */
+  let revealObserver = null;
+  const reduceMotion = () => window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  const revealSelectors = [
+    ".trust .ti", ".plan-head", ".st", ".how .grid > div",
+    ".hs", ".app", ".about .top > div", ".val", ".team li", "footer .in"
+  ];
+
+  function markRevealItems(){
+    revealSelectors.forEach(selector => {
+      $$(selector).forEach((el, index) => {
+        if(el.classList.contains("reveal-target")) return;
+        el.classList.add("reveal-target");
+        el.style.setProperty("--reveal-delay", `${(index % 6) * 70}ms`);
+        if(reduceMotion() || !revealObserver) el.classList.add("is-visible");
+        else revealObserver.observe(el);
+      });
+    });
+  }
+
+  function initMotion(){
+    if("IntersectionObserver" in window && !reduceMotion()){
+      revealObserver = new IntersectionObserver(entries => {
+        entries.forEach(entry => {
+          if(!entry.isIntersecting) return;
+          entry.target.classList.add("is-visible");
+          revealObserver.unobserve(entry.target);
+        });
+      }, {threshold:.12, rootMargin:"0px 0px -40px"});
+    }
+    markRevealItems();
+  }
+ 
+  /* ---------- اللغة والاتجاه ---------- */
+  function applyLang(){
+    const h = document.documentElement;
+    h.lang = S.lang; h.dir = S.lang==="ar" ? "rtl" : "ltr";
+    document.title = t("title");
+    $$("[data-i18n]").forEach(el => el.textContent = t(el.dataset.i18n));
+    $$("[data-i18n-ph]").forEach(el => el.placeholder = t(el.dataset.i18nPh));
+    $("#try1").textContent = t("try1"); $("#try2").textContent = t("try2");
+    $("#langBtn").textContent = t("langBtn");
+    $("#langBtn").setAttribute("aria-label", S.lang==="ar" ? "Switch to English" : "التبديل إلى العربية");
+    $("#selAct").setAttribute("aria-label", S.lang==="ar" ? "نوع النشاط" : "Business type");
+    $("#selCity").setAttribute("aria-label", S.lang==="ar" ? "المدينة" : "City");
+    $("#hint").hidden = true;
+    renderSelects(); if(liveResult) renderPlan();
+  }
+ 
+  function renderSelects(){
+    const a = $("#selAct"), c = $("#selCity");
+    a.innerHTML = Object.keys(ACT).map(k => `<option value="${k}" ${k===S.act?"selected":""}>${ACT[k].lab[i()]}</option>`).join("");
+    c.innerHTML = Object.keys(CITY).map(k => `<option value="${k}" ${k===S.city?"selected":""}>${CITY[k].n[i()]}</option>`).join("");
+  }
+ 
+  /* ---------- بناء الخطة ---------- */
+  // إذا توفّرت استجابة حقيقية من الوكيل (liveResult)، تُبنى الخطوات من
+  // plan.plan (order/title/authority/description/status/caveat) بنفس شكل
+  // الخطوات المحلية. وإلا تُستخدم بيانات العرض التجريبي المحلية (PLAN/STEPS).
+  function buildPlan(){
+    if(liveResult && liveResult.plan && Array.isArray(liveResult.plan.plan) && liveResult.plan.plan.length){
+      const statusNote = {
+        blocked: {ar:"⚠ يتطلب تأكيدًا مباشرًا من الجهة الرسمية", en:"⚠ Requires direct confirmation from the authority"},
+        unverified: {ar:"ⓘ وفق آخر معلومة متاحة — يُنصح بالتأكد مباشرة", en:"ⓘ Per latest available info — direct confirmation advised"},
+        missing: {ar:"ⓘ معلومة غير متوفرة حاليًا في القاعدة المدقَّقة", en:"ⓘ Not currently available in the audited dataset"}
+      };
+      const orderToN = Object.fromEntries(liveResult.plan.plan.map(s => [s.order, s.order]));
+      return liveResult.plan.plan.map(s => ({
+        id: `agent_${s.order}`, n: s.order,
+        title: s.title,
+        desc: s.description + (s.authority ? ` — ${s.authority}` : ""),
+        // "needed" (real prerequisites copied from the audited data) are shown
+        // as normal bullets; the status note/caveat comes after, so a step
+        // never reads as *only* a warning.
+        bullets: [...(Array.isArray(s.needed) ? s.needed : []),
+                  statusNote[s.status] ? statusNote[s.status][S.lang] : null, s.caveat].filter(Boolean),
+        // Only ever a real link the agent copied from the audited source --
+        // never fabricated. sourceUrl is undefined/null when none exists.
+        links: [], sourceUrl: s.source_url || null,
+        deps: Array.isArray(s.dependencies) ? s.dependencies.filter(d => orderToN[d]) : [],
+        authority: s.authority
+      }));
+    }
+    return []; // لا توجد أي خطة محلية/تلقائية — الخطة تأتي من الخادم فقط.
+
+  }
+
+  /* ---------- حالة إنشاء الخطة فقط؛ لا نعرض مذكرة تفكير/تلخيص ---------- */
+  function showMemo(className, text){
+    const el = $("#planStatus");
+    el.className = "plan-status" + (className ? ` ${className}` : "");
+    el.textContent = text; el.hidden = false;
+  }
+  function hideMemo(){ const el = $("#planStatus"); el.hidden = true; el.textContent = ""; el.className = "plan-status"; }
+
+  // لا نعرض أي خطة محلية/تجريبية. عناصر الخطة تظهر فقط بعد وصول
+  // استجابة حقيقية من /api/plan.
+  function setPlanContentVisible(visible){
+    const head = document.querySelector("#plan .plan-head");
+    const steps = $("#steps");
+    const note = document.querySelector("#plan .note");
+    if(head) head.hidden = !visible;
+    if(steps) steps.hidden = !visible;
+    if(note) note.hidden = !visible;
+  }
+ 
+  function renderPlan(){
+    const steps = buildPlan();
+    const entities = new Set(steps.flatMap(s => s.links.length ? s.links : (s.authority ? [s.authority] : []))).size;
+
+    if(liveResult){
+      $("#planTitle").textContent = S.lang==="ar" ? `خطتك: ${S.lastQuery || ""}` : `Your plan: ${S.lastQuery || ""}`;
+      $("#planSub").textContent = S.lang==="ar" ? `${steps.length} خطوة مرتبة عبر ${entities} جهة رسمية — نواة رتّبتها حسب مشروعك` : `${steps.length} ordered steps across ${entities} official entities — from the live advisor`;
+      hideMemo();
+    } else {
+      const a = ACT[S.act], c = CITY[S.city];
+      $("#planTitle").textContent = S.lang==="ar" ? `خطتك: ${a.lab[0]} في ${c.n[0]}` : `Your plan: ${a.lab[1]} in ${c.n[1]}`;
+      $("#planSub").textContent  = S.lang==="ar" ? `${steps.length} خطوة مرتبة عبر ${entities} جهة رسمية` : `${steps.length} ordered steps across ${entities} official entities`;
+      hideMemo();
+    }
+ 
+    const ol = $("#steps"); ol.innerHTML = "";
+    steps.forEach(st => {
+      const done = !!S.done[st.id];
+      const dep = st.deps.length ? `${t("dep_after")} ${st.deps.join(S.lang==="ar" ? "، " : ", ")}` : t("dep_none");
+      const li = document.createElement("li");
+      li.className = "st" + (done ? " done" : "");
+      li.innerHTML = `
+        <div class="rail"><div class="orb">
+          <svg class="sprout" viewBox="0 0 40 24" aria-hidden="true"><path d="M20 22C20 12 14 6 4 6c0 10 6 16 16 16Z" fill="#8DB55A"/><path d="M20 22c0-10 6-16 16-16 0 10-6 16-16 16Z" fill="#6E9A40"/></svg>
+          <svg class="pit" viewBox="0 0 60 100" aria-hidden="true"><use href="#pit-g"/></svg>
+        </div></div>
+        <article class="stc">
+          <h3><span class="num">${st.n}</span><span class="tt"></span></h3>
+          <p class="desc"></p>
+          <ul class="bl"></ul>
+          <div class="links"></div>
+          <p class="deps"></p>
+          <button class="done-btn" type="button" aria-pressed="${done}"></button>
+        </article>`;
+      li.querySelector(".tt").textContent = st.title;
+      li.querySelector(".desc").textContent = st.desc;
+      li.querySelector(".deps").textContent = dep;
+      const ul = li.querySelector(".bl");
+      st.bullets.forEach(b => { const x = document.createElement("li"); x.innerHTML = '<svg aria-hidden="true"><use href="#i-leaf"/></svg><span></span>'; x.querySelector("span").textContent = b; ul.appendChild(x); });
+      const lk = li.querySelector(".links");
+      st.links.forEach(k => {
+        const g = GOV[k], p = document.createElement("a");
+        p.className = "pill"; p.href = g.u; p.target = "_blank"; p.rel = "noopener";
+        p.innerHTML = '<span></span><svg class="ic" aria-hidden="true"><use href="#i-ext"/></svg>';
+        p.querySelector("span").textContent = g.n[i()]; lk.appendChild(p);
+      });
+      // Real link from the live agent, only when the audited data actually has one.
+      if(st.sourceUrl){
+        const p = document.createElement("a");
+        p.className = "pill"; p.href = st.sourceUrl; p.target = "_blank"; p.rel = "noopener";
+        p.innerHTML = '<span></span><svg class="ic" aria-hidden="true"><use href="#i-ext"/></svg>';
+        p.querySelector("span").textContent = st.authority ? `${t("gov_open") || (S.lang==="ar"?"فتح خدمة":"Open service")} — ${st.authority}` : (S.lang==="ar"?"فتح الخدمة الرسمية":"Open official service");
+        lk.appendChild(p);
+      }
+      const btn = li.querySelector(".done-btn");
+      btn.textContent = done ? t("done") : t("mark");
+      btn.addEventListener("click", () => { S.done[st.id] = !S.done[st.id]; renderPlan(); });
+      ol.appendChild(li);
+    });
+    const d = steps.filter(s => S.done[s.id]).length;
+    $("#barFill").style.width = (d/steps.length*100) + "%";
+    $("#progTxt").textContent = S.lang==="ar" ? `أنجزت ${d} من ${steps.length}` : `${d} of ${steps.length} done`;
+    markRevealItems();
+  }
+ 
+  /* ---------- فهم الطلب ---------- */
+  function detectAct(text){ for(const k of DETECT){ if(ACT[k].re.test(text)) return k; } return null; }
+  function detectCity(text){ for(const k of Object.keys(CITY)){ if(CITY[k].re.test(text)) return k; } return null; }
+  async function go(text){
+    if(!text){ return; }
+    // نفتح مساحة الأسئلة فقط؛ لا نعرض أي خطة قبل نتيجة الخادم الحقيقية.
+    $("#plan").hidden = false;
+    setPlanContentVisible(false);
+    hideMemo();
+    pendingQuery = text;
+    if(!onboardAnswers){
+      onboardAnswers = {}; onboardStep = 0;
+      renderOnboard();
+      return;   // runQuery() is called once the last question is answered
+    }
+    runQuery(text);
+  }
+
+  async function runQuery(text){
+    if(!text){ return; }
+    S.lastQuery = text;
+    $("#plan").hidden = false;
+    setPlanContentVisible(false);
+    $("#steps").innerHTML = "";
+    liveResult = null;
+    showMemo("loading", S.lang==="ar" ? "نواة تعمل على خطتك الآن..." : "The advisor is reviewing your request...");
+    $("#plan").scrollIntoView({behavior: matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth"});
+
+    try{
+      const data = await fetchAgentPlan(text, liveNationality, onboardAnswers);
+      liveResult = data;
+      S.done = {};
+      setPlanContentVisible(true);
+      renderPlan();
+      if(onboardAnswers && onboardAnswers.location_ready === "no") runLocationAdvisor();
+    }catch(err){
+      setPlanContentVisible(false);
+      showMemo("error", (S.lang==="ar"
+        ? `تعذّر إكمال خطتك الآن (${API_BASE}).\nتفاصيل: `
+        : `Could not reach the advisor server (${API_BASE}).\nDetails: `) + err.message);
+    }
+  }
+
+  let chatSession = null;
+  async function apiPost(path, body){
+    const res = await fetch(`${API_BASE}${path}`, {method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(body)});
+    const data = await res.json().catch(()=>({}));
+    if(!res.ok) throw new Error(data.detail || `HTTP ${res.status}`);
+    return data;
+  }
+  function addChat(text, who){ const el=document.createElement("div"); el.className=`chat-msg ${who}`; el.textContent=text; $("#chatLog").appendChild(el); $("#chatLog").scrollTop=$("#chatLog").scrollHeight; }
+  $("#chatForm").addEventListener("submit", async e=>{
+    e.preventDefault(); const input=$("#chatInput"), msg=input.value.trim(); if(!msg)return; input.value=""; addChat(msg,"user"); addChat("نواة تتحقق من بيانات الخدمة...","bot"); const pending=$("#chatLog").lastElementChild;
+    try{ const d=await apiPost("/api/chat",{message:msg,session:chatSession}); chatSession=d.session; pending.textContent=d.reply; }
+    catch(err){ pending.textContent=`تعذر الحصول على الإجابة: ${err.message}`; }
+  });
+  let activeLocationQuery = "";
+  async function geocodeArea(name){
+    const city = detectCity(activeLocationQuery || S.lastQuery || ""); const cityName = city ? CITY[city].n[1] : "Saudi Arabia";
+    const q=encodeURIComponent(`${name}, ${cityName}, Saudi Arabia`);
+    const r=await fetch(`https://nominatim.openstreetmap.org/search?format=json&limit=1&q=${q}`,{headers:{"Accept-Language":"ar"}}); const a=await r.json(); return a[0] ? [Number(a[0].lat),Number(a[0].lon)] : null;
+  }
+  let marketMap=null, marketMarkers=[];
+  async function renderLocationAreas(data){
+    const box=$("#locationResults"); box.innerHTML=""; const areas=data.areas||[];
+    for(const a of areas){ const c=document.createElement("div"); c.className="loc-card"; c.innerHTML=`<b></b><p></p>${a.source_url?'<a target="_blank" rel="noopener">فتح المصدر / العرض العقاري</a>':''}`; c.querySelector("b").textContent=a.name||""; c.querySelector("p").textContent=a.why||""; if(a.source_url)c.querySelector("a").href=a.source_url; box.appendChild(c); }
+    $("#locationStatus").textContent=data.note||data.disclaimer||"";
+    if(!areas.length || !window.L)return; $("#marketMap").hidden=false;
+    if(!marketMap) marketMap=L.map("marketMap").setView([24.7136,46.6753],10);
+    marketMarkers.forEach(m=>m.remove()); marketMarkers=[];
+    if(!marketMap._nawahTiles){L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",{maxZoom:19,attribution:"© OpenStreetMap"}).addTo(marketMap);marketMap._nawahTiles=true;}
+    const pts=[]; for(const a of areas){ try{const pt=await geocodeArea(a.name); if(pt){pts.push(pt);marketMarkers.push(L.marker(pt).addTo(marketMap).bindPopup(`<b>${a.name}</b><br>${a.why||""}`));}}catch(e){} }
+    if(pts.length) marketMap.fitBounds(pts,{padding:[30,30]}); setTimeout(()=>marketMap.invalidateSize(),100);
+  }
+  async function runLocationAdvisor(){
+    const typed = ($("#locationInput")?.value || "").trim();
+    const query = typed || S.lastQuery || "";
+    if(!query){ $("#locationStatus").textContent="اكتب النشاط والمدينة أولًا، مثل: أفضل مواقع لعيادة أسنان في جدة"; return; }
+    activeLocationQuery = query;
+    const btn=$("#locationBtn"); btn.disabled=true; $("#locationStatus").textContent="نواة تبحث حسب النشاط والمدينة التي طلبتها...";
+    const city=detectCity(query); const cityHint=city?CITY[city].n[0]:null;
+    try{const d=await apiPost("/api/location",{business_idea:query,nationality:liveNationality,city_hint:cityHint}); await renderLocationAreas(d);}catch(err){$("#locationStatus").textContent=`تعذر تحليل المواقع: ${err.message}`;} finally{btn.disabled=false;}
+  }
+  $("#locationBtn").addEventListener("click",runLocationAdvisor);
+
+  $("#askForm").addEventListener("submit", e => { e.preventDefault(); go($("#biz").value.trim()); });
+  [["#try1","try1"],["#try2","try2"]].forEach(([sel,key]) => $(sel).addEventListener("click", () => { $("#biz").value = t(key); go(t(key)); }));
+ 
+  $("#selAct").addEventListener("change", e => { S.act = e.target.value; });
+  $("#selCity").addEventListener("change", e => { S.city = e.target.value; });
+ 
+  $("#viewFull").addEventListener("click", () => {
+    window.scrollTo({top:0,behavior:"smooth"});
+    setTimeout(() => $("#biz").focus(), 350);
+  });
+  [$("#startNow"), $("#startJourney")].forEach(el => el.addEventListener("click", e => { e.preventDefault(); window.scrollTo({top:0,behavior:"smooth"}); setTimeout(() => $("#biz").focus(), 350); }));
+  $("#searchBtn").addEventListener("click", () => { window.scrollTo({top:0,behavior:"smooth"}); setTimeout(() => $("#biz").focus(), 350); });
+ 
+  $("#langBtn").addEventListener("click", () => {
+    S.lang = S.lang==="ar" ? "en" : "ar";
+    try{ localStorage.setItem("nawah_lang", S.lang); }catch(e){}
+    applyLang();
+  });
+ 
+  /* الترويسة تصبح داكنة عند التمرير */
+  const hdr = $("#hdr");
+  const onScroll = () => hdr.classList.toggle("solid", window.scrollY > 30);
+  window.addEventListener("scroll", onScroll, {passive:true}); onScroll();
+ 
+  initMotion();
+  applyLang();
+})();
+</script>
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" crossorigin=""></script>
+</body>
+</html>
