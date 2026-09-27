@@ -104,3 +104,7 @@ OpenAI الرسمي قبل التشغيل الفعلي، فقد تحتاجين �
 
 ## python -m http.server 5500
 ## python -m uvicorn server:app --reload --port 8000
+# python -m venv .venv
+# .\.venv\Scripts\Activate.ps1
+# pip install -r requirements.txt
+# python -m uvicorn server:app --reload --port 8000

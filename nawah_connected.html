@@ -609,19 +609,19 @@ footer .team{opacity:.62;font-size:.84rem}
 <!-- ===================== خدمات نواة الذكية ===================== -->
 <section class="service-tools" id="servicesTools">
   <div class="wrap">
-    <h2>خدمات نواة الذكية</h2>
-    <p class="lead2">اسأل عن معاملة أو ترخيص، وإذا لم تحدد موقع مشروعك نحلل لك مناطق مناسبة ونربطك بنتائج عقارية منشورة.</p>
+    <h2 data-i18n="services_h2"></h2>
+    <p class="lead2" data-i18n="services_lead"></p>
     <div class="tool-grid">
       <div class="tool-card" id="chatService">
-        <h3>مستشار المعاملات والتراخيص</h3>
-        <p>اسأل عن السجل التجاري، بلدي، إيجار، الاستثمار أو أي إجراء يخص تأسيس وتشغيل النشاط.</p>
-        <div class="chat-log" id="chatLog"><div class="chat-msg bot">اسأل نواة عن أي معاملة أو ترخيص، وسأتذكر نشاطك أثناء المحادثة.</div></div>
-        <form class="chat-row" id="chatForm"><input id="chatInput" placeholder="مثال: ما متطلبات الرخصة البلدية لمقهى؟"><button type="submit">إرسال</button></form>
+        <h3 data-i18n="chat_svc_title"></h3>
+        <p data-i18n="chat_svc_desc"></p>
+        <div class="chat-log" id="chatLog"><div class="chat-msg bot" id="chatIntro" data-i18n="chat_intro"></div></div>
+        <form class="chat-row" id="chatForm"><input id="chatInput" data-i18n-ph="chat_ph"><button type="submit" data-i18n="chat_send"></button></form>
       </div>
       <div class="tool-card" id="locationService">
-        <h3>محلل الموقع والسوق</h3>
-        <p>يظهر تلقائيًا عندما تحدد أنك لم تختر موقعًا بعد. يقارن مناطق مناسبة حسب النشاط والمدينة، ويبحث عن مؤشرات سوق وعروض منشورة في عقار.</p>
-        <div class="chat-row"><input id="locationInput" placeholder="مثال: أفضل مواقع لعيادة أسنان في جدة"><button class="loc-btn" id="locationBtn" type="button">ابحث عن المواقع</button></div>
+        <h3 data-i18n="loc_svc_title"></h3>
+        <p data-i18n="loc_svc_desc"></p>
+        <div class="chat-row"><input id="locationInput" data-i18n-ph="loc_ph"><button class="loc-btn" id="locationBtn" type="button" data-i18n="loc_btn"></button></div>
         <div id="locationStatus" class="loc-status"></div>
         <div id="locationResults" class="location-results"></div>
         <div id="marketMap" class="market-map" hidden></div>
@@ -763,7 +763,7 @@ footer .team{opacity:.62;font-size:.84rem}
       app_i3n:"التسجيل الضريبي", app_i3s:"هيئة الزكاة والضريبة والجمارك",
       app_view:"عرض الخطة كاملة", app_ph:"اطرح سؤالًا إضافيًا...",
       plan_note:"معلومات إرشادية أولية، وقد تختلف اشتراطات نشاطك وموقعك. تحقّق دائمًا من الجهة الرسمية قبل التنفيذ.",
-      about_eb:"من نحن", about_title:"وُلدت نواة من رحلة كل رائد أعمال سعودي",
+      about_eb:"من نحن", about_title:"وُلدت نواة لرحلة كل رائد أعمال ",
       about_p1:"نواة منصة سعودية تبسّط أول خطوة في أي مشروع: فهم ما تحتاجه فعلًا. نجمع الأنظمة والتراخيص واللوائح المتفرقة عبر جهات متعددة، ونحوّلها إلى خطة واحدة واضحة تناسب نشاطك وموقعك تحديدًا.",
       about_p2:"لسنا بديلًا عن الجهات الرسمية، بل دليلك إليها؛ كل خطوة في نواة تنتهي برابط مباشر للمصدر الرسمي حتى تنفّذها بثقة.",
       about_v1_t:"مسار واضح", about_v1_d:"نرتّب خطواتك بالتسلسل الصحيح حسب اعتماد كل إجراء على غيره.",
@@ -775,6 +775,23 @@ footer .team{opacity:.62;font-size:.84rem}
       foot_disc:"نواة نموذج أولي للإرشاد المعلوماتي، ولا تحل محل الجهات الحكومية أو الاستشارة القانونية.",
       foot_team:"فريق العمل", foot_inst:"بإشراف",
       dep_none:"يمكنك البدء بها الآن", dep_after:"تعتمد على الخطوة", mark:"علّمها منجزة", done:"تم",
+      services_h2:"خدمات نواة الذكية",
+      services_lead:"اسأل عن معاملة أو ترخيص، وإذا لم تحدد موقع مشروعك نحلل لك مناطق مناسبة ونربطك بنتائج عقارية منشورة.",
+      chat_svc_title:"مستشار المعاملات والتراخيص",
+      chat_svc_desc:"اسأل عن السجل التجاري، بلدي، إيجار، الاستثمار أو أي إجراء يخص تأسيس وتشغيل النشاط.",
+      chat_intro:"اسأل نواة عن أي معاملة أو ترخيص، وسأتذكر نشاطك أثناء المحادثة.",
+      chat_ph:"مثال: ما متطلبات الرخصة البلدية لمقهى؟",
+      chat_send:"إرسال",
+      chat_checking:"نواة تتحقق من بيانات الخدمة...",
+      chat_err:"تعذر الحصول على الإجابة: ",
+      loc_svc_title:"محلل الموقع والسوق",
+      loc_svc_desc:"يظهر تلقائيًا عندما تحدد أنك لم تختر موقعًا بعد. يقارن مناطق مناسبة حسب النشاط والمدينة، ويبحث عن مؤشرات سوق وعروض منشورة في عقار.",
+      loc_ph:"مثال: أفضل مواقع لعيادة أسنان في جدة",
+      loc_btn:"ابحث عن المواقع",
+      loc_need_query:"اكتب النشاط والمدينة أولًا، مثل: أفضل مواقع لعيادة أسنان في جدة",
+      loc_searching:"نواة تبحث حسب النشاط والمدينة التي طلبتها...",
+      loc_err:"تعذر تحليل المواقع: ",
+      loc_open_source:"فتح المصدر / العرض العقاري",
       langBtn:"EN", title:"نواة | Nawah"
     },
     en:{
@@ -804,7 +821,7 @@ footer .team{opacity:.62;font-size:.84rem}
       app_i3n:"ZATCA Tax Registration", app_i3s:"ZATCA",
       app_view:"View Full Plan", app_ph:"Ask a follow-up question...",
       plan_note:"Guidance only. Requirements can vary by activity and location, so confirm each step with the official entity before acting.",
-      about_eb:"Who we are", about_title:"Nawah was born from every Saudi founder's first struggle",
+      about_eb:"Who we are", about_title:"Nawah was born from every founder's first struggle",
       about_p1:"Nawah is a Saudi platform that simplifies the first step of any business: knowing exactly what you need. We bring together scattered regulations, licenses and requirements across multiple entities and turn them into one clear plan built for your specific activity and location.",
       about_p2:"We're not a replacement for official authorities — we're your guide to them. Every step in Nawah ends with a direct link to the official source, so you can act with confidence.",
       about_v1_t:"A clear path", about_v1_d:"We order your steps correctly, based on what each procedure depends on.",
@@ -816,6 +833,23 @@ footer .team{opacity:.62;font-size:.84rem}
       foot_disc:"Nawah is an informational prototype. It doesn't replace official authorities or legal advice.",
       foot_team:"Team", foot_inst:"Instructors",
       dep_none:"You can start now", dep_after:"Needs step", mark:"Mark as done", done:"Done",
+      services_h2:"Nawah's Smart Services",
+      services_lead:"Ask about a transaction or license, and if you haven't picked a location yet, we'll analyze suitable areas and match you with published real-estate listings.",
+      chat_svc_title:"Licensing & Transactions Advisor",
+      chat_svc_desc:"Ask about commercial registration, Balady, Ejar, investment, or any procedure for setting up and running your business.",
+      chat_intro:"Ask Nawah about any transaction or license — I'll remember your activity throughout the conversation.",
+      chat_ph:"e.g. What are the municipal license requirements for a café?",
+      chat_send:"Send",
+      chat_checking:"Nawah is checking the service data...",
+      chat_err:"Could not get an answer: ",
+      loc_svc_title:"Location & Market Analyst",
+      loc_svc_desc:"Appears automatically once you say you haven't chosen a location yet. Compares suitable areas by activity and city, and searches for market signals and published listings on Aqar.",
+      loc_ph:"e.g. Best locations for a dental clinic in Jeddah",
+      loc_btn:"Search locations",
+      loc_need_query:"Type the activity and city first, e.g. best locations for a dental clinic in Jeddah",
+      loc_searching:"Nawah is searching based on the activity and city you asked for...",
+      loc_err:"Could not analyze locations: ",
+      loc_open_source:"Open source / listing",
       langBtn:"عربي", title:"Nawah | نواة"
     }
   };
@@ -1226,9 +1260,9 @@ footer .team{opacity:.62;font-size:.84rem}
   }
   function addChat(text, who){ const el=document.createElement("div"); el.className=`chat-msg ${who}`; el.textContent=text; $("#chatLog").appendChild(el); $("#chatLog").scrollTop=$("#chatLog").scrollHeight; }
   $("#chatForm").addEventListener("submit", async e=>{
-    e.preventDefault(); const input=$("#chatInput"), msg=input.value.trim(); if(!msg)return; input.value=""; addChat(msg,"user"); addChat("نواة تتحقق من بيانات الخدمة...","bot"); const pending=$("#chatLog").lastElementChild;
+    e.preventDefault(); const input=$("#chatInput"), msg=input.value.trim(); if(!msg)return; input.value=""; addChat(msg,"user"); addChat(t("chat_checking"),"bot"); const pending=$("#chatLog").lastElementChild;
     try{ const d=await apiPost("/api/chat",{message:msg,session:chatSession}); chatSession=d.session; pending.textContent=d.reply; }
-    catch(err){ pending.textContent=`تعذر الحصول على الإجابة: ${err.message}`; }
+    catch(err){ pending.textContent=`${t("chat_err")}${err.message}`; }
   });
   let activeLocationQuery = "";
   async function geocodeArea(name){
@@ -1239,7 +1273,7 @@ footer .team{opacity:.62;font-size:.84rem}
   let marketMap=null, marketMarkers=[];
   async function renderLocationAreas(data){
     const box=$("#locationResults"); box.innerHTML=""; const areas=data.areas||[];
-    for(const a of areas){ const c=document.createElement("div"); c.className="loc-card"; c.innerHTML=`<b></b><p></p>${a.source_url?'<a target="_blank" rel="noopener">فتح المصدر / العرض العقاري</a>':''}`; c.querySelector("b").textContent=a.name||""; c.querySelector("p").textContent=a.why||""; if(a.source_url)c.querySelector("a").href=a.source_url; box.appendChild(c); }
+    for(const a of areas){ const c=document.createElement("div"); c.className="loc-card"; c.innerHTML=`<b></b><p></p>${a.source_url?`<a target="_blank" rel="noopener">${t("loc_open_source")}</a>`:''}`; c.querySelector("b").textContent=a.name||""; c.querySelector("p").textContent=a.why||""; if(a.source_url)c.querySelector("a").href=a.source_url; box.appendChild(c); }
     $("#locationStatus").textContent=data.note||data.disclaimer||"";
     if(!areas.length || !window.L)return; $("#marketMap").hidden=false;
     if(!marketMap) marketMap=L.map("marketMap").setView([24.7136,46.6753],10);
@@ -1251,11 +1285,11 @@ footer .team{opacity:.62;font-size:.84rem}
   async function runLocationAdvisor(){
     const typed = ($("#locationInput")?.value || "").trim();
     const query = typed || S.lastQuery || "";
-    if(!query){ $("#locationStatus").textContent="اكتب النشاط والمدينة أولًا، مثل: أفضل مواقع لعيادة أسنان في جدة"; return; }
+    if(!query){ $("#locationStatus").textContent=t("loc_need_query"); return; }
     activeLocationQuery = query;
-    const btn=$("#locationBtn"); btn.disabled=true; $("#locationStatus").textContent="نواة تبحث حسب النشاط والمدينة التي طلبتها...";
+    const btn=$("#locationBtn"); btn.disabled=true; $("#locationStatus").textContent=t("loc_searching");
     const city=detectCity(query); const cityHint=city?CITY[city].n[0]:null;
-    try{const d=await apiPost("/api/location",{business_idea:query,nationality:liveNationality,city_hint:cityHint}); await renderLocationAreas(d);}catch(err){$("#locationStatus").textContent=`تعذر تحليل المواقع: ${err.message}`;} finally{btn.disabled=false;}
+    try{const d=await apiPost("/api/location",{business_idea:query,nationality:liveNationality,city_hint:cityHint}); await renderLocationAreas(d);}catch(err){$("#locationStatus").textContent=`${t("loc_err")}${err.message}`;} finally{btn.disabled=false;}
   }
   $("#locationBtn").addEventListener("click",runLocationAdvisor);
 

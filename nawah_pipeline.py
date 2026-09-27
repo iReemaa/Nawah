@@ -2,13 +2,26 @@
 Nawah — Multi-Agent Business Advisory Pipeline
 ================================================
 This module is the server-ready extraction of `nawah_professional_v3.ipynb`.
-It contains the exact same five-stage pipeline:
 
-    Researcher v2 -> Verifier 1 -> Planner v2 -> Verifier 2 -> Orchestrator
+Cleanup note (this revision): the notebook's original five-stage chain
+(Researcher v2 -> Verifier 1 -> Planner v2 -> Verifier 2 -> Orchestrator) was
+never actually wired up end to end in the production path — `verifier_1_agent`,
+`verifier_2_agent` and `orchestrator_v2_print_plan` were fully defined but had
+zero callers anywhere in the file, so removing them changes no behavior.
+The real, currently-running pipeline is now:
 
-plus the conversation layer (`nawah_turn`) used for follow-up questions with
-session memory. Nothing about the agent LOGIC was changed from the notebook —
-only the Colab-specific bits were removed:
+    Researcher v2  ->  { Planner v2  ||  Verifier-light }  ->  plan-grounding check
+
+Planner v2 (gpt_sol) and Verifier-light (gpt_luna — a cheap textual narration
+of the deterministic checks) both only need Researcher's output, so they now
+run concurrently instead of one waiting on the other. The plan-vs-requirements
+grounding check that used to live inside the dead `verifier_2_agent` is still
+run — it's pure Python, no LLM, effectively free — right after the Planner
+finishes.
+
+Plus the conversation layer (`nawah_turn`) used for follow-up questions with
+session memory. Nothing about the surviving agent LOGIC was changed from the
+notebook — only the Colab-specific bits were removed:
 
   - `google.colab.userdata` -> plain `os.environ` (use a `.env` file or real
     environment variables / secrets manager in production)
@@ -36,6 +49,7 @@ load_dotenv()
 import json
 import time
 import re
+import concurrent.futures
 from pathlib import Path
 from typing import Dict, List, Literal, Optional, Tuple
 
@@ -46,17 +60,46 @@ from openai import OpenAI
 # --------------------------------------------------------------------------
 try:
     from langsmith import traceable
+    _LANGSMITH_INSTALLED = True
 except ImportError:  # pragma: no cover
+    _LANGSMITH_INSTALLED = False
     def traceable(*_args, **_kwargs):
         def _decorator(fn):
             return fn
         return _decorator
 
-if os.environ.get("LANGCHAIN_API_KEY"):
-    os.environ.setdefault("LANGCHAIN_TRACING_V2", "true")
-    os.environ.setdefault("LANGCHAIN_PROJECT", "Nawah")
+# LangSmith renamed its env vars from LANGCHAIN_* to LANGSMITH_*; both names
+# are read here so a key set under either one works. IMPORTANT: only the API
+# KEY turns tracing on. An endpoint/URL (LANGSMITH_ENDPOINT / LANGCHAIN_ENDPOINT)
+# by itself does nothing -- it just tells the SDK *where* to send traces once
+# tracing is already enabled by a valid key.
+_LS_API_KEY = os.environ.get("LANGSMITH_API_KEY") or os.environ.get("LANGCHAIN_API_KEY")
+_LS_ENDPOINT = os.environ.get("LANGSMITH_ENDPOINT") or os.environ.get("LANGCHAIN_ENDPOINT")
+_LS_PROJECT = os.environ.get("LANGSMITH_PROJECT") or os.environ.get("LANGCHAIN_PROJECT") or "Nawah"
+
+if _LANGSMITH_INSTALLED and _LS_API_KEY:
+    os.environ["LANGCHAIN_API_KEY"] = _LS_API_KEY
+    os.environ["LANGCHAIN_TRACING_V2"] = "true"
+    os.environ["LANGCHAIN_PROJECT"] = _LS_PROJECT
+    if _LS_ENDPOINT:
+        os.environ["LANGCHAIN_ENDPOINT"] = _LS_ENDPOINT
 else:
-    os.environ.setdefault("LANGCHAIN_TRACING_V2", "false")
+    os.environ["LANGCHAIN_TRACING_V2"] = "false"
+
+
+def tracing_status() -> Dict:
+    """Call this once at startup (or expose it on a health-check route) to see
+    exactly why tracing is or isn't active, instead of guessing from silence."""
+    if not _LANGSMITH_INSTALLED:
+        return {"active": False,
+                "reason": "مكتبة langsmith غير مثبّتة -- شغّل: pip install langsmith"}
+    if not _LS_API_KEY:
+        return {"active": False,
+                "reason": ("لا يوجد LANGSMITH_API_KEY أو LANGCHAIN_API_KEY في البيئة. "
+                           "رابط/endpoint وحده لا يكفي لتفعيل التريسنق -- لازم مفتاح API "
+                           "من صفحة Settings في LangSmith.")}
+    return {"active": True, "project": os.environ.get("LANGCHAIN_PROJECT"),
+            "endpoint": os.environ.get("LANGCHAIN_ENDPOINT", "default (smith.langchain.com)")}
 
 # --------------------------------------------------------------------------
 # Client
@@ -98,6 +141,36 @@ def detect_language(text: str) -> Language:
 # --------------------------------------------------------------------------
 def _new_cost_log() -> List[Dict]:
     return []
+
+
+# --------------------------------------------------------------------------
+# Timing -- per-request, same pattern as cost_log. Lets you see exactly
+# which stage/call/tool ate the time in a slow request, instead of guessing.
+# --------------------------------------------------------------------------
+def _new_timing_log() -> List[Dict]:
+    return []
+
+
+def log_timing(timing_log: Optional[List[Dict]], label: str, seconds: float,
+                **extra) -> None:
+    if timing_log is None:
+        return
+    entry = {"label": label, "seconds": round(seconds, 3)}
+    entry.update(extra)
+    timing_log.append(entry)
+
+
+def timing_summary(timing_log: List[Dict]) -> Dict:
+    """Total wall time + a per-label breakdown, sorted slowest-first."""
+    totals: Dict[str, float] = {}
+    for e in timing_log:
+        totals[e["label"]] = totals.get(e["label"], 0.0) + e["seconds"]
+    ranked = sorted(totals.items(), key=lambda kv: -kv[1])
+    return {
+        "total_seconds": round(sum(e["seconds"] for e in timing_log), 3),
+        "by_label": [{"label": k, "seconds": round(v, 3)} for k, v in ranked],
+        "raw": timing_log,
+    }
 
 
 def log_cost(cost_log: List[Dict], agent_name: str, model_key: str,
@@ -147,16 +220,27 @@ def _is_retryable(error: Exception) -> bool:
     return True
 
 
-def call_with_retry(fn, retries: int = 3, delay: float = 2.0):
+def call_with_retry(fn, retries: int = 3, delay: float = 2.0,
+                     timing_log: Optional[List[Dict]] = None, label: str = "call"):
+    """Same retry behaviour as before, plus (optionally) records how long this
+    call took -- including time burned on retries -- under `label` in
+    `timing_log`, so a slow request can be traced back to a specific stage."""
+    start = time.time()
     last_error = None
-    for attempt in range(retries):
+    for attempt in range(1, retries + 1):
         try:
-            return fn()
+            result = fn()
+            log_timing(timing_log, label, time.time() - start, attempts=attempt)
+            return result
         except Exception as e:
             last_error = e
             if not _is_retryable(e):
+                log_timing(timing_log, label, time.time() - start,
+                            attempts=attempt, failed=True, error=type(e).__name__)
                 raise
             time.sleep(delay)
+    log_timing(timing_log, label, time.time() - start,
+                attempts=retries, failed=True, error=type(last_error).__name__)
     raise last_error
 
 
@@ -449,72 +533,132 @@ def get_dependency_rules() -> Dict:
 # --------------------------------------------------------------------------
 # Researcher v2
 # --------------------------------------------------------------------------
-_RESEARCHER_V2_TOOLS = [
-    {"type":"function","name":"search_official_sources","description":"يبحث في sources.json كمرجع أساسي للجهات والخدمات وروابطها الرسمية. استخدمه لكل خدمة أو ترخيص لإرجاع الرابط المخزن في البيانات.","parameters":{"type":"object","properties":{"query":{"type":"string"},"top_k":{"type":"integer"}},"required":["query"]}},
-    {"type":"function","name":"search_balady_direct","description":"يبحث مباشرة في كامل أنشطة بلدي وقواعدها لتحديد النشاط دون الاعتماد على crosswalk مرشح.","parameters":{"type":"object","properties":{"query":{"type":"string"},"top_k":{"type":"integer"}},"required":["query"]}},
-    {"type":"function","name":"search_all_data","description":"يبحث في كل ملفات data المتاحة (canonical/originals/processed/corrections وJSON/JSONL/TXT/CSV/MD) عند الحاجة لمعلومة أو رابط أو اعتماد غير ظاهر في الطبقة المجمعة.","parameters":{"type":"object","properties":{"query":{"type":"string"},"top_k":{"type":"integer"}},"required":["query"]}},
-    {"type":"function","name":"get_dependency_rules","description":"يعيد الاعتماديات الصريحة من بيانات SBC وMISA وإيجار كما هي، لا اعتماديات مخترعة.","parameters":{"type":"object","properties":{}}},
-    {
-        "type": "function", "name": "search_activities",
-        "description": (
-            "يبحث في فهرس الأنشطة التجارية المدقَّق (٢٦٩٦ نشاط من المركز السعودي "
-            "للأعمال بعد إزالة التكرار) عن أقرب نشاط للوصف. كل نتيجة تتضمن "
-            "balady_candidate_rules_preview -- معاينة قواعد بلدي حقيقية مرتبطة "
-            "بروابط *مرشّحة غير مؤكدة* (status: CANDIDATE_VERIFY)، لا تُعامل "
-            "كمطابقة أكيدة إلا بعد التحقق."
-        ),
-        "parameters": {"type": "object",
-                        "properties": {"query": {"type": "string"}, "top_k": {"type": "integer"}},
-                        "required": ["query"]},
+# Tool descriptions are bilingual: the model reads a large volume of this
+# schema text on every call, and an all-Arabic tool definition set was
+# quietly biasing the model toward Arabic output even when the system
+# prompt and the user's own message were in English. Only the natural-
+# language `description` differs per language; names/parameters are identical.
+_RESEARCHER_V2_TOOL_DESCRIPTIONS: Dict[str, Dict[Language, str]] = {
+    "search_official_sources": {
+        "ar": "يبحث في sources.json كمرجع أساسي للجهات والخدمات وروابطها الرسمية. استخدمه لكل خدمة أو ترخيص لإرجاع الرابط المخزن في البيانات.",
+        "en": "Searches sources.json, the primary registry of authorities/services and their official links. Use it for every service or license to retrieve the URL stored in the data.",
     },
-    {
-        "type": "function", "name": "get_balady_rules",
-        "description": (
-            "تجيب القواعد البلدية الحقيقية الكاملة (تصاريح، اشتراطات، الجهة "
-            "المشرفة) لنشاط بلدي محدد بمعرّفه (balady_activity_id) -- من "
-            "الملف المعتمد الرسمي مباشرة، لا من رابط مرشّح."
-        ),
-        "parameters": {"type": "object",
-                        "properties": {"balady_activity_id": {"type": "string"}},
-                        "required": ["balady_activity_id"]},
+    "search_balady_direct": {
+        "ar": "يبحث مباشرة في كامل أنشطة بلدي وقواعدها لتحديد النشاط دون الاعتماد على crosswalk مرشح.",
+        "en": "Searches Balady's full activity list and rules directly, to identify the activity without relying on the candidate crosswalk.",
     },
-    {
-        "type": "function", "name": "get_sbc_registration_rules",
-        "description": "شروط ومستندات تسجيل تجاري حقيقية (حجز اسم / قيد سجل فردي) من service_knowledge.sbc.",
-        "parameters": {"type": "object",
-                        "properties": {"service_id": {"type": "string",
-                                        "enum": ["sole_proprietorship_cr", "trade_name_reservation"]}},
-                        "required": ["service_id"]},
+    "search_all_data": {
+        "ar": "يبحث في كل ملفات data المتاحة (canonical/originals/processed/corrections وJSON/JSONL/TXT/CSV/MD) عند الحاجة لمعلومة أو رابط أو اعتماد غير ظاهر في الطبقة المجمعة.",
+        "en": "Searches every available data file (canonical/originals/processed/corrections, JSON/JSONL/TXT/CSV/MD) when a fact, link, or dependency isn't visible in the consolidated layer.",
     },
-    {
-        "type": "function", "name": "get_misa_knowledge",
-        "description": (
-            "قواعد وزارة الاستثمار (MISA) الكاملة من service_knowledge.misa -- "
-            "الأهلية، الأنشطة المقيدة، القواعد الخليجية، المستندات، والبنود "
-            "غير المحلولة (unresolved_for_nawah) التي يجب عدم تأكيدها كحقيقة."
-        ),
-        "parameters": {"type": "object", "properties": {}},
+    "get_dependency_rules": {
+        "ar": "يعيد الاعتماديات الصريحة من بيانات SBC وMISA وإيجار كما هي، لا اعتماديات مخترعة.",
+        "en": "Returns the explicit dependencies from SBC, MISA, and Ejar data exactly as stored -- never invented dependencies.",
     },
-    {
-        "type": "function", "name": "get_ejar_knowledge",
-        "description": (
-            "قواعد منصة إيجار الكاملة من service_knowledge.ejar، متضمنة حالة "
-            "تعارض الرسوم (SOURCE_CONFLICT) والقواعد غير المؤكدة -- يجب عدم "
-            "ذكر رقم رسوم واحد قاطع."
-        ),
-        "parameters": {"type": "object", "properties": {}},
+    "search_activities": {
+        "ar": ("يبحث في فهرس الأنشطة التجارية المدقَّق (٢٦٩٦ نشاط من المركز السعودي "
+               "للأعمال بعد إزالة التكرار) عن أقرب نشاط للوصف. كل نتيجة تتضمن "
+               "balady_candidate_rules_preview -- معاينة قواعد بلدي حقيقية مرتبطة "
+               "بروابط *مرشّحة غير مؤكدة* (status: CANDIDATE_VERIFY)، لا تُعامل "
+               "كمطابقة أكيدة إلا بعد التحقق."),
+        "en": ("Searches the audited business-activity index (2,696 deduplicated "
+               "Saudi Business Center activities) for the closest match to the "
+               "description. Every result includes balady_candidate_rules_preview "
+               "-- a preview of real Balady rules linked via *unconfirmed candidate* "
+               "matches (status: CANDIDATE_VERIFY); never treat it as a confirmed "
+               "match until verified."),
     },
-    {
-        "type": "function", "name": "check_quality_flags",
-        "description": "يتحقق من quality_issues.json لموضوع معيّن قبل تأكيد أي معلومة عنه.",
-        "parameters": {"type": "object",
-                        "properties": {"topic": {"type": "string"}},
-                        "required": ["topic"]},
+    "get_balady_rules": {
+        "ar": ("تجيب القواعد البلدية الحقيقية الكاملة (تصاريح، اشتراطات، الجهة "
+               "المشرفة) لنشاط بلدي محدد بمعرّفه (balady_activity_id) -- من "
+               "الملف المعتمد الرسمي مباشرة، لا من رابط مرشّح."),
+        "en": ("Returns the full, real Balady rules (permits, requirements, "
+               "supervising authority) for a specific Balady activity id -- "
+               "straight from the canonical file, not from a candidate link."),
     },
+    "get_sbc_registration_rules": {
+        "ar": "شروط ومستندات تسجيل تجاري حقيقية (حجز اسم / قيد سجل فردي) من service_knowledge.sbc.",
+        "en": "Real commercial-registration requirements and documents (trade-name reservation / sole-proprietorship registration) from service_knowledge.sbc.",
+    },
+    "get_misa_knowledge": {
+        "ar": ("قواعد وزارة الاستثمار (MISA) الكاملة من service_knowledge.misa -- "
+               "الأهلية، الأنشطة المقيدة، القواعد الخليجية، المستندات، والبنود "
+               "غير المحلولة (unresolved_for_nawah) التي يجب عدم تأكيدها كحقيقة."),
+        "en": ("Full Ministry of Investment (MISA) rules from service_knowledge.misa "
+               "-- eligibility, restricted activities, GCC-national rules, documents, "
+               "and unresolved items (unresolved_for_nawah) that must never be "
+               "asserted as fact."),
+    },
+    "get_ejar_knowledge": {
+        "ar": ("قواعد منصة إيجار الكاملة من service_knowledge.ejar، متضمنة حالة "
+               "تعارض الرسوم (SOURCE_CONFLICT) والقواعد غير المؤكدة -- يجب عدم "
+               "ذكر رقم رسوم واحد قاطع."),
+        "en": ("Full Ejar platform rules from service_knowledge.ejar, including any "
+               "fee source-conflict flag (SOURCE_CONFLICT) and unconfirmed rules -- "
+               "never state a single definitive fee figure."),
+    },
+    "check_quality_flags": {
+        "ar": "يتحقق من quality_issues.json لموضوع معيّن قبل تأكيد أي معلومة عنه.",
+        "en": "Checks quality_issues.json for a given topic before asserting any information about it.",
+    },
+}
+
+_RESEARCHER_V2_TOOL_PARAMS: Dict[str, Dict] = {
+    "search_official_sources": {"type": "object", "properties": {"query": {"type": "string"}, "top_k": {"type": "integer"}}, "required": ["query"]},
+    "search_balady_direct": {"type": "object", "properties": {"query": {"type": "string"}, "top_k": {"type": "integer"}}, "required": ["query"]},
+    "search_all_data": {"type": "object", "properties": {"query": {"type": "string"}, "top_k": {"type": "integer"}}, "required": ["query"]},
+    "get_dependency_rules": {"type": "object", "properties": {}},
+    "search_activities": {"type": "object", "properties": {"query": {"type": "string"}, "top_k": {"type": "integer"}}, "required": ["query"]},
+    "get_balady_rules": {"type": "object", "properties": {"balady_activity_id": {"type": "string"}}, "required": ["balady_activity_id"]},
+    "get_sbc_registration_rules": {"type": "object", "properties": {"service_id": {"type": "string", "enum": ["sole_proprietorship_cr", "trade_name_reservation"]}}, "required": ["service_id"]},
+    "get_misa_knowledge": {"type": "object", "properties": {}},
+    "get_ejar_knowledge": {"type": "object", "properties": {}},
+    "check_quality_flags": {"type": "object", "properties": {"topic": {"type": "string"}}, "required": ["topic"]},
+}
+
+# Tool call order is meaningful for some model behavior consistency, so keep
+# it fixed instead of relying on dict order at each call site.
+_RESEARCHER_V2_TOOL_ORDER = [
+    "search_official_sources", "search_balady_direct", "search_all_data",
+    "get_dependency_rules", "search_activities", "get_balady_rules",
+    "get_sbc_registration_rules", "get_misa_knowledge", "get_ejar_knowledge",
+    "check_quality_flags",
 ]
 
 
-def _execute_researcher_v2_tool(name: str, arguments: Dict) -> Dict:
+def _researcher_v2_tools(language: Language) -> List[Dict]:
+    return [
+        {"type": "function", "name": name,
+         "description": _RESEARCHER_V2_TOOL_DESCRIPTIONS[name][language],
+         "parameters": _RESEARCHER_V2_TOOL_PARAMS[name]}
+        for name in _RESEARCHER_V2_TOOL_ORDER
+    ]
+
+
+# NOTE: the old `_RESEARCHER_V2_TOOLS` module-level constant (a fixed
+# Arabic-only tool list) was removed here -- it had zero callers anywhere
+# in the file. Every call site already uses `_researcher_v2_tools(language)`.
+
+_SEARCH_ACTIVITIES_NOTE: Dict[Language, Dict[str, str]] = {
+    "ar": {
+        "unresolved": ("بعض روابط بلدي في هذه المعاينة لا تزال مرشّحة (CANDIDATE_VERIFY) "
+                       "وبعضها قد يكون مؤكدًا (CONFIRMED) -- تحققي من match_status لكل "
+                       "مرشّح بنفسه، ثم استخدمي get_balady_rules للتفاصيل الكاملة، واذكري "
+                       "الحالة الحقيقية لكل عنصر كما وردت لا كقاعدة عامة على كل شيء"),
+        "confirmed": "كل روابط بلدي في هذه المعاينة مؤكدة (CONFIRMED) -- استخدمي get_balady_rules للتفاصيل الكاملة",
+    },
+    "en": {
+        "unresolved": ("Some Balady links in this preview are still candidates "
+                       "(CANDIDATE_VERIFY) and some may already be confirmed "
+                       "(CONFIRMED) -- check each candidate's own match_status, then "
+                       "use get_balady_rules for full detail, and state each item's "
+                       "real status as given rather than a blanket rule for all of them"),
+        "confirmed": "Every Balady link in this preview is confirmed (CONFIRMED) -- use get_balady_rules for full detail",
+    },
+}
+
+
+def _execute_researcher_v2_tool(name: str, arguments: Dict, language: Language = "ar") -> Dict:
     if name == "search_balady_direct":
         return {"results": search_balady_activities(arguments["query"], arguments.get("top_k", 5))}
     if name == "search_official_sources":
@@ -536,15 +680,13 @@ def _execute_researcher_v2_tool(name: str, arguments: Dict) -> Dict:
             # warns about the candidates that are genuinely unresolved, and
             # says so plainly when every candidate returned is confirmed.
             unresolved = [c for c in preview if str(c.get("match_status", "")).upper() != "CONFIRMED"]
+            notes = _SEARCH_ACTIVITIES_NOTE.get(language, _SEARCH_ACTIVITIES_NOTE["ar"])
             if not preview:
                 note = None
             elif unresolved:
-                note = ("بعض روابط بلدي في هذه المعاينة لا تزال مرشّحة (CANDIDATE_VERIFY) "
-                         "وبعضها قد يكون مؤكدًا (CONFIRMED) -- تحققي من match_status لكل "
-                         "مرشّح بنفسه، ثم استخدمي get_balady_rules للتفاصيل الكاملة، واذكري "
-                         "الحالة الحقيقية لكل عنصر كما وردت لا كقاعدة عامة على كل شيء")
+                note = notes["unresolved"]
             else:
-                note = "كل روابط بلدي في هذه المعاينة مؤكدة (CONFIRMED) -- استخدمي get_balady_rules للتفاصيل الكاملة"
+                note = notes["confirmed"]
             formatted.append({
                 "activityId": r["activityId"], "nameAr": r["nameAr"],
                 "similarity": r["similarity"],
@@ -646,6 +788,10 @@ _RESEARCHER_V2_SYSTEM: Dict[Language, str] = {
            "- 'blocked': BLOCKING_FOR_AUTOMATED_ANSWERS -- never state a specific "
            "figure, just note the requirement exists and describe the conflict\n"
            "- 'missing': tools indicate MISSING_DATA\n\n"
+           "Write every client-facing field (title, description, documents_needed) "
+           "in clear English -- never leave them in Arabic just because the "
+           "underlying database record is in Arabic. Do not include activity codes, "
+           "internal audit-case names, or crosswalk notes in client-facing text.\n\n"
            "Return JSON only:\n"
            "{{\"requirements\": [{{\"id\": \"...\", \"title\": \"...\", "
            "\"authority\": \"...\", \"description\": \"...\", \"status\": \"...\", "
@@ -684,7 +830,8 @@ def _format_onboarding_answers(answers: Optional[Dict], language: Language) -> s
 def research_agent_v2(business_idea: str, nationality: Nationality = "unspecified",
                        language: Optional[Language] = None, max_tool_rounds: int = 4,
                        cost_log: Optional[List[Dict]] = None,
-                       answers: Optional[Dict] = None) -> Dict:
+                       answers: Optional[Dict] = None,
+                       timing_log: Optional[List[Dict]] = None) -> Dict:
     cost_log = cost_log if cost_log is not None else _new_cost_log()
     language = language or detect_language(business_idea)
     label = "فكرة العمل" if language == "ar" else "Business idea"
@@ -692,48 +839,74 @@ def research_agent_v2(business_idea: str, nationality: Nationality = "unspecifie
     prompt = (_RESEARCHER_V2_SYSTEM[language] + f"\n\n{label}: {business_idea}\n{nat_label}: {nationality}"
               + _format_onboarding_answers(answers, language))
 
-    def _first_call():
-        return client.responses.create(model=GPT_TERRA, input=prompt, tools=_RESEARCHER_V2_TOOLS)
+    researcher_tools = _researcher_v2_tools(language)
 
-    response = call_with_retry(_first_call)
+    def _first_call():
+        return client.responses.create(model=GPT_TERRA, input=prompt, tools=researcher_tools)
+
+    response = call_with_retry(_first_call, timing_log=timing_log, label="researcher_v2.model_call.round_0")
     tool_calls = 0
-    for _ in range(max_tool_rounds):
+    for round_i in range(max_tool_rounds):
         calls = [it for it in response.output if getattr(it, "type", None) == "function_call"]
         if not calls:
             break
         outputs = []
         for call in calls:
             args = json.loads(call.arguments) if call.arguments else {}
-            result = _execute_researcher_v2_tool(call.name, args)
+            tool_start = time.time()
+            result = _execute_researcher_v2_tool(call.name, args, language)
+            log_timing(timing_log, f"researcher_v2.tool.{call.name}", time.time() - tool_start)
             outputs.append({"type": "function_call_output", "call_id": call.call_id,
                              "output": json.dumps(result, ensure_ascii=False)})
             tool_calls += 1
 
         def _next_call():
             return client.responses.create(model=GPT_TERRA, previous_response_id=response.id,
-                                            input=outputs, tools=_RESEARCHER_V2_TOOLS)
-        response = call_with_retry(_next_call)
+                                            input=outputs, tools=researcher_tools)
+        response = call_with_retry(_next_call, timing_log=timing_log,
+                                     label=f"researcher_v2.model_call.round_{round_i + 1}")
 
     data = extract_json(response.output_text)
     data["tool_calls_made"] = tool_calls
     data.setdefault("requirements", [])
     # Fill official service links from the dataset when the model omitted them.
+    #
+    # BUG (fixed here): this used to call the fuzzy, whole-catalog
+    # best_source_url(blob) FIRST, before the precise sbc/balady/misa/ejar
+    # keyword checks below. best_source_url scores every source in
+    # SOURCE_CATALOG against loose alias terms pulled out of the requirement's
+    # title+authority+description all mixed together, so a stray word from
+    # the description (e.g. a mention of "بلدي" inside an SBC requirement's
+    # text) could out-score the requirement's real domain and hand it a
+    # different service's official link. Because that fuzzy search almost
+    # always returns *something*, the reliable domain-specific fallback below
+    # essentially never ran.
+    #
+    # Fix: try the precise, deterministic domain match first -- these map a
+    # requirement straight to the one real service (sbc/balady/misa/ejar) its
+    # own keywords name -- and only fall back to the fuzzy full-catalog
+    # search when none of the four known domains match at all.
     for req in data["requirements"]:
         blob=(str(req.get("title", ""))+" "+str(req.get("authority", ""))+" "+str(req.get("description", ""))).lower()
         if not req.get("source_url"):
-            # First try the explicit sources.json service registry. The returned URL
-            # is always copied from the dataset; it is never generated by the model.
-            req["source_url"] = best_source_url(blob)
-            if req.get("source_url"):
-                req["source_origin"] = "sources.json"
-            elif any(x in blob for x in ("اسم تجاري","سجل تجاري","commercial","وزارة التجارة","المركز السعودي")):
+            if any(x in blob for x in ("اسم تجاري","سجل تجاري","commercial","وزارة التجارة","المركز السعودي")):
                 req["source_url"]=_service_source_url("sbc")
+                if req.get("source_url"): req["source_origin"]="service_knowledge.sbc"
             elif any(x in blob for x in ("بلدي","بلدية","municip")):
                 req["source_url"]=_official_url("balady","municipal")
+                if req.get("source_url"): req["source_origin"]="sources.json:balady"
             elif any(x in blob for x in ("استثمار","misa","investment")):
                 req["source_url"]=_service_source_url("misa")
+                if req.get("source_url"): req["source_origin"]="service_knowledge.misa"
             elif any(x in blob for x in ("إيجار","ejar","lease")):
                 req["source_url"]=_service_source_url("ejar")
+                if req.get("source_url"): req["source_origin"]="service_knowledge.ejar"
+            else:
+                # None of the four known domains matched -- only now fall
+                # back to the fuzzy, whole-catalog search.
+                req["source_url"] = best_source_url(blob)
+                if req.get("source_url"):
+                    req["source_origin"] = "sources.json"
         # Source-backed facts are verified unless a real quality flag says otherwise.
         if req.get("source_url") and req.get("status") == "unverified" and not req.get("quality_note"):
             req["status"]="verified"
@@ -807,65 +980,11 @@ def _deterministic_ordering_check(requirements: List[Dict]) -> List[str]:
     return problems
 
 
-_VERIFIER1_SYSTEM: Dict[Language, str] = {
-    "ar": ("أنتِ مدققة أولى في مكتب استشارات أعمال. راجعنا آلياً قائمة المتطلبات "
-           "ووجدنا الفحوصات أدناه بالفعل -- مهمتك فقط تحويلها لملاحظات تدقيق "
-           "واضحة بالعربية للمستشار البشري، وإضافة أي ملاحظة إضافية تلاحظينها "
-           "بقراءة القائمة (تكرار، تناقض داخلي، معلومة غامضة). لا تُسقطي أي "
-           "فحص آلي ولا تخففي حدّته."),
-    "en": ("You are the first-pass verifier at a business advisory office. "
-           "Automated checks already ran and are below -- your job is only to "
-           "turn them into clear Arabic/English verification notes for the "
-           "human advisor, plus any extra issue you notice reading the list "
-           "(duplication, internal contradiction, vague wording). Never drop "
-           "or soften an automated check."),
-}
-
-
-@traceable(name="Verifier 1 (Research Check)", run_type="chain")
-def verifier_1_agent(research_data: Dict, nationality: Nationality = "unspecified",
-                      language: Optional[Language] = None,
-                      cost_log: Optional[List[Dict]] = None) -> Dict:
-    cost_log = cost_log if cost_log is not None else _new_cost_log()
-    requirements = research_data.get("requirements", [])
-    language = language or "ar"
-
-    completeness_gaps = _deterministic_completeness_check(requirements, nationality)
-    status_mismatches = _deterministic_status_check(requirements)
-    ordering_problems = _deterministic_ordering_check(requirements)
-
-    checks_blob = json.dumps({
-        "completeness_gaps": completeness_gaps, "status_mismatches": status_mismatches,
-        "ordering_problems": ordering_problems, "requirements_reviewed": len(requirements),
-    }, ensure_ascii=False, indent=2)
-
-    prompt = (
-        _VERIFIER1_SYSTEM[language] + "\n\n"
-        + ("الفحوصات الآلية:\n" if language == "ar" else "Automated checks:\n")
-        + checks_blob
-        + ("\n\nأعيدي JSON فقط: {{\"notes\": [\"...\"], \"overall_flag\": "
-           "\"clean أو needs_review أو blocking_issues_found\"}}" if language == "ar" else
-           "\n\nReturn JSON only: {{\"notes\": [\"...\"], \"overall_flag\": "
-           "\"clean or needs_review or blocking_issues_found\"}}")
-    )
-
-    def _call():
-        return client.responses.create(model=GPT_SOL, input=prompt)
-
-    response = call_with_retry(_call)
-    verification = extract_json(response.output_text)
-    verification["completeness_gaps"] = completeness_gaps
-    verification["status_mismatches"] = status_mismatches
-    verification["ordering_problems"] = ordering_problems
-    if not verification.get("overall_flag"):
-        verification["overall_flag"] = (
-            "blocking_issues_found" if (completeness_gaps or status_mismatches or ordering_problems)
-            else "clean")
-
-    usage = response.usage
-    log_cost(cost_log, "Verifier 1", "gpt_sol", usage.input_tokens, usage.output_tokens)
-    return {"research_data": research_data, "verification": verification}
-
+# NOTE: `verifier_1_agent` (an LLM call on gpt_sol that only re-narrated the
+# three deterministic checks below) was removed here -- it had zero callers
+# anywhere in the file; `run_nawah_pipeline_v3` already builds the same
+# `verification` dict directly from these functions, with no LLM involved.
+# The functions themselves are still very much alive and load-bearing.
 
 # --------------------------------------------------------------------------
 # Planner v2
@@ -920,14 +1039,17 @@ _PLANNER_V2_SYSTEM: Dict[Language, str] = {
            "{{\"plan\": [{{\"order\": 1, \"title\": \"...\", \"authority\": \"...\", "
            "\"description\": \"...\", \"status\": \"verified, unverified, or blocked\", "
            "\"caveat\": \"... or null\", \"needed\": [\"...\"], "
-           "\"dependencies\": [1, 2], \"source_url\": \"... or null\"}}]}}"),
+           "\"dependencies\": [1, 2], \"source_url\": \"... or null\"}}]}}\n\n"
+           "Write every client-facing field entirely in English -- translate any "
+           "Arabic wording carried over from the source requirements list."),
 }
 
 
 @traceable(name="Planner v2", run_type="chain")
 def planner_agent_v2(verifier_1_output: Dict, business_idea: str,
                       language: Optional[Language] = None,
-                      cost_log: Optional[List[Dict]] = None) -> Dict:
+                      cost_log: Optional[List[Dict]] = None,
+                      timing_log: Optional[List[Dict]] = None) -> Dict:
     cost_log = cost_log if cost_log is not None else _new_cost_log()
     language = language or detect_language(business_idea)
     research_data = verifier_1_output["research_data"]
@@ -949,22 +1071,53 @@ def planner_agent_v2(verifier_1_output: Dict, business_idea: str,
     def _call():
         return client.responses.create(model=GPT_SOL, input=prompt)
 
-    response = call_with_retry(_call)
+    response = call_with_retry(_call, timing_log=timing_log, label="planner_v2.model_call")
     data = extract_json(response.output_text)
     data.setdefault("plan", [])
 
-    # Deterministic guard, same pattern as _deterministic_status_check above:
-    # a real source_url may only be one that actually exists in the requirements
-    # list. If the model wrote a URL that isn't in that set, it's a fabrication --
-    # drop it to null rather than ship an invented government link.
-    real_urls = ({r.get("source_url") for r in research_data.get("requirements", []) if r.get("source_url")} | {x.get("url") for x in SOURCE_CATALOG if x.get("url")})
+    # Deterministic guard.
+    #
+    # BUG (fixed here): the old check accepted a step's source_url as long as
+    # it existed *anywhere* in SOURCE_CATALOG -- i.e. anywhere in the entire
+    # national catalogue of official links (balady + sbc + misa + ejar + every
+    # other authority), not just among THIS case's own requirements. Any real
+    # government URL passed that check, so the Planner model could freely
+    # attach one requirement's official link to a different, unrelated step
+    # while that requirement's own correct link drifted onto some other step.
+    # Both links were "real", so nothing ever caught the swap.
+    #
+    # Fix: never trust the model's copy of source_url at all. Re-bind each
+    # plan step to the exact requirement it was built from -- by requirement
+    # id if the model included one, otherwise by the same title-fragment
+    # match already used by _deterministic_plan_grounding_check below -- and
+    # force that requirement's own source_url onto the step. A step that
+    # can't be matched to any requirement never gets a URL from the wider
+    # catalogue; it gets none, rather than risking another service's link.
+    requirements = research_data.get("requirements", [])
+    req_by_id = {r.get("id"): r for r in requirements if r.get("id")}
+
+    def _match_requirement(step: Dict) -> Optional[Dict]:
+        rid = step.get("requirement_id") or step.get("id")
+        if rid and rid in req_by_id:
+            return req_by_id[rid]
+        step_blob = (str(step.get("title", "")) + " " + str(step.get("description", ""))).lower()
+        best, best_len = None, 0
+        for r in requirements:
+            frag = str(r.get("title", ""))[:15].lower()
+            if frag and frag in step_blob and len(frag) > best_len:
+                best, best_len = r, len(frag)
+        return best
+
     for step in data["plan"]:
         step.setdefault("needed", [])
         step.setdefault("dependencies", [])
-        if step.get("source_url") and step["source_url"] not in real_urls:
-            step["source_url"] = None
+        matched_req = _match_requirement(step)
+        if matched_req is not None:
+            # Always the matched requirement's own link -- never whatever the
+            # model wrote, correct-looking or not.
+            step["source_url"] = matched_req.get("source_url")
         else:
-            step.setdefault("source_url", None)
+            step["source_url"] = None
 
     # Deterministic dependency pass based on the explicit dataset dependency graph.
     title_to_order = [(st.get("order"), (st.get("title","")+" "+st.get("description","")).lower()) for st in data["plan"]]
@@ -1079,119 +1232,74 @@ def _deterministic_plan_grounding_check(plan: List[Dict], requirements: List[Dic
     return {"dropped_requirements": dropped_requirements, "status_downgrades": status_downgrades}
 
 
-_VERIFIER2_SYSTEM: Dict[Language, str] = {
-    "ar": ("أنتِ مدققة ثانية، تراجعين الخطة النهائية المبنية من قِبل المخططة قبل "
-           "ما توصل للعميل. فحوصات آلية جرت بالفعل (أدناه) تقارن الخطة "
-           "بالمتطلبات المصدرية -- حوّليها لملاحظات واضحة، وأضيفي أي ملاحظة عن "
-           "تناسق الخطة نفسها (ترتيب منطقي، وضوح الصياغة، عدم وجود لغة تسويقية "
-           "مبالغ فيها أو وعود غير مؤكدة). لا تُسقطي أي فحص آلي."),
-    "en": ("You are the second verifier, reviewing the final plan the Planner "
-           "built before it reaches the client. Automated checks already ran "
-           "(below) comparing the plan to its source requirements -- turn them "
-           "into clear notes, plus anything you notice about the plan's own "
-           "coherence (logical order, clarity, no overpromising or unconfirmed "
-           "guarantees). Never drop an automated check."),
+# NOTE: `verifier_2_agent` (gpt_sol) and `orchestrator_v2_print_plan` (gpt_luna)
+# were removed here -- both had zero callers anywhere in the file. The final
+# client-facing memo (`orchestrator_v2_print_plan`'s job) was never generated
+# in production; `run_nawah_pipeline_v3` always returned `final_text: ""` and
+# the UI showed only the structured `plan`. `_deterministic_plan_grounding_check`
+# above is kept and is now actually called (see run_nawah_pipeline_v3 below) --
+# it's pure Python, so it adds real grounding safety at zero extra latency/cost.
+
+
+# --------------------------------------------------------------------------
+# Verifier-light -- cheap, PARALLEL narration of the deterministic checks
+# --------------------------------------------------------------------------
+# Replaces the old sequential "Verifier 1" LLM call. Runs on gpt_luna (the
+# cheapest model) instead of gpt_sol, and -- critically -- runs concurrently
+# with Planner v2 rather than before it, since both only need Researcher's
+# output. It never blocks or feeds into the Planner call; it's a side-channel
+# audit note for logs/human review. Same hard rule as the old Verifier 1:
+# never drop or soften a deterministic finding.
+_VERIFIER_LIGHT_SYSTEM: Dict[Language, str] = {
+    "ar": ("أنتِ مدققة سريعة. الفحوصات الآلية أدناه جرت بالفعل بكود حتمي -- "
+           "مهمتك فقط صياغتها كملاحظات مختصرة وواضحة، بدون حذف أو تخفيف أي "
+           "فحص. أعيدي JSON فقط: {{\"notes\": [\"...\"], \"overall_flag\": "
+           "\"clean أو needs_review أو blocking_issues_found\"}}"),
+    "en": ("You are a fast verifier. The automated checks below already ran "
+           "via deterministic code -- your only job is to phrase them as "
+           "short, clear notes, without dropping or softening any check. "
+           "Return JSON only: {{\"notes\": [\"...\"], \"overall_flag\": "
+           "\"clean, needs_review, or blocking_issues_found\"}}"),
 }
 
 
-@traceable(name="Verifier 2 (Plan Check)", run_type="chain")
-def verifier_2_agent(plan_data: Dict, verifier_1_output: Dict,
-                      language: Optional[Language] = None,
-                      cost_log: Optional[List[Dict]] = None) -> Dict:
+def verifier_light_agent(research_data: Dict, nationality: Nationality = "unspecified",
+                          language: Optional[Language] = None,
+                          cost_log: Optional[List[Dict]] = None,
+                          timing_log: Optional[List[Dict]] = None) -> Dict:
     cost_log = cost_log if cost_log is not None else _new_cost_log()
+    requirements = research_data.get("requirements", [])
     language = language or "ar"
-    plan = plan_data.get("plan", [])
-    requirements = verifier_1_output["research_data"].get("requirements", [])
 
-    grounding = _deterministic_plan_grounding_check(plan, requirements)
+    completeness_gaps = _deterministic_completeness_check(requirements, nationality)
+    status_mismatches = _deterministic_status_check(requirements)
+    ordering_problems = _deterministic_ordering_check(requirements)
 
-    prompt = (
-        _VERIFIER2_SYSTEM[language] + "\n\n"
-        + ("الخطة:\n" if language == "ar" else "The plan:\n")
-        + json.dumps(plan, ensure_ascii=False, indent=2)
-        + ("\n\nفحوصات آلية (مطابقة الخطة بالمتطلبات المصدرية):\n" if language == "ar"
-           else "\n\nAutomated checks (plan vs. source requirements):\n")
-        + json.dumps(grounding, ensure_ascii=False, indent=2)
-        + ("\n\nأعيدي JSON فقط: {{\"notes\": [\"...\"], \"overall_flag\": "
-           "\"clean أو needs_review أو blocking_issues_found\"}}" if language == "ar" else
-           "\n\nReturn JSON only: {{\"notes\": [\"...\"], \"overall_flag\": "
-           "\"clean, needs_review, or blocking_issues_found\"}}")
-    )
+    checks_blob = json.dumps({
+        "completeness_gaps": completeness_gaps, "status_mismatches": status_mismatches,
+        "ordering_problems": ordering_problems, "requirements_reviewed": len(requirements),
+    }, ensure_ascii=False, indent=2)
 
-    def _call():
-        return client.responses.create(model=GPT_SOL, input=prompt)
-
-    response = call_with_retry(_call)
-    verification = extract_json(response.output_text)
-    verification["dropped_requirements"] = grounding["dropped_requirements"]
-    verification["status_downgrades"] = grounding["status_downgrades"]
-    if not verification.get("overall_flag"):
-        verification["overall_flag"] = (
-            "blocking_issues_found"
-            if (grounding["dropped_requirements"] or grounding["status_downgrades"]) else "clean")
-
-    usage = response.usage
-    log_cost(cost_log, "Verifier 2", "gpt_sol", usage.input_tokens, usage.output_tokens)
-    return {"plan_data": plan_data, "verification": verification}
-
-
-# --------------------------------------------------------------------------
-# Orchestrator
-# --------------------------------------------------------------------------
-_ORCH_V2_PRINT_SYSTEM: Dict[Language, str] = {
-    "ar": ("أنتِ مستشارة أعمال أولى في نواة للاستشارات. اكتبي مذكرة استشارية "
-           "احترافية ونهائية للعميل من الخطة المدقَّقة مرتين أدناه (تدقيق "
-           "البيانات وتدقيق الخطة). قواعد صارمة:\n"
-           "- استخدمي فقط ما ورد بالخطة -- لا تخترعي رقمًا أو تفصيلًا.\n"
-           "- الخطة التي تصلك هنا هي النسخة العامة المنقحة؛ لا تعرضي أي حالات تدقيق داخلية أو "
-           "أكواد تقنية أو ملاحظات تحقق.\n"
-           "- اكتبي فقط الإجراءات العملية وروابط الخدمات الرسمية الموجودة في الخطة.\n"
-           "- أسلوب مكتب استشارات بشري محترف تمامًا -- ممنوع أي عبارة تكشف "
-           "كونك نموذج ذكاء اصطناعي.\n"
-           "- رتّبي المذكرة بعناوين واضحة: نظرة عامة، خطوات التأسيس مرتبة، "
-           "ملاحظات تحتاج تأكيدًا، التوقيع الختامي."),
-    "en": ("You are a senior advisor at Nawah Advisory. Write a final, "
-           "professional advisory memo for the client from the twice-verified "
-           "plan below (data verification and plan verification). Strict rules:\n"
-           "- Use only what's in the plan -- never invent a figure or detail.\n"
-           "- Any step with status='blocked' is written clearly as an item "
-           "requiring direct confirmation from the authority, citing the "
-           "conflict calmly and professionally, without alarm.\n"
-           "- Any step with status='unverified' is marked with wording like "
-           "'per the latest available information; direct confirmation is "
-           "advised'.\n"
-           "- Write entirely like a professional human advisory office -- "
-           "never reveal you are an AI model.\n"
-           "- Structure the memo with clear headers: overview, ordered setup "
-           "steps, items requiring confirmation, closing signature."),
-}
-
-
-@traceable(name="Orchestrator v2 - Print Plan", run_type="chain")
-def orchestrator_v2_print_plan(business_idea: str, verifier_2_output: Dict,
-                                language: Optional[Language] = None,
-                                cost_log: Optional[List[Dict]] = None) -> str:
-    cost_log = cost_log if cost_log is not None else _new_cost_log()
-    language = language or detect_language(business_idea)
-    plan_data = verifier_2_output["plan_data"]
-    verification_2 = verifier_2_output["verification"]
-
-    prompt = (
-        _ORCH_V2_PRINT_SYSTEM[language]
-        + f"\n\n{'فكرة العمل' if language == 'ar' else 'Business idea'}: {business_idea}"
-        + f"\n\n{'الخطة' if language == 'ar' else 'Plan'}:\n"
-        + json.dumps(plan_data.get("plan", []), ensure_ascii=False, indent=2)
-        + f"\n\n{'تقرير التدقيق الثاني' if language == 'ar' else 'Second verification report'}:\n"
-        + json.dumps(verification_2, ensure_ascii=False, indent=2)
-    )
+    prompt = (_VERIFIER_LIGHT_SYSTEM[language] + "\n\n"
+              + ("الفحوصات الآلية:\n" if language == "ar" else "Automated checks:\n")
+              + checks_blob)
 
     def _call():
         return client.responses.create(model=GPT_LUNA, input=prompt)
 
-    response = call_with_retry(_call)
+    response = call_with_retry(_call, timing_log=timing_log, label="verifier_light.model_call")
+    verification = extract_json(response.output_text)
+    verification["completeness_gaps"] = completeness_gaps
+    verification["status_mismatches"] = status_mismatches
+    verification["ordering_problems"] = ordering_problems
+    if not verification.get("overall_flag"):
+        verification["overall_flag"] = (
+            "blocking_issues_found" if (completeness_gaps or status_mismatches or ordering_problems)
+            else "clean")
+
     usage = response.usage
-    log_cost(cost_log, "Orchestrator v2 (print)", "gpt_luna", usage.input_tokens, usage.output_tokens)
-    return response.output_text
+    log_cost(cost_log, "Verifier-light", "gpt_luna", usage.input_tokens, usage.output_tokens)
+    return verification
 
 
 def run_nawah_pipeline_v3(business_idea: str, nationality: Nationality = "unspecified",
@@ -1202,14 +1310,16 @@ def run_nawah_pipeline_v3(business_idea: str, nationality: Nationality = "unspec
     The business scope is intentionally open and is inferred from business_idea.
     """
     cost_log = _new_cost_log()
+    timing_log = _new_timing_log()
+    pipeline_start = time.time()
     language = language or detect_language(business_idea)
 
     research_data = research_agent_v2(
         business_idea, nationality, language, max_tool_rounds=4,
-        cost_log=cost_log, answers=answers
+        cost_log=cost_log, answers=answers, timing_log=timing_log
     )
 
-    # Fast deterministic verification: no extra LLM call.
+    # Deterministic verification dict -- no LLM call, needed as Planner's input.
     reqs = research_data.get("requirements", [])
     verification = {
         "notes": [],
@@ -1219,8 +1329,37 @@ def run_nawah_pipeline_v3(business_idea: str, nationality: Nationality = "unspec
         "ordering_problems": _deterministic_ordering_check(reqs),
     }
     v1_output = {"research_data": research_data, "verification": verification}
-    plan_data = planner_agent_v2(v1_output, business_idea, language, cost_log=cost_log)
+
+    # Planner v2 (gpt_sol) and Verifier-light (gpt_luna) both depend only on
+    # research_data/verification -- neither needs the other's output -- so
+    # run them concurrently instead of Verifier-light blocking the Planner.
+    # cost_log/timing_log are plain lists; concurrent .append() from threads
+    # is safe under the GIL, so both agents can log into the same lists.
+    with concurrent.futures.ThreadPoolExecutor(max_workers=2) as pool:
+        planner_future = pool.submit(
+            planner_agent_v2, v1_output, business_idea, language,
+            cost_log=cost_log, timing_log=timing_log,
+        )
+        verifier_light_future = pool.submit(
+            verifier_light_agent, research_data, nationality, language,
+            cost_log=cost_log, timing_log=timing_log,
+        )
+        plan_data = planner_future.result()
+        verifier_light_report = verifier_light_future.result()
+
     public_plan = _client_safe_plan(plan_data)
+
+    # Plan-vs-requirements grounding check -- pure Python, no LLM, effectively
+    # free -- runs after the Planner since it needs the Planner's own output.
+    grounding = _deterministic_plan_grounding_check(plan_data.get("plan", []), reqs)
+    verifier_2_report = {
+        "overall_flag": ("blocking_issues_found"
+                          if (grounding["dropped_requirements"] or grounding["status_downgrades"])
+                          else "clean"),
+        **grounding,
+    }
+
+    log_timing(timing_log, "run_nawah_pipeline_v3.total_wall_time", time.time() - pipeline_start)
 
     # The UI only needs the actionable plan. Avoid a third/fourth model call to
     # write a memo the user does not want to see.
@@ -1228,12 +1367,14 @@ def run_nawah_pipeline_v3(business_idea: str, nationality: Nationality = "unspec
         "final_text": "",
         "language": language,
         "research": {"requirements_count": len(reqs), "tool_calls_made": research_data.get("tool_calls_made", 0)},
-        "verifier_1": {"overall_flag": "internal_checks_complete"},
+        "verifier_1": verifier_light_report,
         "plan": public_plan,
         "internal_plan": plan_data,
-        "verifier_2": {"overall_flag": "skipped_fast_path"},
+        "verifier_2": verifier_2_report,
         "cost_log": cost_log,
         "cost_total_sar": round(sum(e["cost_sar"] for e in cost_log), 4),
+        "timing_log": timing_log,
+        "timing": timing_summary(timing_log),
         "data_inventory": data_inventory(),
     }
 
@@ -1243,7 +1384,8 @@ def run_nawah_pipeline_v3(business_idea: str, nationality: Nationality = "unspec
 # --------------------------------------------------------------------------
 Intent = Literal["new_business_request", "specific_question", "greeting_or_unclear"]
 
-_QA_TOOLS_V3 = _RESEARCHER_V2_TOOLS + [{"type": "web_search"}]
+def _qa_tools(language: Language) -> List[Dict]:
+    return _researcher_v2_tools(language) + [{"type": "web_search"}]
 
 _INTENT_SYSTEM: Dict[Language, str] = {
     "ar": ("أنتِ مصنّفة نوايا في مكتب استشارات أعمال. صنّفي رسالة العميل إلى "
@@ -1265,7 +1407,7 @@ def _case_summary(session: Dict) -> str:
 
 
 def classify_intent(message: str, session: Dict, language: Language,
-                     cost_log: List[Dict]) -> Intent:
+                     cost_log: List[Dict], timing_log: Optional[List[Dict]] = None) -> Intent:
     prompt = (_INTENT_SYSTEM[language]
               + f"\n\nhas_case: {bool(session.get('has_case'))}\ncase: {_case_summary(session)}"
               + f"\n\nmessage: «{message}»")
@@ -1273,7 +1415,7 @@ def classify_intent(message: str, session: Dict, language: Language,
     def _call():
         return client.responses.create(model=GPT_LUNA, input=prompt)
 
-    response = call_with_retry(_call)
+    response = call_with_retry(_call, timing_log=timing_log, label="classify_intent.model_call")
     usage = response.usage
     log_cost(cost_log, "Intent classifier", "gpt_luna", usage.input_tokens, usage.output_tokens)
     intent = extract_json(response.output_text).get("intent")
@@ -1282,90 +1424,123 @@ def classify_intent(message: str, session: Dict, language: Language,
 
 
 _QA_SYSTEM: Dict[Language, str] = {
-    "ar": ("أنت مساعد نواة للمعاملات والتراخيص داخل السعودية. مهمتك إجابة السؤال الحالي مباشرة "
-           "باستخدام سياق المحادثة وبيانات نواة الرسمية. لا تتصرف كموظف استقبال ولا تكتب مقدمات تسويقية.\n\n"
-           "قواعد واجهة المستخدم:\n"
-           "- تذكّر النشاط والمدينة والموضوع من سياق الجلسة. إذا قال المستخدم لاحقًا (بيطري) فهذا يحدد النشاط للسؤال السابق، ولا تسأله عنه مرة أخرى.\n"
-           "- ابدأ بالجواب، بحد أقصى 4-7 أسطر قصيرة ما لم يطلب المستخدم التفصيل.\n"
-           "- إذا وُجد رابط خدمة رسمي في نتائج الأدوات، اختم بسطر: رابط الخدمة: URL\n"
-           "- لا تعرض إطلاقًا أسماء أعلام الجودة أو أكواد النظام أو التصنيفات الداخلية مثل BLOCKING وREVIEW وCANDIDATE_VERIFY وSOURCE_CONFLICT وNEAR_VARIATION أو أكواد SBC.\n"
-           "- لا تطبع رموز استشهاد داخلية مثل turn? أو cite أو أسماء الأدوات.\n"
-           "- لا تقل: شكرًا لتواصلكم، فريق نواة، مستشار حقيقي، ملف تأسيس، أو نحن نساعدك؛ هذه محادثة عملية مباشرة.\n"
-           "- لا تسأل سؤال متابعة إذا كان الجواب ممكنًا من السياق الحالي.\n"
-           "- لا تخترع شرطًا أو رسمًا أو رابطًا. إذا لم تدعم البيانات تفصيلًا دقيقًا، اذكر فقط الجزء المدعوم دون كشف ملاحظات التدقيق الداخلية."),
-    "en": ("You are Nawah's Saudi transactions and licensing assistant. Answer the current question directly using conversation context and Nawah's official-source data. Keep the answer concise, preserve activity/city/topic context, never expose internal quality flags, tool names, codes, or citation tokens, and never invent requirements, fees, or URLs."),
+    "ar": (
+        "أنت مساعد نواة داخل التطبيق. تعامل مع المستخدم كمساعد ذكي ودود وطبيعي، وليس كنظام تقني أو موظف خدمة عملاء.\n\n"
+        "أسلوب الإجابة:\n"
+        "- أجب على سؤال المستخدم نفسه مباشرة وبأسلوب عربي طبيعي وواضح وودود.\n"
+        "- رتّب الإجابة بالطريقة الأنسب للسؤال: فقرة قصيرة، نقاط، أو خطوات مرقمة. لا تستخدم قالبًا ثابتًا لكل الأسئلة.\n"
+        "- إذا كان السؤال بسيطًا، أعطِ جوابًا بسيطًا. وإذا طلب شرحًا أو خطوات، أعطِ تفاصيل كافية ومنظمة.\n"
+        "- استخدم سياق المحادثة السابق، مثل النشاط والمدينة والموضوع، ولا تطلب معلومة سبق أن ذكرها المستخدم.\n"
+        "- إذا كان السؤال متابعة قصيرة مثل: (طيب وبعدها؟) أو (كم تكلف؟)، افهمه من السياق السابق.\n"
+        "- كن friendly ومحادثيًا بدون مبالغة، وابتعد عن الصياغة الرسمية الجامدة أو التسويقية.\n"
+        "- لا تقل: شكرًا لتواصلكم، فريق نواة، مستشار نواة، حسب قاعدة البيانات، حسب الكود، حسب الأدوات، أو أي عبارة تكشف طريقة عمل النظام.\n"
+        "- لا تعرض روابط، URLs، أسماء مصادر، مراجع، citations، أكواد، IDs، أسماء أدوات، أسماء ملفات، أو مصطلحات تقنية داخلية.\n"
+        "- لا تعرض كلمات داخلية مثل BLOCKING أو REVIEW أو CANDIDATE_VERIFY أو SOURCE_CONFLICT أو UNVERIFIED أو SBC.\n"
+        "- لا تقل إنك بحثت في الإنترنت أو في ملفات داخلية، ولا تضف قسم مصادر أو رابط خدمة.\n"
+        "- لا تخترع معلومة دقيقة غير متأكد منها، خصوصًا الرسوم أو المدد أو الاشتراطات المتغيرة. عند عدم التأكد قل ذلك بصياغة طبيعية ومختصرة.\n"
+        "- لا تكرر السؤال في بداية الرد، ولا تسأل سؤال متابعة إلا إذا كانت معلومة أساسية فعلًا تمنعك من إعطاء جواب مفيد.\n"
+        "- إذا كان السؤال خارج التراخيص والأعمال، أجب عليه بشكل طبيعي أيضًا ما دام يمكن الإجابة عنه.\n"
+        "- استخدم العربية إذا كتب المستخدم بالعربية، والإنجليزية إذا كتب بالإنجليزية.\n\n"
+        "الهدف: المستخدم يشعر أنه يتحدث مع مساعد فاهم ومرتب، وليس مع مخرجات كود أو تقرير آلي."
+    ),
+    "en": (
+        "You are Nawah's in-app assistant. Respond like a friendly, natural, capable assistant, not like a technical system or customer-service representative. "
+        "Answer the user's actual question directly and organize it in the format that best fits: a short paragraph, bullets, or numbered steps. "
+        "Use conversation context and never ask again for information already provided. Do not expose URLs, links, citations, sources, file names, tool names, IDs, "
+        "internal flags, system terminology, or implementation details. Do not say you searched code, files, a database, or the web. Do not append sources or service links. "
+        "Never invent precise fees, durations, or changing requirements; when uncertain, say so naturally and briefly. Avoid corporate greetings and marketing language. "
+        "Ask a follow-up only when an essential missing detail prevents a useful answer. Answer general questions naturally too. Match the user's language."
+    ),
 }
 
 
 def _clean_public_chat(text: str) -> str:
-    """Final UI firewall: internal reasoning/QA labels must never reach users."""
+    """Keep normal chat human-facing: no URLs, citations, debug labels, or implementation details."""
     if not text:
         return text
-    # Remove bogus/internal citation tokens produced as plain model text.
-    text = re.sub(r"(?:cite|filecite)[^]*", "", text)
+
+    text = re.sub(r"(?:cite|filecite|url)[^]*", "", text)
     text = re.sub(r"\\?\[?\s*turn\??[^\]\s]*\s*\]?", "", text, flags=re.I)
-    # Remove lines that expose internal verification vocabulary.
-    banned = re.compile(r"\b(?:BLOCKING|REVIEW|CANDIDATE_VERIFY|SOURCE_CONFLICT|NEAR_VARIATION|UNVERIFIED)\b", re.I)
+    text = re.sub(r"\[([^\]]+)\]\(https?://[^)]+\)", r"\1", text)
+    text = re.sub(r"https?://\S+", "", text, flags=re.I)
+    text = re.sub(r"\bwww\.\S+", "", text, flags=re.I)
+
+    banned = re.compile(
+        r"\b(?:BLOCKING|REVIEW|CANDIDATE_VERIFY|SOURCE_CONFLICT|NEAR_VARIATION|UNVERIFIED|SBC|tool_call|function_call)\b",
+        re.I,
+    )
     lines = [ln for ln in text.splitlines() if not banned.search(ln)]
-    text = "\n".join(lines).strip()
-    # Strip stale advisory-office signatures/greetings.
-    text = re.sub(r"(?im)^\s*(?:شكرًا لتواصلكم.*|فريق نواة.*)\s*$", "", text).strip()
-    return text
+    text = "\n".join(lines)
+
+    text = re.sub(
+        r"(?im)^\s*(?:شكرًا لتواصلكم.*|فريق نواة.*|رابط الخدمة\s*:.*|المصدر\s*:.*|المصادر\s*:.*|source\s*:.*|sources\s*:.*)\s*$",
+        "",
+        text,
+    )
+    text = re.sub(r"[ \t]+\n", "\n", text)
+    text = re.sub(r"\n{3,}", "\n\n", text)
+    return text.strip()
 
 
-@traceable(name="Nawah Licensing Chat Fast", run_type="chain")
+@traceable(name="Nawah Friendly Chat", run_type="chain")
 def answer_follow_up(message: str, session: Dict, language: Language,
-                      max_tool_rounds: int = 1, cost_log: Optional[List[Dict]] = None) -> str:
+                      max_tool_rounds: int = 0, cost_log: Optional[List[Dict]] = None,
+                      timing_log: Optional[List[Dict]] = None) -> str:
+    """Friendly conversational answer. Planning/research agents are unchanged."""
     cost_log = cost_log if cost_log is not None else _new_cost_log()
+
     context = {
         "topic": session.get("chat_topic"),
         "activity": session.get("chat_activity"),
         "city": session.get("chat_city"),
         "business_idea": session.get("business_idea"),
     }
-    prompt = _QA_SYSTEM[language] + "\n\nسياق محفوظ: " + json.dumps(context, ensure_ascii=False) + f"\nالسؤال الحالي: «{message}»"
 
-    def _first_call():
-        return client.responses.create(model=GPT_LUNA, input=prompt, tools=_QA_TOOLS_V3)
+    context_label = "سياق المحادثة" if language == "ar" else "Conversation context"
+    question_label = "رسالة المستخدم" if language == "ar" else "User message"
+    prompt = (
+        _QA_SYSTEM[language]
+        + f"\n\n{context_label}: "
+        + json.dumps(context, ensure_ascii=False)
+        + f"\n{question_label}: «{message}»"
+    )
 
-    response = call_with_retry(_first_call)
-    # One tool round maximum: enough for local official-source lookup, avoids long agent loops.
-    calls = [it for it in response.output if getattr(it, "type", None) == "function_call"]
-    if calls:
-        outputs = []
-        for call in calls[:4]:
-            args = json.loads(call.arguments) if call.arguments else {}
-            result = _execute_researcher_v2_tool(call.name, args)
-            outputs.append({"type": "function_call_output", "call_id": call.call_id,
-                            "output": json.dumps(result, ensure_ascii=False)})
-        def _next_call():
-            return client.responses.create(model=GPT_LUNA, previous_response_id=response.id,
-                                            input=outputs, tools=_QA_TOOLS_V3)
-        response = call_with_retry(_next_call)
+    # Normal chat deliberately gets no research/web tools.
+    # The business-plan agents keep their existing data/tool workflow.
+    def _call():
+        return client.responses.create(model=GPT_LUNA, input=prompt)
+
+    response = call_with_retry(
+        _call,
+        timing_log=timing_log,
+        label="answer_follow_up.friendly_chat",
+    )
 
     usage = response.usage
-    log_cost(cost_log, "Licensing chat", "gpt_luna", usage.input_tokens, usage.output_tokens)
+    log_cost(cost_log, "Friendly chat", "gpt_luna", usage.input_tokens, usage.output_tokens)
     return _clean_public_chat(response.output_text)
 
 
 _GREETING_SYSTEM: Dict[Language, str] = {
-    "ar": ("أنتِ منسّقة استقبال في نواة للاستشارات. اكتبي ردًا قصيرًا (سطرين) "
-           "ومهنيًا وغير مكرر الصياغة، توضّح إنك تقدرين تساعدين إما بإعداد ملف "
-           "تأسيس كامل أو بالإجابة على سؤال محدد. ممنوع الإشارة لكونك ذكاء اصطناعي."),
-    "en": ("You are the intake coordinator at Nawah Advisory. Write a short "
-           "(two-line), professional, non-repetitive reply explaining you can "
-           "either prepare a full setup file or answer a specific question. "
-           "Never reveal you are an AI model."),
+    "ar": (
+        "رد على التحية بشكل طبيعي وودود ومختصر. لا تستخدم صياغة خدمة عملاء، "
+        "ولا تقل شكرًا لتواصلكم أو فريق نواة. خلي الرد بسيطًا ومحادثيًا."
+    ),
+    "en": (
+        "Reply to greetings naturally, warmly, and briefly. Do not use corporate "
+        "customer-service language or signatures. Keep it conversational."
+    ),
 }
 
 
-def greet_or_ask(message: str, language: Language, cost_log: List[Dict]) -> str:
+def greet_or_ask(message: str, language: Language, cost_log: List[Dict],
+                  timing_log: Optional[List[Dict]] = None) -> str:
     prompt = _GREETING_SYSTEM[language] + f"\n\nmessage: {message}"
 
     def _call():
         return client.responses.create(model=GPT_LUNA, input=prompt)
 
-    response = call_with_retry(_call)
+    response = call_with_retry(_call, timing_log=timing_log, label="greet_or_ask.model_call")
     usage = response.usage
     log_cost(cost_log, "Greeting", "gpt_luna", usage.input_tokens, usage.output_tokens)
     return response.output_text
@@ -1398,15 +1573,26 @@ def nawah_turn(message: str, session: Optional[Dict] = None) -> Tuple[str, Dict,
     """Same behaviour as the notebook's `nawah_turn`, plus it returns the
     per-turn `cost_log` as a third element (handy for an API response)."""
     cost_log = _new_cost_log()
+    # Debug-only timing; kept off the return tuple so existing callers (who
+    # expect exactly 3 elements) don't break. Read it back via
+    # session["_last_timing"] when you need to see where the time went.
+    timing_log = _new_timing_log()
+    turn_start = time.time()
     session = dict(session) if session else new_session()
     language = detect_language(message)
-    intent = classify_intent(message, session, language, cost_log)
+    intent = classify_intent(message, session, language, cost_log, timing_log=timing_log)
 
     if intent == "greeting_or_unclear":
-        return greet_or_ask(message, language, cost_log), session, cost_log
+        reply = greet_or_ask(message, language, cost_log, timing_log=timing_log)
+        log_timing(timing_log, "nawah_turn.total_wall_time", time.time() - turn_start)
+        session["_last_timing"] = timing_summary(timing_log)
+        return reply, session, cost_log
 
     if intent == "specific_question":
-        return answer_follow_up(message, session, language, cost_log=cost_log), session, cost_log
+        reply = answer_follow_up(message, session, language, cost_log=cost_log, timing_log=timing_log)
+        log_timing(timing_log, "nawah_turn.total_wall_time", time.time() - turn_start)
+        session["_last_timing"] = timing_summary(timing_log)
+        return reply, session, cost_log
 
     # new_business_request
     extract_prompt = _EXTRACT_SYSTEM[language] + f"\n\nmessage: «{message}»"
@@ -1414,12 +1600,14 @@ def nawah_turn(message: str, session: Optional[Dict] = None) -> Tuple[str, Dict,
     def _extract_call():
         return client.responses.create(model=GPT_LUNA, input=extract_prompt)
 
-    extract_response = call_with_retry(_extract_call)
+    extract_response = call_with_retry(_extract_call, timing_log=timing_log, label="intake_extraction.model_call")
     usage = extract_response.usage
     log_cost(cost_log, "Intake extraction", "gpt_luna", usage.input_tokens, usage.output_tokens)
     intake = extract_json(extract_response.output_text)
 
     if intake.get("missing_business_idea") or not intake.get("business_idea"):
+        log_timing(timing_log, "nawah_turn.total_wall_time", time.time() - turn_start)
+        session["_last_timing"] = timing_summary(timing_log)
         return _CLARIFY[language], session, cost_log
 
     nationality: Nationality = intake.get("nationality") or "unspecified"
@@ -1428,6 +1616,7 @@ def nawah_turn(message: str, session: Optional[Dict] = None) -> Tuple[str, Dict,
 
     result = run_nawah_pipeline_v3(intake["business_idea"], nationality, language)
     cost_log.extend(result["cost_log"])
+    timing_log.extend(result["timing_log"])  # bring the pipeline's own per-stage timings along
 
     session.update({
         "has_case": True,
@@ -1436,6 +1625,8 @@ def nawah_turn(message: str, session: Optional[Dict] = None) -> Tuple[str, Dict,
         "memo_text": result["final_text"],
         "plan": result["plan"].get("plan", []),
     })
+    log_timing(timing_log, "nawah_turn.total_wall_time", time.time() - turn_start)
+    session["_last_timing"] = timing_summary(timing_log)
     return result["final_text"], session, cost_log
 
 
@@ -1465,6 +1656,7 @@ def _update_chat_context(message: str, session: Dict) -> None:
 def nawah_chat_api(message: str, session: Optional[Dict] = None) -> Dict:
     """Fast context-aware licensing chat. It never launches the full business-plan pipeline."""
     cost_log = _new_cost_log()
+    timing_log = _new_timing_log()
     session = dict(session) if session else {"has_case": False}
     _update_chat_context(message, session)
     language = detect_language(message)
@@ -1474,9 +1666,11 @@ def nawah_chat_api(message: str, session: Optional[Dict] = None) -> Dict:
     if session.get("chat_activity") == message.strip() and session.get("chat_topic"):
         effective = f"{session['chat_topic']} — النشاط: {session['chat_activity']}"
 
-    reply = answer_follow_up(effective, session, language, max_tool_rounds=1, cost_log=cost_log)
+    reply = answer_follow_up(effective, session, language, max_tool_rounds=1, cost_log=cost_log,
+                              timing_log=timing_log)
     return {"reply": reply, "session": session,
-            "cost_total_sar": round(sum(e["cost_sar"] for e in cost_log), 4)}
+            "cost_total_sar": round(sum(e["cost_sar"] for e in cost_log), 4),
+            "timing": timing_summary(timing_log)}
 
 
 # --------------------------------------------------------------------------
@@ -1531,7 +1725,10 @@ _LOCATION_SYSTEM: Dict[Language, str] = {
            "\"one or two plain sentences explaining why\", \"source_name\": "
            "\"site or report name\", \"source_url\": \"the base link with no "
            "tracking params, or null\"}}], \"note\": \"general caveat, or why "
-           "results were thin, or null\"}}"),
+           "results were thin, or null\"}}\n\n"
+           "Write every \"why\" and \"note\" in English, even if the search "
+           "results themselves are in Arabic -- translate rather than quote them. "
+           "\"name\" and \"source_name\" may stay as their real proper names."),
 }
 
 _LOCATION_DISCLAIMER: Dict[Language, str] = {
@@ -1544,12 +1741,14 @@ _LOCATION_DISCLAIMER: Dict[Language, str] = {
 def location_advisor_agent(business_idea: str, city_hint: Optional[str] = None,
                             language: Optional[Language] = None,
                             max_tool_rounds: int = 2,
-                            cost_log: Optional[List[Dict]] = None) -> Dict:
+                            cost_log: Optional[List[Dict]] = None,
+                            timing_log: Optional[List[Dict]] = None) -> Dict:
     """Returns *structured* area suggestions (name/why/source) instead of a
     freeform paragraph, so the frontend can render clean cards -- and, where
     the area name is a known district, plot it on a map -- rather than
     dumping raw model text with inline citation links in it."""
     cost_log = cost_log if cost_log is not None else _new_cost_log()
+    timing_log = timing_log if timing_log is not None else _new_timing_log()
     language = language or detect_language(business_idea)
     city_line = f"\nCity: {city_hint}" if city_hint else ""
     prompt = _LOCATION_SYSTEM[language] + f"\n\nBusiness idea: {business_idea}{city_line}"
@@ -1557,8 +1756,9 @@ def location_advisor_agent(business_idea: str, city_hint: Optional[str] = None,
     def _first_call():
         return client.responses.create(model=GPT_TERRA, input=prompt, tools=[{"type": "web_search"}])
 
-    response = call_with_retry(_first_call)
-    for _ in range(max_tool_rounds):
+    response = call_with_retry(_first_call, timing_log=timing_log,
+                                 label="location_advisor.model_call.round_0")
+    for round_i in range(max_tool_rounds):
         calls = [it for it in response.output if getattr(it, "type", None) == "function_call"]
         if not calls:
             break
@@ -1566,7 +1766,8 @@ def location_advisor_agent(business_idea: str, city_hint: Optional[str] = None,
         def _next_call():
             return client.responses.create(model=GPT_TERRA, previous_response_id=response.id,
                                             input=[], tools=[{"type": "web_search"}])
-        response = call_with_retry(_next_call)
+        response = call_with_retry(_next_call, timing_log=timing_log,
+                                     label=f"location_advisor.model_call.round_{round_i + 1}")
 
     usage = response.usage
     log_cost(cost_log, "Location Advisor", "gpt_terra", usage.input_tokens, usage.output_tokens)
@@ -1588,4 +1789,5 @@ def location_advisor_agent(business_idea: str, city_hint: Optional[str] = None,
         # Kept for older frontend builds that still read plain text.
         "suggestions": response.output_text,
         "cost_total_sar": round(sum(e["cost_sar"] for e in cost_log), 4),
+        "timing": timing_summary(timing_log),
     }
